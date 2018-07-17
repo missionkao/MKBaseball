@@ -1,0 +1,6 @@
+framework module Pods_MKBaseball {
+  umbrella header "Pods-MKBaseball-umbrella.h"
+
+  export *
+  module * { export * }
+}
