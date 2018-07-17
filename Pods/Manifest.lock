@@ -1,16 +1,20 @@
 PODS:
+  - SnapKit (4.0.0)
   - SwiftyJSON (3.1.4)
 
 DEPENDENCIES:
+  - SnapKit (~> 4.0.0)
   - SwiftyJSON
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - SnapKit
     - SwiftyJSON
 
 SPEC CHECKSUMS:
+  SnapKit: a42d492c16e80209130a3379f73596c3454b7694
   SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
 
-PODFILE CHECKSUM: 85eda4a7090b42bf37e7725f19735500d43fc3e5
+PODFILE CHECKSUM: 233a9b672124b1d13ded2bef198b5a5a2fed51e7
 
 COCOAPODS: 1.5.3
