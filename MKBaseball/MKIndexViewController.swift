@@ -17,15 +17,14 @@ class MKIndexViewController: UITabBarController {
         
         view.addSubview(headerLogoImageView)
         
-        let firstViewController = UIViewController()
-        firstViewController.tabBarItem = UITabBarItem(tabBarSystemItem: .favorites, tag: 100)
-        firstViewController.view.backgroundColor = UIColor.gray
+        let todayViewController = MKTodayViewController()
+        todayViewController.tabBarItem = UITabBarItem(tabBarSystemItem: .favorites, tag: 100)
         
         let secondViewController = UIViewController()
         secondViewController.tabBarItem = UITabBarItem(tabBarSystemItem: .more, tag: 200)
         secondViewController.view.backgroundColor = UIColor.brown
         
-        self.viewControllers = [firstViewController, secondViewController]
+        self.viewControllers = [todayViewController, secondViewController]
         
         setupConstraints()
     }
@@ -41,10 +40,14 @@ class MKIndexViewController: UITabBarController {
 
 private extension MKIndexViewController {
     func setupConstraints() {
-        headerLogoImageView.snp.makeConstraints { (maker) in
-            maker.centerX.equalToSuperview()
-            maker.top.equalTo(view.snp.topMargin)
-            maker.height.equalTo(56)
+        headerLogoImageView.snp.makeConstraints { (make) in
+            if #available(iOS 11.0, *) {
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.topMargin)
+            } else {
+                make.top.equalTo(view.snp.topMargin)
+            }
+            make.centerX.equalToSuperview()
+            make.height.equalTo(56)
         }
     }
 }
