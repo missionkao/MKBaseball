@@ -13,7 +13,7 @@ enum MKTodayViewControllerTableViewSectionType: Int {
     case todayGame = 0, memberChange
     
     func headerView() -> UIView {
-        let view = UIView()
+        let view = MKContainerView.init(frame: .zero)
         view.backgroundColor = UIColor.white
         
         let titleLabel = UILabel()
@@ -49,6 +49,8 @@ class MKTodayViewController: UIViewController {
         view.backgroundColor = UIColor.clear
         view.rowHeight = UITableViewAutomaticDimension
         view.tableFooterView = UIView()
+        view.separatorColor = UIColor.gray
+        view.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         view.dataSource = self
         view.delegate = self
         return view
