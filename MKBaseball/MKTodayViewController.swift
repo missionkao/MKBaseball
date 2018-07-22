@@ -31,6 +31,15 @@ enum MKTodayViewControllerTableViewSectionType: Int {
         
         return view
     }
+    
+    func cellView() -> UITableViewCell {
+        switch self {
+        case .todayGame:
+            return MKTodayGameTableViewCell(style: .default, reuseIdentifier: nil)
+        case .memberChange:
+            return MKTodayGameTableViewCell(style: .default, reuseIdentifier: nil)
+        }
+    }
 }
 
 class MKTodayViewController: UIViewController {
@@ -47,7 +56,7 @@ class MKTodayViewController: UIViewController {
         let view = UITableView(frame: CGRect.zero, style: .plain)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.clear
-        view.rowHeight = UITableViewAutomaticDimension
+        view.rowHeight = 120
         view.tableFooterView = UIView()
         view.separatorColor = UIColor.gray
         view.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
@@ -61,14 +70,11 @@ class MKTodayViewController: UIViewController {
 extension MKTodayViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        return 2
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
-        cell.backgroundColor = UIColor.white
-        cell.textLabel?.text = "test"
-        return cell
+        return MKTodayViewControllerTableViewSectionType.init(rawValue: indexPath.section)!.cellView()
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
