@@ -8,11 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		6FD27FD236D6A73150A80CAF /* Pods_MKBaseball.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA8643CD0C0F3C1E693EB42C /* Pods_MKBaseball.framework */; };
+		932665AA21032E2B002F7237 /* MKContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932665A921032E2B002F7237 /* MKContainerView.swift */; };
+		932665AC21043D3B002F7237 /* MKTodayGameTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932665AB21043D3B002F7237 /* MKTodayGameTableViewCell.swift */; };
+		932665AE2104BF2D002F7237 /* MKTodayChangeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932665AD2104BF2C002F7237 /* MKTodayChangeTableViewCell.swift */; };
 		93475FA920FE38F9000B1D52 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93475FA820FE38F9000B1D52 /* AppDelegate.swift */; };
 		93475FAB20FE38F9000B1D52 /* MKIndexViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93475FAA20FE38F9000B1D52 /* MKIndexViewController.swift */; };
 		93475FB020FE38F9000B1D52 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 93475FAF20FE38F9000B1D52 /* Assets.xcassets */; };
 		93475FB320FE38F9000B1D52 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 93475FB120FE38F9000B1D52 /* LaunchScreen.storyboard */; };
 		93475FBE20FE38F9000B1D52 /* MKBaseballTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93475FBD20FE38F9000B1D52 /* MKBaseballTests.swift */; };
+		937921132102FEBC00B6FD67 /* MKTodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937921122102FEBC00B6FD67 /* MKTodayViewController.swift */; };
 		F05045365755EE198D73CC65 /* Pods_MKBaseballTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE30638F3BAF47D6518E8BA0 /* Pods_MKBaseballTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -29,6 +33,9 @@
 /* Begin PBXFileReference section */
 		460B6AE70F00DD9ABE264830 /* Pods-MKBaseballTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MKBaseballTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-MKBaseballTests/Pods-MKBaseballTests.release.xcconfig"; sourceTree = "<group>"; };
 		878C797CFD7EB704AD25C549 /* Pods-MKBaseballTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MKBaseballTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MKBaseballTests/Pods-MKBaseballTests.debug.xcconfig"; sourceTree = "<group>"; };
+		932665A921032E2B002F7237 /* MKContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKContainerView.swift; sourceTree = "<group>"; };
+		932665AB21043D3B002F7237 /* MKTodayGameTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKTodayGameTableViewCell.swift; sourceTree = "<group>"; };
+		932665AD2104BF2C002F7237 /* MKTodayChangeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKTodayChangeTableViewCell.swift; sourceTree = "<group>"; };
 		93475FA520FE38F9000B1D52 /* MKBaseball.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MKBaseball.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		93475FA820FE38F9000B1D52 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		93475FAA20FE38F9000B1D52 /* MKIndexViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKIndexViewController.swift; sourceTree = "<group>"; };
@@ -38,6 +45,7 @@
 		93475FB920FE38F9000B1D52 /* MKBaseballTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MKBaseballTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		93475FBD20FE38F9000B1D52 /* MKBaseballTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKBaseballTests.swift; sourceTree = "<group>"; };
 		93475FBF20FE38F9000B1D52 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		937921122102FEBC00B6FD67 /* MKTodayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKTodayViewController.swift; sourceTree = "<group>"; };
 		C1EFED80C4E8C5D94ECDBF32 /* Pods-MKBaseball.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MKBaseball.release.xcconfig"; path = "Pods/Target Support Files/Pods-MKBaseball/Pods-MKBaseball.release.xcconfig"; sourceTree = "<group>"; };
 		EA8643CD0C0F3C1E693EB42C /* Pods_MKBaseball.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MKBaseball.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA251430571B8273E0AE88EB /* Pods-MKBaseball.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MKBaseball.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MKBaseball/Pods-MKBaseball.debug.xcconfig"; sourceTree = "<group>"; };
@@ -98,6 +106,10 @@
 			children = (
 				93475FA820FE38F9000B1D52 /* AppDelegate.swift */,
 				93475FAA20FE38F9000B1D52 /* MKIndexViewController.swift */,
+				937921122102FEBC00B6FD67 /* MKTodayViewController.swift */,
+				932665AB21043D3B002F7237 /* MKTodayGameTableViewCell.swift */,
+				932665AD2104BF2C002F7237 /* MKTodayChangeTableViewCell.swift */,
+				932665A921032E2B002F7237 /* MKContainerView.swift */,
 				93475FAF20FE38F9000B1D52 /* Assets.xcassets */,
 				93475FB120FE38F9000B1D52 /* LaunchScreen.storyboard */,
 				93475FB420FE38F9000B1D52 /* Info.plist */,
@@ -290,7 +302,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				93475FAB20FE38F9000B1D52 /* MKIndexViewController.swift in Sources */,
+				932665AC21043D3B002F7237 /* MKTodayGameTableViewCell.swift in Sources */,
 				93475FA920FE38F9000B1D52 /* AppDelegate.swift in Sources */,
+				932665AA21032E2B002F7237 /* MKContainerView.swift in Sources */,
+				932665AE2104BF2D002F7237 /* MKTodayChangeTableViewCell.swift in Sources */,
+				937921132102FEBC00B6FD67 /* MKTodayViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
