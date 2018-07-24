@@ -31,9 +31,8 @@ class MKIndexViewController: UITabBarController {
         calendarViewController.tabBarItem = calendarTabBarItem
         calendarViewController.view.backgroundColor = UIColor.brown
         
-        let rankingViewController = UIViewController()
+        let rankingViewController = MKRankingViewController()
         rankingViewController.tabBarItem = rankingTabBarItem
-        rankingViewController.view.backgroundColor = UIColor.gray
         
         let statsViewController = UIViewController()
         statsViewController.tabBarItem = statsTabBarItem

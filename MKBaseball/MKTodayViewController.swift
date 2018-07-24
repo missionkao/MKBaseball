@@ -13,7 +13,7 @@ enum MKTodayViewControllerTableViewSectionType: Int {
     case todayGame = 0, memberChange
     
     func headerView() -> UIView {
-        let view = MKContainerView.init(frame: .zero)
+        let view = MKContainerView(frame: .zero)
         view.backgroundColor = UIColor.white
         
         let titleLabel = UILabel()
