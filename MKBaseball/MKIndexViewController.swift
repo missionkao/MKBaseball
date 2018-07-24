@@ -43,11 +43,7 @@ class MKIndexViewController: UITabBarController {
         newsViewController.tabBarItem = newsTabBarItem
         newsViewController.view.backgroundColor = UIColor.blue
         
-        let videoViewController = UIViewController()
-        videoViewController.tabBarItem = videoTabBarItem
-        videoViewController.view.backgroundColor = UIColor.black
-        
-        self.viewControllers = [topViewController, calendarViewController, rankingViewController, statsViewController, newsViewController, videoViewController]
+        self.viewControllers = [topViewController, calendarViewController, rankingViewController, statsViewController, newsViewController]
         
         setupConstraints()
     }
