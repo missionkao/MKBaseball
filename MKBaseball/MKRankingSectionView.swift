@@ -23,15 +23,33 @@ class MKRankingSectionView: MKContainerView {
         super.init(frame: .zero)
         
         backgroundColor = UIColor.white
+        addSubview(titleLabel)
         addSubview(stackView)
+        
+        titleLabel.snp.makeConstraints { (make) in
+            make.top.equalToSuperview()
+            make.height.equalTo(44)
+            make.left.equalToSuperview().offset(16)
+            make.right.equalToSuperview().offset(-16)
+        }
+        
         stackView.snp.makeConstraints { (make) in
-            make.top.bottom.equalToSuperview()
+            make.top.equalTo(titleLabel.snp.bottom)
+            make.bottom.equalToSuperview()
             make.left.equalToSuperview().offset(16)
             make.right.equalToSuperview().offset(-16)
         }
         
         setupView()
     }
+    
+    private lazy var titleLabel: UILabel = {
+        let view = commonLabel()
+        view.textAlignment = .left
+        view.font = UIFont.boldSystemFont(ofSize: 24)
+        view.text = sectionType.sectionHeaderTitle()
+        return view
+    }()
     
     private lazy var stackView: UIStackView = {
         let view = UIStackView()
