@@ -23,14 +23,13 @@ enum MKRankingTableViewSectionType: Int {
         return MKRankingSectionView(sectionType: self, labelTexts: labelTexts)
     }
     
-    //戰績排名
-    //排名, 球隊, 出賽, 勝-和-敗, 勝率, 勝差
-    
-    //對戰成績
-    //(球隊), Lamigo, 中信兄弟, 富邦, 統一
-    
-    //團隊成績
-    //(球隊), 得分, 失分, 全壘打, 打擊率, 防禦率
+    func sectionHeaderTitle() -> String {
+        switch self {
+        case .rank: return "戰績排名"
+        case .between: return "對戰成績"
+        case .team: return "團隊成績"
+        }
+    }
     
     func sectionHeaderTexts() -> [String] {
         switch self {
@@ -98,7 +97,11 @@ extension MKRankingViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 48
+        return 72
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 8
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -110,6 +113,10 @@ extension MKRankingViewController: UITableViewDataSource {
         }
         
         return MKRankingTableViewSectionType(rawValue: section)?.sectionHeaderView(labelTexts: labelTexts)
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return UIView()
     }
 }
 
