@@ -10,21 +10,39 @@ import UIKit
 import SnapKit
 
 class MKIndexViewController: UITabBarController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.cpblBlue
+        tabBar.backgroundColor = UIColor.white
+        
+        tabBar.layer.borderWidth = 0.50
+        tabBar.layer.borderColor = UIColor.gray.cgColor
+        
+        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedStringKey.foregroundColor : UIColor.gray], for: .normal)
+        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedStringKey.foregroundColor : UIColor.cpblBlue], for: .selected)
         
         view.addSubview(headerLogoImageView)
         
-        let todayViewController = MKTodayViewController()
-        todayViewController.tabBarItem = UITabBarItem(tabBarSystemItem: .favorites, tag: 100)
+        let topViewController = MKTodayViewController()
+        topViewController.tabBarItem = topTabBarItem
         
-        let secondViewController = UIViewController()
-        secondViewController.tabBarItem = UITabBarItem(tabBarSystemItem: .more, tag: 200)
-        secondViewController.view.backgroundColor = UIColor.brown
+        let calendarViewController = UIViewController()
+        calendarViewController.tabBarItem = calendarTabBarItem
+        calendarViewController.view.backgroundColor = UIColor.brown
         
-        self.viewControllers = [todayViewController, secondViewController]
+        let rankingViewController = MKRankingViewController()
+        rankingViewController.tabBarItem = rankingTabBarItem
+        
+        let statsViewController = UIViewController()
+        statsViewController.tabBarItem = statsTabBarItem
+        statsViewController.view.backgroundColor = UIColor.red
+        
+        let newsViewController = UIViewController()
+        newsViewController.tabBarItem = newsTabBarItem
+        newsViewController.view.backgroundColor = UIColor.blue
+        
+        self.viewControllers = [topViewController, calendarViewController, rankingViewController, statsViewController, newsViewController]
         
         setupConstraints()
     }
@@ -34,6 +52,30 @@ class MKIndexViewController: UITabBarController {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.contentMode = .scaleAspectFit
         return view
+    }()
+    
+    private lazy var topTabBarItem: UITabBarItem = {
+        return tabBarItem(titel: "Top", imageName: "tab_bar_top")
+    }()
+    
+    private lazy var calendarTabBarItem: UITabBarItem = {
+        return tabBarItem(titel: "Calendar", imageName: "tab_bar_calendar")
+    }()
+    
+    private lazy var rankingTabBarItem: UITabBarItem = {
+        return tabBarItem(titel: "Ranking", imageName: "tab_bar_ranking")
+    }()
+    
+    private lazy var statsTabBarItem: UITabBarItem = {
+        return tabBarItem(titel: "Stats", imageName: "tab_bar_stats")
+    }()
+    
+    private lazy var newsTabBarItem: UITabBarItem = {
+        return tabBarItem(titel: "News", imageName: "tab_bar_news")
+    }()
+    
+    private lazy var videoTabBarItem: UITabBarItem = {
+        return tabBarItem(titel: "Video", imageName: "tab_bar_video")
     }()
 
 }
@@ -50,6 +92,11 @@ private extension MKIndexViewController {
             make.height.equalTo(56)
         }
     }
+    
+    func tabBarItem(titel: String, imageName: String) -> UITabBarItem {
+        let filledImageName = "\(imageName)_filled"
+        return UITabBarItem(title: titel, image: UIImage(named: imageName)?.withRenderingMode(.alwaysOriginal), selectedImage: UIImage(named: filledImageName)?.withRenderingMode(.alwaysOriginal))
+    }
 }
 
 extension UIColor {
@@ -57,5 +104,5 @@ extension UIColor {
         self.init(red: CGFloat(r)/255, green: CGFloat(g)/255, blue: CGFloat(b)/255, alpha: a)
     }
     
-    static let cpblBlue = UIColor(r: 45, g: 71, b: 146, a: 0.7)
+    static let cpblBlue = UIColor(r: 45, g: 71, b: 126, a: 1.0)
 }

@@ -11,6 +11,8 @@
 		932665AA21032E2B002F7237 /* MKContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932665A921032E2B002F7237 /* MKContainerView.swift */; };
 		932665AC21043D3B002F7237 /* MKTodayGameTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932665AB21043D3B002F7237 /* MKTodayGameTableViewCell.swift */; };
 		932665AE2104BF2D002F7237 /* MKTodayChangeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932665AD2104BF2C002F7237 /* MKTodayChangeTableViewCell.swift */; };
+		932665B0210754CB002F7237 /* MKRankingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932665AF210754CB002F7237 /* MKRankingViewController.swift */; };
+		932665B22107640E002F7237 /* MKRankingSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932665B12107640E002F7237 /* MKRankingSectionView.swift */; };
 		93475FA920FE38F9000B1D52 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93475FA820FE38F9000B1D52 /* AppDelegate.swift */; };
 		93475FAB20FE38F9000B1D52 /* MKIndexViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93475FAA20FE38F9000B1D52 /* MKIndexViewController.swift */; };
 		93475FB020FE38F9000B1D52 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 93475FAF20FE38F9000B1D52 /* Assets.xcassets */; };
@@ -36,6 +38,8 @@
 		932665A921032E2B002F7237 /* MKContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKContainerView.swift; sourceTree = "<group>"; };
 		932665AB21043D3B002F7237 /* MKTodayGameTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKTodayGameTableViewCell.swift; sourceTree = "<group>"; };
 		932665AD2104BF2C002F7237 /* MKTodayChangeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKTodayChangeTableViewCell.swift; sourceTree = "<group>"; };
+		932665AF210754CB002F7237 /* MKRankingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKRankingViewController.swift; sourceTree = "<group>"; };
+		932665B12107640E002F7237 /* MKRankingSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKRankingSectionView.swift; sourceTree = "<group>"; };
 		93475FA520FE38F9000B1D52 /* MKBaseball.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MKBaseball.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		93475FA820FE38F9000B1D52 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		93475FAA20FE38F9000B1D52 /* MKIndexViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKIndexViewController.swift; sourceTree = "<group>"; };
@@ -113,6 +117,8 @@
 				93475FAF20FE38F9000B1D52 /* Assets.xcassets */,
 				93475FB120FE38F9000B1D52 /* LaunchScreen.storyboard */,
 				93475FB420FE38F9000B1D52 /* Info.plist */,
+				932665AF210754CB002F7237 /* MKRankingViewController.swift */,
+				932665B12107640E002F7237 /* MKRankingSectionView.swift */,
 			);
 			path = MKBaseball;
 			sourceTree = "<group>";
@@ -304,9 +310,11 @@
 				93475FAB20FE38F9000B1D52 /* MKIndexViewController.swift in Sources */,
 				932665AC21043D3B002F7237 /* MKTodayGameTableViewCell.swift in Sources */,
 				93475FA920FE38F9000B1D52 /* AppDelegate.swift in Sources */,
+				932665B0210754CB002F7237 /* MKRankingViewController.swift in Sources */,
 				932665AA21032E2B002F7237 /* MKContainerView.swift in Sources */,
 				932665AE2104BF2D002F7237 /* MKTodayChangeTableViewCell.swift in Sources */,
 				937921132102FEBC00B6FD67 /* MKTodayViewController.swift in Sources */,
+				932665B22107640E002F7237 /* MKRankingSectionView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
