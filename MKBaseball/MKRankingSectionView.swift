@@ -30,14 +30,7 @@ class MKRankingSectionView: MKContainerView {
             make.right.equalToSuperview().offset(-16)
         }
         
-        switch self.sectionType {
-        case .rank:
-            setupRankSectionView()
-        case .between:
-            setupBetweenSectionView()
-        case .team:
-            setupTeamSectionView()
-        }
+        setupView()
     }
     
     private lazy var stackView: UIStackView = {
@@ -147,40 +140,24 @@ class MKRankingSectionView: MKContainerView {
 }
 
 private extension MKRankingSectionView {
-    func setupRankSectionView() {
-        var tuples = [(UILabel, CGFloat)]()
-        tuples.append((rankLabel, 0.1))
-        tuples.append((teamLabel, 0.3))
-        tuples.append((gameLabel, 0.1))
-        tuples.append((gradeLabel, 0.25))
-        tuples.append((averageLabel, 0.15))
-        tuples.append((diffLabel, 0.1))
+    func setupView() {
+        var labels = [UILabel]()
+        switch sectionType {
+        case .rank:
+            labels = [rankLabel, teamLabel, gameLabel, gradeLabel, averageLabel, diffLabel]
+        case .between:
+            labels = [commonLabel(), firstLabel, secondLabel, thirdLabel, fourthLabel]
+        case .team:
+            labels = [commonLabel(), goalLabel, loseLabel, hrLabel, hitLabel, eraLabel]
+        }
         
-        setupView(tuples: tuples)
-    }
-    
-    func setupBetweenSectionView() {
-        var tuples = [(UILabel, CGFloat)]()
-        tuples.append((firstLabel, 0.25))
-        tuples.append((secondLabel, 0.25))
-        tuples.append((thirdLabel, 0.25))
-        tuples.append((fourthLabel, 0.25))
+        let widths = sectionType.labelWidthMultiplies()
         
-        setupView(tuples: tuples)
-    }
-    
-    func setupTeamSectionView() {
         var tuples = [(UILabel, CGFloat)]()
-        tuples.append((goalLabel, 0.2))
-        tuples.append((loseLabel, 0.2))
-        tuples.append((hrLabel, 0.2))
-        tuples.append((hitLabel, 0.2))
-        tuples.append((eraLabel, 0.2))
+        for (index, label) in labels.enumerated() {
+            tuples.append((label, widths[index]))
+        }
         
-        setupView(tuples: tuples)
-    }
-    
-    func setupView(tuples: [(UILabel, CGFloat)]) {
         for t in tuples {
             stackView.addArrangedSubview(t.0)
             t.0.snp.makeConstraints({ (make) in

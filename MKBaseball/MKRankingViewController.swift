@@ -27,10 +27,27 @@ enum MKRankingTableViewSectionType: Int {
     //排名, 球隊, 出賽, 勝-和-敗, 勝率, 勝差
     
     //對戰成績
-    //Lamigo, 中信兄弟, 富邦, 統一
+    //(球隊), Lamigo, 中信兄弟, 富邦, 統一
     
     //團隊成績
-    //得分, 失分, 全壘打, 打擊率, 防禦率
+    //(球隊), 得分, 失分, 全壘打, 打擊率, 防禦率
+    
+    func sectionHeaderTexts() -> [String] {
+        switch self {
+        case .rank: return ["排名", "球隊", "出賽", "勝-和-敗", "勝率", "勝差"]
+        case .team: return ["得分", "失分", "全壘打", "打擊率", "防禦率"]
+        default:
+            return [String]()
+        }
+    }
+    
+    func labelWidthMultiplies() -> [CGFloat] {
+        switch self {
+        case .rank: return [0.1, 0.3, 0.1, 0.25, 0.15, 0.1]
+        case .between: return [0.2, 0.2, 0.2, 0.2, 0.2]
+        case .team: return [0.25, 0.15, 0.15, 0.15, 0.15, 0.15]
+        }
+    }
 }
 
 class MKRankingViewController: UIViewController {
@@ -86,13 +103,12 @@ extension MKRankingViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         var labelTexts = [String]()
-        if section == 0 {
-            labelTexts = ["排名", "球隊", "出賽", "勝-和-敗", "勝率", "勝差"]
-        } else if section == 1 {
+        if section == 1 {
             labelTexts = ["Lamigo", "中信兄弟", "富邦", "統一"]
         } else {
-            labelTexts = ["得分", "失分", "全壘打", "打擊率", "防禦率"]
+            labelTexts = MKRankingTableViewSectionType(rawValue: section)!.sectionHeaderTexts()
         }
+        
         return MKRankingTableViewSectionType(rawValue: section)?.sectionHeaderView(labelTexts: labelTexts)
     }
 }
