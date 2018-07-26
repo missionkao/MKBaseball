@@ -27,7 +27,7 @@ class MKTodayChangeTableViewCell: UITableViewCell {
     
     private lazy var teamLabel: UILabel = {
         let view = commonLabel()
-        view.text = "統一7-ELEVEn"
+        view.text = TEAM_NAME_LION
         return view
     }()
     
