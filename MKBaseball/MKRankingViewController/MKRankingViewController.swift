@@ -40,6 +40,14 @@ enum MKRankingTableViewSectionType: Int {
         }
     }
     
+    func cellClass() -> AnyClass {
+        switch self {
+        case .rank: return MKRankingTableViewRankCell.self
+        case .between: return MKRankingTableViewBetweenCell.self
+        case .team: return MKRankingTableViewTeamCell.self
+        }
+    }
+    
     func labelWidthMultiplies() -> [CGFloat] {
         switch self {
         case .rank: return [0.1, 0.3, 0.1, 0.25, 0.15, 0.1]
@@ -68,11 +76,12 @@ class MKRankingViewController: UIViewController {
         view.tableFooterView = UIView()
         view.separatorColor = UIColor.gray
         view.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        view.rowHeight = 44
         view.dataSource = self
         view.delegate = self
         
         for type in sectionTypes {
-            view.register(UITableViewCell.self, forCellReuseIdentifier: type.cellReuseIdentifier())
+            view.register(type.cellClass(), forCellReuseIdentifier: type.cellReuseIdentifier())
         }
         
         return view
@@ -88,7 +97,6 @@ extension MKRankingViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellReuseIdentifier = MKRankingTableViewSectionType(rawValue: indexPath.section)!.cellReuseIdentifier()
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath)
-        cell.textLabel?.text = "test"
         return cell
     }
     
