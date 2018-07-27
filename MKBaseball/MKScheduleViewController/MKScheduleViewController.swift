@@ -12,7 +12,8 @@ import CVCalendar
 class MKScheduleViewController: UIViewController {
     
     private let cellReuseIdentifier = "MKScheduleTableViewCell"
-
+    private var isCalendarMainViewAppear = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.white
@@ -20,10 +21,12 @@ class MKScheduleViewController: UIViewController {
         stackView.addArrangedSubview(leftButton)
         stackView.addArrangedSubview(monthButton)
         stackView.addArrangedSubview(rightButton)
-        
-//        view.addSubview(tableView)
+        view.addSubview(tableView)
         setupConstraints()
+        
         setupCalendarView()
+        
+        monthButton.addTarget(self, action: #selector(toggleCalendarView), for: .touchUpInside)
     }
     
     override func viewDidLayoutSubviews() {
@@ -78,6 +81,8 @@ class MKScheduleViewController: UIViewController {
     private lazy var calendarMainView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.white
+        view.alpha = 0
         return view
     }()
     
@@ -139,10 +144,10 @@ extension MKScheduleViewController: CVCalendarViewDelegate, CVCalendarMenuViewDe
 
 private extension MKScheduleViewController {
     func setupConstraints() {
-//        tableView.snp.makeConstraints { (make) in
-//            make.top.equalTo(stackView.snp.bottom)
-//            make.left.right.bottom.equalToSuperview()
-//        }
+        tableView.snp.makeConstraints { (make) in
+            make.top.equalTo(stackView.snp.bottom).offset(8)
+            make.left.right.bottom.equalToSuperview()
+        }
         
         stackView.snp.makeConstraints { (make) in
             // top offset = logo(56) + offset
@@ -194,6 +199,18 @@ private extension MKScheduleViewController {
             make.top.equalTo(menuView.snp.bottom).offset(4)
             make.height.equalTo(400)
             make.left.right.equalToSuperview()
+        }
+    }
+    
+    @objc func toggleCalendarView() {
+        UIView.animate(withDuration: 0.3) {
+            if self.isCalendarMainViewAppear == false {
+                self.calendarMainView.alpha = 1
+                self.isCalendarMainViewAppear = true
+            } else {
+                self.calendarMainView.alpha = 0
+                self.isCalendarMainViewAppear = false
+            }
         }
     }
 }
