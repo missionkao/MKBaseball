@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		027655832109D3B1005C0ADF /* MKConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027655822109D3B1005C0ADF /* MKConstant.swift */; };
 		027655852109D5F4005C0ADF /* MKUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027655842109D5F4005C0ADF /* MKUtility.swift */; };
+		0276558C210B0034005C0ADF /* MKScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0276558B210B0034005C0ADF /* MKScheduleViewController.swift */; };
 		6FD27FD236D6A73150A80CAF /* Pods_MKBaseball.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA8643CD0C0F3C1E693EB42C /* Pods_MKBaseball.framework */; };
 		932665AA21032E2B002F7237 /* MKContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932665A921032E2B002F7237 /* MKContainerView.swift */; };
 		932665AC21043D3B002F7237 /* MKTodayGameTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932665AB21043D3B002F7237 /* MKTodayGameTableViewCell.swift */; };
@@ -38,6 +39,7 @@
 /* Begin PBXFileReference section */
 		027655822109D3B1005C0ADF /* MKConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKConstant.swift; sourceTree = "<group>"; };
 		027655842109D5F4005C0ADF /* MKUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKUtility.swift; sourceTree = "<group>"; };
+		0276558B210B0034005C0ADF /* MKScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKScheduleViewController.swift; sourceTree = "<group>"; };
 		460B6AE70F00DD9ABE264830 /* Pods-MKBaseballTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MKBaseballTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-MKBaseballTests/Pods-MKBaseballTests.release.xcconfig"; sourceTree = "<group>"; };
 		878C797CFD7EB704AD25C549 /* Pods-MKBaseballTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MKBaseballTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MKBaseballTests/Pods-MKBaseballTests.debug.xcconfig"; sourceTree = "<group>"; };
 		932665A921032E2B002F7237 /* MKContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKContainerView.swift; sourceTree = "<group>"; };
@@ -119,6 +121,14 @@
 			path = MKRankingViewController;
 			sourceTree = "<group>";
 		};
+		0276558A210AFFE0005C0ADF /* MKScheduleViewController */ = {
+			isa = PBXGroup;
+			children = (
+				0276558B210B0034005C0ADF /* MKScheduleViewController.swift */,
+			);
+			path = MKScheduleViewController;
+			sourceTree = "<group>";
+		};
 		567B0CFAC63B51561DA030F8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -151,6 +161,7 @@
 		93475FA720FE38F9000B1D52 /* MKBaseball */ = {
 			isa = PBXGroup;
 			children = (
+				0276558A210AFFE0005C0ADF /* MKScheduleViewController */,
 				027655892109D733005C0ADF /* MKRankingViewController */,
 				027655882109D6E5005C0ADF /* MKTodayViewController */,
 				027655872109D68A005C0ADF /* Utility */,
@@ -353,6 +364,7 @@
 				93475FA920FE38F9000B1D52 /* AppDelegate.swift in Sources */,
 				932665B0210754CB002F7237 /* MKRankingViewController.swift in Sources */,
 				027655852109D5F4005C0ADF /* MKUtility.swift in Sources */,
+				0276558C210B0034005C0ADF /* MKScheduleViewController.swift in Sources */,
 				932665AA21032E2B002F7237 /* MKContainerView.swift in Sources */,
 				932665AE2104BF2D002F7237 /* MKTodayChangeTableViewCell.swift in Sources */,
 				937921132102FEBC00B6FD67 /* MKTodayViewController.swift in Sources */,
