@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CVCalendar
 
 class MKScheduleViewController: UIViewController {
     
@@ -16,17 +17,39 @@ class MKScheduleViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = UIColor.cpblBlue
         view.addSubview(stackView)
-        view.addSubview(tableView)
-        
         stackView.addArrangedSubview(monthLabel)
         
+//        view.addSubview(tableView)
         setupConstraints()
+        setupCalendar()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        menuView.commitMenuViewUpdate()
+        calendarView.commitCalendarViewUpdate()
     }
     
     private lazy var stackView: UIStackView = {
         let view = UIStackView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.spacing = 0
+        return view
+    }()
+    
+    private lazy var menuView: CVCalendarMenuView = {
+        let view = CVCalendarMenuView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.menuViewDelegate = self
+        return view
+    }()
+    
+    private lazy var calendarView: CVCalendarView = {
+        let view = CVCalendarView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.calendarAppearanceDelegate = self
+        view.animatorDelegate = self
+        view.calendarDelegate = self
         return view
     }()
     
@@ -68,12 +91,22 @@ extension MKScheduleViewController: UITableViewDataSource {
 extension MKScheduleViewController: UITableViewDelegate {
 }
 
+extension MKScheduleViewController: CVCalendarViewDelegate, CVCalendarMenuViewDelegate {
+    
+    // MARK: Required methods
+    
+    func presentationMode() -> CalendarMode { return .monthView }
+    
+    func firstWeekday() -> Weekday { return .sunday }
+    
+}
+
 private extension MKScheduleViewController {
     func setupConstraints() {
-        tableView.snp.makeConstraints { (make) in
-            make.top.equalTo(stackView.snp.bottom)
-            make.left.right.bottom.equalToSuperview()
-        }
+//        tableView.snp.makeConstraints { (make) in
+//            make.top.equalTo(stackView.snp.bottom)
+//            make.left.right.bottom.equalToSuperview()
+//        }
         
         stackView.snp.makeConstraints { (make) in
             // top offset = logo(56) + offset
@@ -84,6 +117,24 @@ private extension MKScheduleViewController {
             }
             make.left.right.equalToSuperview()
             make.height.equalTo(44)
+        }
+    }
+    
+    func setupCalendar() {
+        
+        view.addSubview(menuView)
+        view.addSubview(calendarView)
+        
+        menuView.snp.makeConstraints { (make) in
+            make.top.equalTo(stackView.snp.bottom)
+            make.left.right.equalToSuperview()
+            make.height.equalTo(15)
+        }
+        
+        calendarView.snp.makeConstraints { (make) in
+            make.top.equalTo(menuView.snp.bottom).offset(5)
+            make.left.right.equalToSuperview()
+            make.height.equalTo(450)
         }
     }
 }
