@@ -1,20 +1,24 @@
 PODS:
+  - CVCalendar (1.6.1)
   - SnapKit (4.0.0)
   - SwiftyJSON (3.1.4)
 
 DEPENDENCIES:
+  - CVCalendar
   - SnapKit (~> 4.0.0)
   - SwiftyJSON
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - CVCalendar
     - SnapKit
     - SwiftyJSON
 
 SPEC CHECKSUMS:
+  CVCalendar: 505c11b11a088b43f159806e791eba1c2540853b
   SnapKit: a42d492c16e80209130a3379f73596c3454b7694
   SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
 
-PODFILE CHECKSUM: 233a9b672124b1d13ded2bef198b5a5a2fed51e7
+PODFILE CHECKSUM: a620ff7a7a8a8cdc076182d2bb7479fb80b55ec7
 
 COCOAPODS: 1.5.3
