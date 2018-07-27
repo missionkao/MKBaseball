@@ -15,9 +15,11 @@ class MKScheduleViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.cpblBlue
+        view.backgroundColor = UIColor.white
         view.addSubview(stackView)
-        stackView.addArrangedSubview(monthLabel)
+        stackView.addArrangedSubview(leftButton)
+        stackView.addArrangedSubview(monthButton)
+        stackView.addArrangedSubview(rightButton)
         
 //        view.addSubview(tableView)
         setupConstraints()
@@ -53,11 +55,39 @@ class MKScheduleViewController: UIViewController {
         return view
     }()
     
-    private lazy var monthLabel: UILabel = {
-        let view = UILabel()
-        view.backgroundColor = UIColor.gray
+    private lazy var leftButton: UIButton = {
+        let view = UIButton()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.text = "test"
+        let image = UIImage(named: "arrow_left")?.withRenderingMode(.alwaysTemplate)
+        let filledImage = UIImage(named: "arrow_left_filled")?.withRenderingMode(.alwaysTemplate)
+        view.setImage(image, for: .normal)
+        view.setImage(filledImage, for: .highlighted)
+        view.tintColor = UIColor.cpblBlue
+        view.backgroundColor = UIColor.white
+        return view
+    }()
+    
+    private lazy var monthButton: UIButton = {
+        let view = UIButton()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.setTitle("2018 年 8 月", for: .normal)
+        view.titleLabel?.font = UIFont.systemFont(ofSize: 18)
+        view.titleLabel?.textAlignment = .center
+        view.setTitleColor(UIColor.cpblBlue, for: .normal)
+        view.setTitleColor(UIColor.gray, for: .highlighted)
+        view.backgroundColor = UIColor.white
+        return view
+    }()
+    
+    private lazy var rightButton: UIButton = {
+        let view = UIButton()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        let image = UIImage(named: "arrow_right")?.withRenderingMode(.alwaysTemplate)
+        let filledImage = UIImage(named: "arrow_right_filled")?.withRenderingMode(.alwaysTemplate)
+        view.setImage(image, for: .normal)
+        view.setImage(filledImage, for: .highlighted)
+        view.tintColor = UIColor.cpblBlue
+        view.backgroundColor = UIColor.white
         return view
     }()
     
@@ -115,8 +145,23 @@ private extension MKScheduleViewController {
             } else {
                 make.top.equalToSuperview().offset(56 + 16)
             }
-            make.left.right.equalToSuperview()
+            make.left.equalToSuperview().offset(16)
+            make.right.equalToSuperview().offset(-16)
             make.height.equalTo(44)
+        }
+        
+        leftButton.snp.makeConstraints { (make) in
+            make.centerY.equalToSuperview()
+            make.width.equalTo(32)
+        }
+        
+        monthButton.snp.makeConstraints { (make) in
+            make.centerY.centerX.equalToSuperview()
+        }
+        
+        rightButton.snp.makeConstraints { (make) in
+            make.centerY.equalToSuperview()
+            make.width.equalTo(32)
         }
     }
     
@@ -126,7 +171,7 @@ private extension MKScheduleViewController {
         view.addSubview(calendarView)
         
         menuView.snp.makeConstraints { (make) in
-            make.top.equalTo(stackView.snp.bottom)
+            make.top.equalTo(stackView.snp.bottom).offset(8)
             make.left.right.equalToSuperview()
             make.height.equalTo(15)
         }
