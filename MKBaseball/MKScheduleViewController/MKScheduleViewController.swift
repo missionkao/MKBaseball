@@ -16,11 +16,11 @@ class MKScheduleViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.white
-        view.addSubview(stackView)
-        stackView.addArrangedSubview(leftButton)
-        stackView.addArrangedSubview(monthButton)
-        stackView.addArrangedSubview(rightButton)
+        view.backgroundColor = UIColor.cpblBlue
+        view.addSubview(headerView)
+        headerView.addSubview(leftButton)
+        headerView.addSubview(monthButton)
+        headerView.addSubview(rightButton)
         view.addSubview(tableView)
         setupConstraints()
         
@@ -35,10 +35,11 @@ class MKScheduleViewController: UIViewController {
         calendarView.commitCalendarViewUpdate()
     }
     
-    private lazy var stackView: UIStackView = {
-        let view = UIStackView()
+    private lazy var headerView: MKContainerView = {
+        let view = MKContainerView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.spacing = 0
+        view.backgroundColor = UIColor.white
+        view.separatorInset = UIEdgeInsets.zero
         return view
     }()
     
@@ -145,34 +146,37 @@ extension MKScheduleViewController: CVCalendarViewDelegate, CVCalendarMenuViewDe
 private extension MKScheduleViewController {
     func setupConstraints() {
         tableView.snp.makeConstraints { (make) in
-            make.top.equalTo(stackView.snp.bottom).offset(8)
+            make.top.equalTo(headerView.snp.bottom)
             make.left.right.bottom.equalToSuperview()
         }
         
-        stackView.snp.makeConstraints { (make) in
+        headerView.snp.makeConstraints { (make) in
             // top offset = logo(56) + offset
             if #available(iOS 11.0, *) {
                 make.top.equalTo(view.safeAreaLayoutGuide.snp.topMargin).offset(56 + 16)
             } else {
                 make.top.equalToSuperview().offset(56 + 16)
             }
-            make.left.equalToSuperview().offset(16)
-            make.right.equalToSuperview().offset(-16)
-            make.height.equalTo(44)
+            make.left.right.equalToSuperview()
+            make.height.equalTo(52)
         }
         
         leftButton.snp.makeConstraints { (make) in
-            make.centerY.equalToSuperview()
+            make.left.equalToSuperview().offset(16)
             make.width.equalTo(32)
+            make.centerY.equalToSuperview()
         }
         
         monthButton.snp.makeConstraints { (make) in
-            make.centerY.centerX.equalToSuperview()
+            make.centerY.equalToSuperview()
+            make.left.equalTo(leftButton.snp.right)
+            make.right.equalTo(rightButton.snp.left)
         }
         
         rightButton.snp.makeConstraints { (make) in
             make.centerY.equalToSuperview()
             make.width.equalTo(32)
+            make.right.equalToSuperview().offset(-16)
         }
     }
     
@@ -182,11 +186,11 @@ private extension MKScheduleViewController {
         calendarMainView.addSubview(calendarView)
         
         calendarMainView.snp.makeConstraints { (make) in
-            make.top.equalTo(stackView.snp.bottom).offset(8)
+            make.top.equalTo(headerView.snp.bottom).offset(8)
             make.left.right.equalToSuperview()
             //calendarView 會自己 layout height,
             //期待 calendarMainView.height >= menuView.height + calendarView.height + offset
-            make.height.equalTo(420)
+            make.height.equalTo(360)
         }
         
         menuView.snp.makeConstraints { (make) in
@@ -197,7 +201,7 @@ private extension MKScheduleViewController {
         
         calendarView.snp.makeConstraints { (make) in
             make.top.equalTo(menuView.snp.bottom).offset(4)
-            make.height.equalTo(400)
+            make.height.equalTo(360)
             make.left.right.equalToSuperview()
         }
     }

@@ -11,7 +11,12 @@ import UIKit
 class MKContainerView: UIView {
     
     private let separatorColor = UIColor.gray
-    private let separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+    var separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16) {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
+    
     private let separatorHeight: CGFloat = 1.0
     
     required init?(coder aDecoder: NSCoder) {
