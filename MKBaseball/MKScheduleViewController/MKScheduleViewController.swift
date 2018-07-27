@@ -23,7 +23,7 @@ class MKScheduleViewController: UIViewController {
         
 //        view.addSubview(tableView)
         setupConstraints()
-        setupCalendar()
+        setupCalendarView()
     }
     
     override func viewDidLayoutSubviews() {
@@ -36,22 +36,6 @@ class MKScheduleViewController: UIViewController {
         let view = UIStackView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.spacing = 0
-        return view
-    }()
-    
-    private lazy var menuView: CVCalendarMenuView = {
-        let view = CVCalendarMenuView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.menuViewDelegate = self
-        return view
-    }()
-    
-    private lazy var calendarView: CVCalendarView = {
-        let view = CVCalendarView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.calendarAppearanceDelegate = self
-        view.animatorDelegate = self
-        view.calendarDelegate = self
         return view
     }()
     
@@ -88,6 +72,28 @@ class MKScheduleViewController: UIViewController {
         view.setImage(filledImage, for: .highlighted)
         view.tintColor = UIColor.cpblBlue
         view.backgroundColor = UIColor.white
+        return view
+    }()
+    
+    private lazy var calendarMainView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var menuView: CVCalendarMenuView = {
+        let view = CVCalendarMenuView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.menuViewDelegate = self
+        return view
+    }()
+    
+    private lazy var calendarView: CVCalendarView = {
+        let view = CVCalendarView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.calendarAppearanceDelegate = self
+        view.animatorDelegate = self
+        view.calendarDelegate = self
         return view
     }()
     
@@ -165,21 +171,29 @@ private extension MKScheduleViewController {
         }
     }
     
-    func setupCalendar() {
+    func setupCalendarView() {
+        view.addSubview(calendarMainView)
+        calendarMainView.addSubview(menuView)
+        calendarMainView.addSubview(calendarView)
         
-        view.addSubview(menuView)
-        view.addSubview(calendarView)
-        
-        menuView.snp.makeConstraints { (make) in
+        calendarMainView.snp.makeConstraints { (make) in
             make.top.equalTo(stackView.snp.bottom).offset(8)
             make.left.right.equalToSuperview()
-            make.height.equalTo(15)
+            //calendarView 會自己 layout height,
+            //期待 calendarMainView.height >= menuView.height + calendarView.height + offset
+            make.height.equalTo(420)
+        }
+        
+        menuView.snp.makeConstraints { (make) in
+            make.top.equalToSuperview()
+            make.height.equalTo(16)
+            make.left.right.equalToSuperview()
         }
         
         calendarView.snp.makeConstraints { (make) in
-            make.top.equalTo(menuView.snp.bottom).offset(5)
+            make.top.equalTo(menuView.snp.bottom).offset(4)
+            make.height.equalTo(400)
             make.left.right.equalToSuperview()
-            make.height.equalTo(450)
         }
     }
 }
