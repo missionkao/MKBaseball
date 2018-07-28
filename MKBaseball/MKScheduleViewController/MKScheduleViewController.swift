@@ -110,23 +110,50 @@ class MKScheduleViewController: UIViewController {
         view.tableFooterView = UIView()
         view.separatorColor = UIColor.gray
         view.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-        view.rowHeight = 44
+        view.rowHeight = 120
         view.dataSource = self
         view.delegate = self
-        view.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
+        view.register(MKGameTableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
+        view.sectionHeaderHeight = 24
         return view
     }()
 }
 
 extension MKScheduleViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return 2
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath)
-        cell.textLabel?.text = "test"
+        // WIP: move to viewModel
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! MKGameTableViewCell
+        let cellViewModel = MKGameTableViewCellViewModel.parsing(htmlString: "")
+        cell.applyCellViewModel(viewModel: cellViewModel)
         return cell
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 5
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let view = UIView()
+        view.backgroundColor = UIColor(white: 0.8, alpha: 1.0)
+        
+        let dateLabel = UILabel()
+        dateLabel.translatesAutoresizingMaskIntoConstraints = false
+        dateLabel.text = "2018/07/28 (六)"
+        dateLabel.textColor = UIColor.cpblBlue
+        dateLabel.font = UIFont.systemFont(ofSize: 16)
+        view.addSubview(dateLabel)
+        
+        dateLabel.snp.makeConstraints { (make) in
+            make.left.equalToSuperview().offset(16)
+            make.right.equalToSuperview().offset(-16)
+            make.centerY.equalToSuperview()
+        }
+        
+        return view
     }
 }
 
