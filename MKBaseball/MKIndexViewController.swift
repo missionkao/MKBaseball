@@ -33,9 +33,8 @@ class MKIndexViewController: UITabBarController {
         let rankingViewController = MKRankingViewController()
         rankingViewController.tabBarItem = rankingTabBarItem
         
-        let statsViewController = UIViewController()
+        let statsViewController = MKStatisticViewController()
         statsViewController.tabBarItem = statsTabBarItem
-        statsViewController.view.backgroundColor = UIColor.red
         
         let newsViewController = UIViewController()
         newsViewController.tabBarItem = newsTabBarItem
