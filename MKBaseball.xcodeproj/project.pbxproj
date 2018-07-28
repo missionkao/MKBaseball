@@ -106,8 +106,8 @@
 		027655882109D6E5005C0ADF /* MKTodayViewController */ = {
 			isa = PBXGroup;
 			children = (
-				937921122102FEBC00B6FD67 /* MKTodayViewController.swift */,
 				932665AD2104BF2C002F7237 /* MKTodayChangeTableViewCell.swift */,
+				937921122102FEBC00B6FD67 /* MKTodayViewController.swift */,
 			);
 			path = MKTodayViewController;
 			sourceTree = "<group>";
@@ -115,9 +115,9 @@
 		027655892109D733005C0ADF /* MKRankingViewController */ = {
 			isa = PBXGroup;
 			children = (
-				932665AF210754CB002F7237 /* MKRankingViewController.swift */,
 				932665B12107640E002F7237 /* MKRankingSectionView.swift */,
 				932665B32109FB47002F7237 /* MKRankingTableViewCell.swift */,
+				932665AF210754CB002F7237 /* MKRankingViewController.swift */,
 			);
 			path = MKRankingViewController;
 			sourceTree = "<group>";
@@ -139,6 +139,20 @@
 			path = MKGameTableViewCell;
 			sourceTree = "<group>";
 		};
+		02765596210C856B005C0ADF /* MKStatisticViewController */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = MKStatisticViewController;
+			sourceTree = "<group>";
+		};
+		02765597210C85AA005C0ADF /* MKNewsViewController */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = MKNewsViewController;
+			sourceTree = "<group>";
+		};
 		567B0CFAC63B51561DA030F8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -151,11 +165,11 @@
 		93475F9C20FE38F9000B1D52 = {
 			isa = PBXGroup;
 			children = (
+				567B0CFAC63B51561DA030F8 /* Frameworks */,
 				93475FA720FE38F9000B1D52 /* MKBaseball */,
 				93475FBC20FE38F9000B1D52 /* MKBaseballTests */,
-				93475FA620FE38F9000B1D52 /* Products */,
 				FB8C8C5D849A68D43AFAC72D /* Pods */,
-				567B0CFAC63B51561DA030F8 /* Frameworks */,
+				93475FA620FE38F9000B1D52 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
@@ -172,16 +186,18 @@
 			isa = PBXGroup;
 			children = (
 				0276558F210C50E7005C0ADF /* MKGameTableViewCell */,
-				0276558A210AFFE0005C0ADF /* MKScheduleViewController */,
+				02765597210C85AA005C0ADF /* MKNewsViewController */,
 				027655892109D733005C0ADF /* MKRankingViewController */,
+				0276558A210AFFE0005C0ADF /* MKScheduleViewController */,
+				02765596210C856B005C0ADF /* MKStatisticViewController */,
 				027655882109D6E5005C0ADF /* MKTodayViewController */,
-				027655872109D68A005C0ADF /* Utility */,
 				027655862109D678005C0ADF /* UIComponent */,
+				027655872109D68A005C0ADF /* Utility */,
 				93475FA820FE38F9000B1D52 /* AppDelegate.swift */,
-				93475FAA20FE38F9000B1D52 /* MKIndexViewController.swift */,
 				93475FAF20FE38F9000B1D52 /* Assets.xcassets */,
-				93475FB120FE38F9000B1D52 /* LaunchScreen.storyboard */,
 				93475FB420FE38F9000B1D52 /* Info.plist */,
+				93475FB120FE38F9000B1D52 /* LaunchScreen.storyboard */,
+				93475FAA20FE38F9000B1D52 /* MKIndexViewController.swift */,
 			);
 			path = MKBaseball;
 			sourceTree = "<group>";
@@ -189,8 +205,8 @@
 		93475FBC20FE38F9000B1D52 /* MKBaseballTests */ = {
 			isa = PBXGroup;
 			children = (
-				93475FBD20FE38F9000B1D52 /* MKBaseballTests.swift */,
 				93475FBF20FE38F9000B1D52 /* Info.plist */,
+				93475FBD20FE38F9000B1D52 /* MKBaseballTests.swift */,
 			);
 			path = MKBaseballTests;
 			sourceTree = "<group>";
@@ -292,8 +308,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				93475FB320FE38F9000B1D52 /* LaunchScreen.storyboard in Resources */,
 				93475FB020FE38F9000B1D52 /* Assets.xcassets in Resources */,
+				93475FB320FE38F9000B1D52 /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -372,19 +388,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				93475FAB20FE38F9000B1D52 /* MKIndexViewController.swift in Sources */,
 				93475FA920FE38F9000B1D52 /* AppDelegate.swift in Sources */,
-				932665B0210754CB002F7237 /* MKRankingViewController.swift in Sources */,
-				02765595210C569C005C0ADF /* MKGameTableViewCellViewModel.swift in Sources */,
-				027655852109D5F4005C0ADF /* MKUtility.swift in Sources */,
-				0276558C210B0034005C0ADF /* MKScheduleViewController.swift in Sources */,
-				02765591210C5104005C0ADF /* MKGameTableViewCell.swift in Sources */,
+				027655832109D3B1005C0ADF /* MKConstant.swift in Sources */,
 				932665AA21032E2B002F7237 /* MKContainerView.swift in Sources */,
-				932665AE2104BF2D002F7237 /* MKTodayChangeTableViewCell.swift in Sources */,
-				937921132102FEBC00B6FD67 /* MKTodayViewController.swift in Sources */,
+				02765591210C5104005C0ADF /* MKGameTableViewCell.swift in Sources */,
+				02765595210C569C005C0ADF /* MKGameTableViewCellViewModel.swift in Sources */,
+				93475FAB20FE38F9000B1D52 /* MKIndexViewController.swift in Sources */,
 				932665B22107640E002F7237 /* MKRankingSectionView.swift in Sources */,
 				932665B42109FB47002F7237 /* MKRankingTableViewCell.swift in Sources */,
-				027655832109D3B1005C0ADF /* MKConstant.swift in Sources */,
+				932665B0210754CB002F7237 /* MKRankingViewController.swift in Sources */,
+				0276558C210B0034005C0ADF /* MKScheduleViewController.swift in Sources */,
+				932665AE2104BF2D002F7237 /* MKTodayChangeTableViewCell.swift in Sources */,
+				937921132102FEBC00B6FD67 /* MKTodayViewController.swift in Sources */,
+				027655852109D5F4005C0ADF /* MKUtility.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
