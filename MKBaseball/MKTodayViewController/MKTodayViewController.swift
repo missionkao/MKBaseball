@@ -31,15 +31,6 @@ enum MKTodayViewControllerTableViewSectionType: Int {
         
         return view
     }
-    
-    func cellView() -> UITableViewCell {
-        switch self {
-        case .todayGame:
-            return MKTodayGameTableViewCell(style: .default, reuseIdentifier: nil)
-        case .memberChange:
-            return MKTodayChangeTableViewCell(style: .default, reuseIdentifier: nil)
-        }
-    }
 }
 
 class MKTodayViewController: UIViewController {
@@ -63,7 +54,6 @@ class MKTodayViewController: UIViewController {
         view.delegate = self
         return view
     }()
-    
 }
 
 extension MKTodayViewController: UITableViewDataSource {
@@ -76,7 +66,14 @@ extension MKTodayViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return MKTodayViewControllerTableViewSectionType.init(rawValue: indexPath.section)!.cellView()
+        if indexPath.section == 0 {
+            // WIP: move to viewModel
+            let cell = MKGameTableViewCell(style: .default, reuseIdentifier: nil)
+            let cellViewModel = MKGameTableViewCellViewModel.parsing(htmlString: "")
+            cell.applyCellViewModel(viewModel: cellViewModel)
+            return cell
+        }
+        return MKTodayChangeTableViewCell(style: .default, reuseIdentifier: nil)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -111,7 +108,6 @@ extension MKTodayViewController: UITableViewDataSource {
 }
 
 extension MKTodayViewController: UITableViewDelegate {
-    
 }
 
 private extension MKTodayViewController {

@@ -186,7 +186,7 @@ private extension MKScheduleViewController {
         calendarMainView.addSubview(calendarView)
         
         calendarMainView.snp.makeConstraints { (make) in
-            make.top.equalTo(headerView.snp.bottom).offset(8)
+            make.top.equalTo(headerView.snp.bottom)
             make.left.right.equalToSuperview()
             //calendarView 會自己 layout height,
             //期待 calendarMainView.height >= menuView.height + calendarView.height + offset
@@ -194,13 +194,13 @@ private extension MKScheduleViewController {
         }
         
         menuView.snp.makeConstraints { (make) in
-            make.top.equalToSuperview()
+            make.top.equalToSuperview().offset(8)
             make.height.equalTo(16)
             make.left.right.equalToSuperview()
         }
         
         calendarView.snp.makeConstraints { (make) in
-            make.top.equalTo(menuView.snp.bottom).offset(4)
+            make.top.equalTo(menuView.snp.bottom)
             make.height.equalTo(360)
             make.left.right.equalToSuperview()
         }

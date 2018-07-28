@@ -1,15 +1,14 @@
 //
-//  MKTodayGameTableViewCell.swift
+//  MKGameTableViewCell.swift
 //  MKBaseball
 //
-//  Created by Mission on 2018/7/22.
+//  Created by Mason Kao on 2018/7/28.
 //  Copyright © 2018年 Mission. All rights reserved.
 //
 
 import UIKit
-import SnapKit
 
-class MKTodayGameTableViewCell: UITableViewCell {
+class MKGameTableViewCell: UITableViewCell {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -33,6 +32,15 @@ class MKTodayGameTableViewCell: UITableViewCell {
         setupConstraints()
     }
     
+    func applyCellViewModel(viewModel: MKGameTableViewCellViewModel) {
+        leftImageView.image = UIImage(named: viewModel.awayTeam.logoImageName())
+        leftLabel.text = viewModel.awayScore
+        rightImageView.image = UIImage(named: viewModel.homeTeam.logoImageName())
+        rightLabel.text = viewModel.homeScore
+        locationLabel.text = viewModel.location
+        timeLabel.text = viewModel.startTime
+    }
+    
     private lazy var topView: UIStackView = {
         let view = UIStackView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -44,13 +52,11 @@ class MKTodayGameTableViewCell: UITableViewCell {
     
     private lazy var locationLabel: UILabel = {
         let view = topGeneralLabel()
-        view.text = "新莊棒球場"
         return view
     }()
     
     private lazy var timeLabel: UILabel = {
         let view = topGeneralLabel()
-        view.text = "17:05"
         return view
     }()
     
@@ -62,14 +68,13 @@ class MKTodayGameTableViewCell: UITableViewCell {
     }()
     
     private lazy var leftImageView: UIImageView = {
-        let view = UIImageView.init(image: UIImage(named: "Score_M_logo"))
+        let view = UIImageView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
     private lazy var leftLabel: UILabel = {
         let view = middleGeneralLabel()
-        view.text = "0"
         return view
     }()
     
@@ -80,31 +85,29 @@ class MKTodayGameTableViewCell: UITableViewCell {
     }()
     
     private lazy var rightImageView: UIImageView = {
-        let view = UIImageView.init(image: UIImage(named: "Score_G_logo"))
+        let view = UIImageView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
     private lazy var rightLabel: UILabel = {
         let view = middleGeneralLabel()
-        view.text = "10"
         return view
     }()
-
 }
 
-private extension MKTodayGameTableViewCell {
+private extension MKGameTableViewCell {
     func setupConstraints() {
         topView.snp.makeConstraints { (make) in
-            make.top.equalToSuperview()
-            make.height.equalTo(32)
+            make.top.equalToSuperview().offset(8)
+            make.height.equalTo(20)
             make.centerX.equalToSuperview()
         }
         
         middleView.snp.makeConstraints { (make) in
             make.left.right.equalToSuperview()
             make.top.equalTo(topView.snp.bottom)
-            make.height.equalTo(88)
+            make.height.equalTo(80)
         }
         
         leftImageView.snp.makeConstraints { (make) in
@@ -115,7 +118,7 @@ private extension MKTodayGameTableViewCell {
         
         leftLabel.snp.makeConstraints { (make) in
             make.centerY.equalToSuperview()
-            make.left.equalTo(leftImageView.snp.right).offset(16)
+            make.left.equalTo(leftImageView.snp.right).offset(24)
         }
         
         vsLabel.snp.makeConstraints { (make) in
@@ -124,7 +127,7 @@ private extension MKTodayGameTableViewCell {
         
         rightLabel.snp.makeConstraints { (make) in
             make.centerY.equalToSuperview()
-            make.right.equalTo(rightImageView.snp.left).offset(-16)
+            make.right.equalTo(rightImageView.snp.left).offset(-24)
         }
         
         rightImageView.snp.makeConstraints { (make) in
@@ -151,7 +154,7 @@ private extension MKTodayGameTableViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.clear
         view.textColor = UIColor.cpblBlue
-        view.font = UIFont.systemFont(ofSize: 32)
+        view.font = UIFont.systemFont(ofSize: 44)
         view.textAlignment = .center
         view.sizeToFit()
         return view
