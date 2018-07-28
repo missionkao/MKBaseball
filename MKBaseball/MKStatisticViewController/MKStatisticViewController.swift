@@ -21,10 +21,8 @@ class MKStatisticViewController: UIViewController {
         setupConstraints()
     }
     
-    private lazy var headerView: UIView = {
-       let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.lightGray
+    private lazy var headerView: MKSegmentedControlHeaderView = {
+        let view = MKSegmentedControlHeaderView(items: ["打擊數據", "投手數據"])
         return view
     }()
 

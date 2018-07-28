@@ -138,7 +138,7 @@ extension MKScheduleViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = UIView()
-        view.backgroundColor = UIColor(white: 0.8, alpha: 1.0)
+        view.backgroundColor = UIColor(white: 0.9, alpha: 1.0)
         
         let dateLabel = UILabel()
         dateLabel.translatesAutoresizingMaskIntoConstraints = false
