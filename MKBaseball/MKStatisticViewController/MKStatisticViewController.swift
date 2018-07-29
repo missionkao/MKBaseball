@@ -36,7 +36,7 @@ class MKStatisticViewController: UIViewController {
         view.rowHeight = 56
         view.dataSource = self
         view.delegate = self
-        view.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
+        view.register(MKStatisticTableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
         return view
     }()
 }
@@ -48,7 +48,6 @@ extension MKStatisticViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath)
-        cell.textLabel?.text = "test"
         return cell
     }
 }
