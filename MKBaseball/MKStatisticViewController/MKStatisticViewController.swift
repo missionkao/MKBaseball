@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import PopupController
 
 class MKStatisticViewController: UIViewController {
     
@@ -53,6 +54,20 @@ extension MKStatisticViewController: UITableViewDataSource {
 }
 
 extension MKStatisticViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let popupOptions: [PopupCustomOption] = [
+            .layout(.center),
+            .animation(.slideUp),
+            .backgroundStyle(.blackFilter(alpha: 0.8)),
+            .dismissWhenTaps(true),
+            .scrollable(true)
+        ]
+        
+        PopupController
+            .create(self)
+            .customize(popupOptions)
+            .show(MKStatisticPopupViewController())
+    }
 }
 
 private extension MKStatisticViewController {
