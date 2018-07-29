@@ -36,19 +36,18 @@ class MKNewsViewController: UIViewController {
         view.rowHeight = 120
         view.dataSource = self
         view.delegate = self
-        view.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
+        view.register(MKNewsTableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
         return view
     }()
 }
 
 extension MKNewsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return 3
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath)
-        cell.textLabel?.text = "test"
         return cell
     }
 }
