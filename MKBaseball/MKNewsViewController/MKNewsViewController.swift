@@ -8,9 +8,20 @@
 
 import UIKit
 
+enum MKNewsViewMode: Int {
+    case news = 0, video
+}
+
 class MKNewsViewController: UIViewController {
 
-    private let cellReuseIdentifier = "MKNewsTableViewCell"
+    private let newsCellReuseIdentifier = "MKNewsTableViewCell"
+    private let videoCellReuseIdentifier = "MKVideoTableViewCell"
+    
+    private var viewMode: MKNewsViewMode = .news {
+        didSet {
+            tableView.reloadData()
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,6 +34,7 @@ class MKNewsViewController: UIViewController {
     
     private lazy var headerView: MKSegmentedControlHeaderView = {
         let view = MKSegmentedControlHeaderView(items: ["職棒消息", "職棒影片"])
+        view.delegate = self
         return view
     }()
     
@@ -36,7 +48,8 @@ class MKNewsViewController: UIViewController {
         view.rowHeight = 120
         view.dataSource = self
         view.delegate = self
-        view.register(MKNewsTableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
+        view.register(MKNewsTableViewCell.self, forCellReuseIdentifier: newsCellReuseIdentifier)
+        view.register(UITableViewCell.self, forCellReuseIdentifier: videoCellReuseIdentifier)
         return view
     }()
 }
@@ -47,12 +60,26 @@ extension MKNewsViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath)
+        if viewMode == .news {
+            return tableView.dequeueReusableCell(withIdentifier: newsCellReuseIdentifier, for: indexPath)
+        }
+        let cell = tableView.dequeueReusableCell(withIdentifier: videoCellReuseIdentifier, for: indexPath)
+        cell.textLabel?.text = "test"
         return cell
     }
 }
 
 extension MKNewsViewController: UITableViewDelegate {
+}
+
+extension MKNewsViewController: MKSegmentedControlHeaderViewDelegate {
+    func headerView(_ headerView: MKSegmentedControlHeaderView, didSelectSegmentControl atIndex: Int) {
+        if atIndex == 0 {
+            viewMode = .news
+        } else {
+            viewMode = .video
+        }
+    }
 }
 
 private extension MKNewsViewController {

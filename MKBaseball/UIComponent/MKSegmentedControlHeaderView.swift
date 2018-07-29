@@ -8,7 +8,13 @@
 
 import UIKit
 
+protocol MKSegmentedControlHeaderViewDelegate: class {
+    func headerView(_ headerView: MKSegmentedControlHeaderView, didSelectSegmentControl atIndex: Int)
+}
+
 class MKSegmentedControlHeaderView: MKContainerView {
+    
+    weak var delegate: MKSegmentedControlHeaderViewDelegate?
     
     private let items: [String]
     
@@ -39,6 +45,11 @@ class MKSegmentedControlHeaderView: MKContainerView {
         var attributes = [NSAttributedStringKey: Any]()
         attributes[NSAttributedStringKey.font] = UIFont.systemFont(ofSize: 16)
         view.setTitleTextAttributes(attributes, for: .normal)
+        view.addTarget(self, action: #selector(MKSegmentedControlHeaderView.didSelectSegmentControl), for: .valueChanged)
         return view
     }()
+    
+    @objc func didSelectSegmentControl(sender: UISegmentedControl) {
+        delegate?.headerView(self, didSelectSegmentControl: sender.selectedSegmentIndex)
+    }
 }
