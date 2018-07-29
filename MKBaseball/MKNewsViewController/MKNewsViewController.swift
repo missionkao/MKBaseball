@@ -19,6 +19,7 @@ class MKNewsViewController: UIViewController {
     
     private var viewMode: MKNewsViewMode = .news {
         didSet {
+            tableView.backgroundColor = (viewMode == .news ? UIColor.white : UIColor.black)
             tableView.reloadData()
         }
     }
@@ -43,13 +44,11 @@ class MKNewsViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.white
         view.tableFooterView = UIView()
-        view.separatorColor = UIColor.gray
-        view.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-        view.rowHeight = 120
+        view.separatorStyle = .none
         view.dataSource = self
         view.delegate = self
         view.register(MKNewsTableViewCell.self, forCellReuseIdentifier: newsCellReuseIdentifier)
-        view.register(UITableViewCell.self, forCellReuseIdentifier: videoCellReuseIdentifier)
+        view.register(MKVideoTableViewCell.self, forCellReuseIdentifier: videoCellReuseIdentifier)
         return view
     }()
 }
@@ -64,8 +63,14 @@ extension MKNewsViewController: UITableViewDataSource {
             return tableView.dequeueReusableCell(withIdentifier: newsCellReuseIdentifier, for: indexPath)
         }
         let cell = tableView.dequeueReusableCell(withIdentifier: videoCellReuseIdentifier, for: indexPath)
-        cell.textLabel?.text = "test"
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if viewMode == .news {
+            return 120
+        }
+        return 212
     }
 }
 
