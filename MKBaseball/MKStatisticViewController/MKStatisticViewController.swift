@@ -58,7 +58,7 @@ extension MKStatisticViewController: UITableViewDelegate {
         let popupOptions: [PopupCustomOption] = [
             .layout(.center),
             .animation(.slideUp),
-            .backgroundStyle(.blackFilter(alpha: 0.8)),
+            .backgroundStyle(.blackFilter(alpha: 0.1)),
             .dismissWhenTaps(true),
             .scrollable(true)
         ]

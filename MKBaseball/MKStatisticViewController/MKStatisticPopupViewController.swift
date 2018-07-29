@@ -20,6 +20,8 @@ class MKStatisticPopupViewController: UIViewController {
 
 extension MKStatisticPopupViewController: PopupContentViewController {
     func sizeForPopup(_ popupController: PopupController, size: CGSize, showingKeyboard: Bool) -> CGSize {
-        return UIScreen.main.bounds.size
+        let size = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height - 128)
+        
+        return size
     }
 }
