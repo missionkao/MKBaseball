@@ -1,10 +1,12 @@
 PODS:
   - CVCalendar (1.6.1)
+  - PopupController (0.2.0)
   - SnapKit (4.0.0)
   - SwiftyJSON (3.1.4)
 
 DEPENDENCIES:
   - CVCalendar
+  - "PopupController (from `git@github.com:ahmedsafadii/PopupController.git`)"
   - SnapKit (~> 4.0.0)
   - SwiftyJSON
 
@@ -14,11 +16,21 @@ SPEC REPOS:
     - SnapKit
     - SwiftyJSON
 
+EXTERNAL SOURCES:
+  PopupController:
+    :git: "git@github.com:ahmedsafadii/PopupController.git"
+
+CHECKOUT OPTIONS:
+  PopupController:
+    :commit: ba6ac5296de555983abd185b1fbd5185a072f1d7
+    :git: "git@github.com:ahmedsafadii/PopupController.git"
+
 SPEC CHECKSUMS:
   CVCalendar: 505c11b11a088b43f159806e791eba1c2540853b
+  PopupController: 0b69fdf11cbeaa807789a8c3992599083640988f
   SnapKit: a42d492c16e80209130a3379f73596c3454b7694
   SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
 
-PODFILE CHECKSUM: a620ff7a7a8a8cdc076182d2bb7479fb80b55ec7
+PODFILE CHECKSUM: 2864046166c4b3e948e27ee293d4b1e0275fd942
 
 COCOAPODS: 1.5.3
