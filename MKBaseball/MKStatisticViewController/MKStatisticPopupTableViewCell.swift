@@ -1,14 +1,14 @@
 //
-//  MKStatisticTableViewCell.swift
+//  MKStatisticPopupTableViewCell.swift
 //  MKBaseball
 //
-//  Created by Mason Kao on 2018/7/29.
+//  Created by Mason Kao on 2018/7/30.
 //  Copyright © 2018年 Mission. All rights reserved.
 //
 
 import UIKit
 
-class MKStatisticTableViewCell: UITableViewCell {
+class MKStatisticPopupTableViewCell: UITableViewCell {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -17,7 +17,7 @@ class MKStatisticTableViewCell: UITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
-        contentView.addSubview(itemLabel)
+        contentView.addSubview(rankLabel)
         contentView.addSubview(playerLabel)
         contentView.addSubview(teamLabel)
         contentView.addSubview(valueLabel)
@@ -25,16 +25,14 @@ class MKStatisticTableViewCell: UITableViewCell {
         setupConstraints()
     }
     
-    private lazy var itemLabel: UILabel = {
+    private lazy var rankLabel: UILabel = {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.font = UIFont.boldSystemFont(ofSize: 16)
-        view.layer.cornerRadius = 20
-        view.layer.masksToBounds = true
-        view.textColor = UIColor.white
-        view.backgroundColor = UIColor.cpblBlue
+        view.backgroundColor = UIColor.clear
+        view.font = UIFont.systemFont(ofSize: 20)
+        view.textColor = UIColor.black
+        view.text = "1"
         view.textAlignment = .center
-        view.text = "AVG"
         return view
     }()
     
@@ -43,7 +41,7 @@ class MKStatisticTableViewCell: UITableViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.clear
         view.font = UIFont.systemFont(ofSize: 20)
-        view.textColor = UIColor.cpblBlue
+        view.textColor = UIColor.black
         view.text = "胡金龍"
         return view
     }()
@@ -63,29 +61,29 @@ class MKStatisticTableViewCell: UITableViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.clear
         view.font = UIFont.boldSystemFont(ofSize: 20)
-        view.textColor = UIColor.cpblBlue
+        view.textColor = UIColor.black
         view.textAlignment = .right
         view.text = "0.367"
         return view
     }()
 }
 
-private extension MKStatisticTableViewCell {
+private extension MKStatisticPopupTableViewCell {
     func setupConstraints() {
-        itemLabel.snp.makeConstraints { (make) in
+        rankLabel.snp.makeConstraints { (make) in
             make.left.equalToSuperview().offset(16)
             make.centerY.equalToSuperview()
-            make.width.height.equalTo(40)
+            make.width.equalTo(24)
         }
         
         playerLabel.snp.makeConstraints { (make) in
-            make.left.equalTo(itemLabel.snp.right).offset(16)
+            make.left.equalTo(rankLabel.snp.right).offset(16)
             make.top.equalToSuperview().offset(8)
             make.height.equalTo(24)
         }
         
         teamLabel.snp.makeConstraints { (make) in
-            make.left.equalTo(itemLabel.snp.right).offset(16)
+            make.left.equalTo(rankLabel.snp.right).offset(16)
             make.top.equalTo(playerLabel.snp.bottom).offset(4)
             make.bottom.equalToSuperview().offset(-8)
         }
