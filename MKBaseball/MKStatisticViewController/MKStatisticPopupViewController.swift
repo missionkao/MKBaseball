@@ -54,6 +54,14 @@ extension MKStatisticPopupViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath)
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 56
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return sectionHeaderView()
+    }
 }
 
 extension MKStatisticPopupViewController: UITableViewDelegate {
@@ -65,5 +73,39 @@ private extension MKStatisticPopupViewController {
             make.top.equalToSuperview()
             make.left.right.bottom.equalToSuperview()
         }
+    }
+    
+    func sectionHeaderView() -> UIView {
+        let view = UIView()
+        view.backgroundColor = UIColor.white
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 20)
+        label.textColor = UIColor.cpblBlue
+        label.sizeToFit()
+        label.backgroundColor = UIColor.clear
+        label.text = "AVG"
+        
+        let subtitleLabel = UILabel()
+        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        subtitleLabel.font = UIFont.systemFont(ofSize: 10)
+        subtitleLabel.textColor = UIColor.cpblBlue
+        subtitleLabel.sizeToFit()
+        subtitleLabel.backgroundColor = UIColor.clear
+        subtitleLabel.text = "打擊率"
+        
+        view.addSubview(label)
+        view.addSubview(subtitleLabel)
+        
+        label.snp.makeConstraints { (make) in
+            make.centerX.centerY.equalToSuperview()
+        }
+        
+        subtitleLabel.snp.makeConstraints { (make) in
+            make.left.equalTo(label.snp.right).offset(8)
+            make.bottom.equalTo(label.snp.bottom)
+        }
+        
+        return view
     }
 }
