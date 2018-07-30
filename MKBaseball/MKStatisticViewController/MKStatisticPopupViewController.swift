@@ -56,7 +56,7 @@ extension MKStatisticPopupViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 56
+        return 40
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -76,34 +76,30 @@ private extension MKStatisticPopupViewController {
     }
     
     func sectionHeaderView() -> UIView {
-        let view = UIView()
+        let view = MKContainerView()
         view.backgroundColor = UIColor.white
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 20)
+        label.font = UIFont.systemFont(ofSize: 24)
         label.textColor = UIColor.cpblBlue
         label.sizeToFit()
         label.backgroundColor = UIColor.clear
         label.text = "AVG"
         
-        let subtitleLabel = UILabel()
-        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
-        subtitleLabel.font = UIFont.systemFont(ofSize: 10)
-        subtitleLabel.textColor = UIColor.cpblBlue
-        subtitleLabel.sizeToFit()
-        subtitleLabel.backgroundColor = UIColor.clear
-        subtitleLabel.text = "打擊率"
+        var attributes = [NSAttributedStringKey:Any]()
+        attributes[.font] = UIFont.systemFont(ofSize: 24)
+        let title = NSAttributedString(string: "AVG", attributes: attributes)
+        attributes[.font] = UIFont.systemFont(ofSize: 10)
+        let subtitle = NSAttributedString(string: " 打擊率", attributes: attributes)
+        let string = NSMutableAttributedString(attributedString: title)
+        string.append(subtitle)
+        
+        label.attributedText = string
         
         view.addSubview(label)
-        view.addSubview(subtitleLabel)
         
         label.snp.makeConstraints { (make) in
             make.centerX.centerY.equalToSuperview()
-        }
-        
-        subtitleLabel.snp.makeConstraints { (make) in
-            make.left.equalTo(label.snp.right).offset(8)
-            make.bottom.equalTo(label.snp.bottom)
         }
         
         return view
