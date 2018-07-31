@@ -8,6 +8,7 @@ target 'MKBaseball' do
   pod 'SnapKit', '~> 4.0.0'
   pod 'CVCalendar'
   pod 'PopupController', :git => 'git@github.com:ahmedsafadii/PopupController.git'
+  pod 'Kanna'
 
   target 'MKBaseballTests' do
     inherit! :search_paths
