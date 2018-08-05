@@ -60,6 +60,8 @@ private extension MKTodayViewModel {
         let rowColumn = todayGameRowAndColumn()
         
         let games = doc.xpath("/html/body/div[4]/div/div/table/tr[\(rowColumn.row)]/td[\(rowColumn.column)]/div")
+        
+        competitions = [MKCompetitionModel]()
             
         for g in games {
             let competitionElement = g.at_css("table")
@@ -83,7 +85,6 @@ private extension MKTodayViewModel {
             
             competitions.append(model)
         }
-        
     }
     
     // WIP: should be tested

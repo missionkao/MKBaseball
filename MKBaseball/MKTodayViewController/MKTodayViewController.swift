@@ -36,6 +36,7 @@ enum MKTodayViewControllerTableViewSectionType: Int {
 class MKTodayViewController: UIViewController {
     
     private var viewModel: MKTodayViewModel!
+    private let refreshControl = UIRefreshControl()
     
     required init(viewModel: MKTodayViewModel) {
         super.init(nibName: nil, bundle: nil)
@@ -51,6 +52,8 @@ class MKTodayViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = UIColor.cpblBlue
         view.addSubview(tableView)
+        
+        tableView.addSubview(refreshControl)
         
         setupConstraints()
         
@@ -73,6 +76,7 @@ class MKTodayViewController: UIViewController {
 extension MKTodayViewController: MKTodayViewModelDelegate {
     func viewModel(_ viewModel: MKTodayViewModel, didChangeViewMode: MKViewMode) {
         DispatchQueue.main.sync { [unowned self] in
+            self.refreshControl.endRefreshing()
             self.tableView.reloadData()
         }
     }
@@ -129,6 +133,11 @@ extension MKTodayViewController: UITableViewDataSource {
 }
 
 extension MKTodayViewController: UITableViewDelegate {
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        if refreshControl.isRefreshing {
+            viewModel.fetchTodayGame()
+        }
+    }
 }
 
 private extension MKTodayViewController {
