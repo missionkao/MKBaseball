@@ -22,7 +22,8 @@ struct MKCompetitionModel {
     private(set) var awayScore = "--"
     private(set) var homeScore = "--"
     let location: String
-    let startTime: String?
+    let number: String
+    let currentState: String?
     let note: String?
 }
 
@@ -52,26 +53,51 @@ class MKTodayViewModel {
 
 private extension MKTodayViewModel {
     func parseHTML(_ html: String) {
-        if let doc = try? HTML(html: html, encoding: .utf8) {
-            if let date = doc.xpath("/html/body/div[4]/div/div/table/tr[3]/td[6]").first {
-                let games = date.css("div")
-                
-                for g in games {
-                    let competitionElement = g.at_css("table")
-                    let numberElement = competitionElement?.nextSibling
-                    let scoreElement = numberElement?.nextSibling
-                    
-                    guard let competiton = parseGameCompetition(competitionElement), let score = parseGameScore(scoreElement) else {
-                        continue
-                    }
-                    parseGameNumber(numberElement)
-                    
-                    let model = MKCompetitionModel(awayTeam: competiton.awayTeam, homeTeam: competiton.homeTeam, awayScore: score.awayScore, homeScore: score.homeScore, location: competiton.location, startTime: "17:05", note: nil)
-                    
-                    competitions.append(model)
-                }
-            }
+        guard let doc = try? HTML(html: html, encoding: .utf8) else {
+            return
         }
+        
+        let rowColumn = todayGameRowAndColumn()
+        
+        let games = doc.xpath("/html/body/div[4]/div/div/table/tr[\(rowColumn.row)]/td[\(rowColumn.column)]/div")
+            
+        for g in games {
+            let competitionElement = g.at_css("table")
+            let numberElement = competitionElement?.nextSibling
+            let scoreElement = numberElement?.nextSibling
+            
+            guard let competiton = parseGameCompetition(competitionElement), let score = parseGameScore(scoreElement), let number = parseGameNumber(numberElement) else {
+                continue
+            }
+            
+            var currentState = score.currentInning
+            if currentState == nil {
+                currentState = parseGameInfo(scoreElement?.nextSibling)
+            }
+            
+            guard let current = currentState else {
+                continue
+            }
+            
+            let model = MKCompetitionModel(awayTeam: competiton.awayTeam, homeTeam: competiton.homeTeam, awayScore: score.awayScore, homeScore: score.homeScore, location: competiton.location, number: number, currentState: current, note: nil)
+            
+            competitions.append(model)
+        }
+        
+    }
+    
+    // WIP: should be tested
+    func todayGameRowAndColumn() -> (row: Int, column: Int) {
+        let date = Date()
+        let calendar = Calendar.current
+        
+        let weekMonth = calendar.component(.weekOfMonth, from: date)
+        let weekday = calendar.component(.weekday, from: date)
+        
+        let column = (weekday == 1) ? 7 : weekday - 1
+        let row = (weekday == 1) ? weekMonth - 1 : weekMonth
+        
+        return (2 * row + 1, column)
     }
     
     func parseGameCompetition(_ element: XMLElement?) -> (awayTeam: CPBLTeam, homeTeam: CPBLTeam, location: String)? {
@@ -92,22 +118,34 @@ private extension MKTodayViewModel {
         return (awayTeam, homeTeam, location)
     }
     
-    func parseGameNumber(_ element: XMLElement?) {
+    func parseGameNumber(_ element: XMLElement?) -> String? {
         guard let number = element?.at_css("tr th")?.nextSibling?.text else {
-            return
+            return nil
         }
-        print(number)
+        return number
     }
     
-    func parseGameScore(_ element: XMLElement?) -> (awayScore: String, homeScore: String)? {
+    func parseGameScore(_ element: XMLElement?) -> (awayScore: String, currentInning: String?, homeScore: String)? {
         guard let awayScoreElement = element?.at_css("td"), let awayScore = awayScoreElement.at_css("span")?.text else {
             return nil
+        }
+        
+        var currentInning: String?
+        if let currentInningElement = awayScoreElement.nextSibling {
+            currentInning = currentInningElement.at_css("a")?.text
+            if currentInning == "" {
+                currentInning = "Final"
+            }
         }
         
         guard let homeScoreElement = awayScoreElement.nextSibling?.nextSibling, let homeScore = homeScoreElement.at_css("span")?.text else {
             return nil
         }
-//        print("\(awayScore), \(homeScore)")
-        return (awayScore, homeScore)
+//        print("\(awayScore), \(currentInning ?? "no inning"), \(homeScore)")
+        return (awayScore, currentInning, homeScore)
+    }
+    
+    func parseGameInfo(_ element: XMLElement?) -> String? {
+        return element?.at_css("tr td")?.nextSibling?.text
     }
 }

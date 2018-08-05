@@ -38,7 +38,7 @@ class MKGameTableViewCell: UITableViewCell {
         rightImageView.image = UIImage(named: viewModel.homeTeam.logoImageName())
         rightLabel.text = viewModel.homeScore
         locationLabel.text = viewModel.location
-        timeLabel.text = viewModel.startTime
+        timeLabel.text = viewModel.currentState
     }
     
     private lazy var topView: UIStackView = {
@@ -108,7 +108,7 @@ private extension MKGameTableViewCell {
         
         middleView.snp.makeConstraints { (make) in
             make.left.right.equalToSuperview()
-            make.top.equalTo(topView.snp.bottom)
+            make.top.equalTo(topView.snp.bottom).offset(8)
             make.height.equalTo(48)
         }
         
