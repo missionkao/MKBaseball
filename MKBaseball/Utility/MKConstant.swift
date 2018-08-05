@@ -19,12 +19,28 @@ enum CPBLTeam: String {
     case guardians = "富邦悍將"
     case monkey = "Lamigo"
     
+    init(html: String) {
+        if html.contains("B04") {
+            self = .guardians
+            return
+        }
+        if html.contains("E02") {
+            self = .elephant
+            return
+        }
+        if html.contains("A02") {
+            self = .monkey
+            return
+        }
+        self = .lion
+    }
+    
     func logoImageName() -> String {
         switch self {
         case .lion: return "Score_L_logo"
         case .elephant: return "Score_B_logo"
         case .guardians: return "Score_G_logo"
-        case .monkey: return "Score_ M_logo"
+        case .monkey: return "Score_M_logo"
         }
     }
 }

@@ -24,7 +24,7 @@ class MKIndexViewController: UITabBarController {
         
         view.addSubview(headerLogoImageView)
         
-        let topViewController = MKTodayViewController()
+        let topViewController = MKTodayViewController(viewModel: MKTodayViewModel())
         topViewController.tabBarItem = topTabBarItem
         
         let calendarViewController = MKScheduleViewController()

@@ -15,6 +15,16 @@ struct MKGameTableViewCellViewModel {
     let startTime: String?
     let note: String?
     
+    init(model: MKCompetitionModel) {
+        awayTeam = model.awayTeam
+        homeTeam = model.homeTeam
+        awayScore = model.awayScore
+        homeScore = model.homeScore
+        location = model.location
+        startTime = model.startTime
+        note = model.note
+    }
+    
     static func parsing(htmlString: String) -> MKGameTableViewCellViewModel {
         let awayTeam: CPBLTeam = .elephant
         let homeTeam: CPBLTeam = .guardians
@@ -27,6 +37,8 @@ struct MKGameTableViewCellViewModel {
         startTime = "17:05"
         note = nil
         
-        return MKGameTableViewCellViewModel(awayTeam: awayTeam, homeTeam: homeTeam, awayScore: awayScore, homeScore: homeScore, location: location, startTime: startTime, note: note)
+        let model = MKCompetitionModel(awayTeam: awayTeam, homeTeam: homeTeam, awayScore: awayScore, homeScore: homeScore, location: location, startTime: startTime, note: note)
+        
+        return MKGameTableViewCellViewModel(model: model)
     }
 }

@@ -34,13 +34,27 @@ enum MKTodayViewControllerTableViewSectionType: Int {
 }
 
 class MKTodayViewController: UIViewController {
-
+    
+    private var viewModel: MKTodayViewModel!
+    
+    required init(viewModel: MKTodayViewModel) {
+        super.init(nibName: nil, bundle: nil)
+        self.viewModel = viewModel
+        self.viewModel.delegate = self
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.cpblBlue
         view.addSubview(tableView)
         
         setupConstraints()
+        
+        viewModel.fetchTodayGame()
     }
     
     private lazy var tableView: UITableView = {
@@ -56,20 +70,27 @@ class MKTodayViewController: UIViewController {
     }()
 }
 
+extension MKTodayViewController: MKTodayViewModelDelegate {
+    func viewModel(_ viewModel: MKTodayViewModel, didChangeViewMode: MKViewMode) {
+        DispatchQueue.main.sync { [unowned self] in
+            self.tableView.reloadData()
+        }
+    }
+}
+
 extension MKTodayViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
-            return 2
+            return viewModel.competitions.count
         }
         return 5
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
-            // WIP: move to viewModel
             let cell = MKGameTableViewCell(style: .default, reuseIdentifier: nil)
-            let cellViewModel = MKGameTableViewCellViewModel.parsing(htmlString: "")
+            let cellViewModel = MKGameTableViewCellViewModel(model: viewModel.competitions[indexPath.row])
             cell.applyCellViewModel(viewModel: cellViewModel)
             return cell
         }
@@ -78,7 +99,7 @@ extension MKTodayViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section == 0 {
-            return 120
+            return 100
         }
         return 56
     }
