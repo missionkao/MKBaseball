@@ -38,7 +38,7 @@ class MKGameTableViewCell: UITableViewCell {
         rightImageView.image = UIImage(named: viewModel.homeTeam.logoImageName())
         rightLabel.text = viewModel.homeScore
         locationLabel.text = viewModel.location
-        timeLabel.text = viewModel.startTime
+        timeLabel.text = viewModel.currentState
     }
     
     private lazy var topView: UIStackView = {
@@ -70,6 +70,7 @@ class MKGameTableViewCell: UITableViewCell {
     private lazy var leftImageView: UIImageView = {
         let view = UIImageView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.contentMode = .scaleAspectFill
         return view
     }()
     
@@ -87,6 +88,7 @@ class MKGameTableViewCell: UITableViewCell {
     private lazy var rightImageView: UIImageView = {
         let view = UIImageView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.contentMode = .scaleAspectFill
         return view
     }()
     
@@ -106,14 +108,14 @@ private extension MKGameTableViewCell {
         
         middleView.snp.makeConstraints { (make) in
             make.left.right.equalToSuperview()
-            make.top.equalTo(topView.snp.bottom)
-            make.height.equalTo(80)
+            make.top.equalTo(topView.snp.bottom).offset(8)
+            make.height.equalTo(48)
         }
         
         leftImageView.snp.makeConstraints { (make) in
             make.left.equalToSuperview().offset(16)
             make.centerY.equalToSuperview()
-            make.width.height.equalTo(64)
+            make.width.height.equalTo(48)
         }
         
         leftLabel.snp.makeConstraints { (make) in
@@ -133,7 +135,7 @@ private extension MKGameTableViewCell {
         rightImageView.snp.makeConstraints { (make) in
             make.right.equalToSuperview().offset(-16)
             make.centerY.equalToSuperview()
-            make.width.height.equalTo(64)
+            make.width.height.equalTo(48)
         }
         
     }
@@ -143,7 +145,7 @@ private extension MKGameTableViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.clear
         view.textColor = UIColor.cpblBlue
-        view.font = UIFont.systemFont(ofSize: 16)
+        view.font = UIFont.systemFont(ofSize: 14)
         view.textAlignment = .center
         view.sizeToFit()
         return view
@@ -154,7 +156,7 @@ private extension MKGameTableViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.clear
         view.textColor = UIColor.cpblBlue
-        view.font = UIFont.systemFont(ofSize: 44)
+        view.font = UIFont.systemFont(ofSize: 36)
         view.textAlignment = .center
         view.sizeToFit()
         return view

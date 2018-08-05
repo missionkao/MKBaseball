@@ -12,8 +12,18 @@ struct MKGameTableViewCellViewModel {
     private(set) var awayScore = "--"
     private(set) var homeScore = "--"
     let location: String
-    let startTime: String?
+    let currentState: String?
     let note: String?
+    
+    init(model: MKCompetitionModel) {
+        awayTeam = model.awayTeam
+        homeTeam = model.homeTeam
+        awayScore = model.awayScore
+        homeScore = model.homeScore
+        location = model.location
+        currentState = model.currentState
+        note = model.note
+    }
     
     static func parsing(htmlString: String) -> MKGameTableViewCellViewModel {
         let awayTeam: CPBLTeam = .elephant
@@ -21,12 +31,14 @@ struct MKGameTableViewCellViewModel {
         let awayScore = "0"
         let homeScore = "1"
         let location = "新莊"
-        var startTime: String?
+        var currentState: String?
         var note: String?
         
-        startTime = "17:05"
+        currentState = "17:05"
         note = nil
         
-        return MKGameTableViewCellViewModel(awayTeam: awayTeam, homeTeam: homeTeam, awayScore: awayScore, homeScore: homeScore, location: location, startTime: startTime, note: note)
+        let model = MKCompetitionModel(awayTeam: awayTeam, homeTeam: homeTeam, awayScore: awayScore, homeScore: homeScore, location: location, number: "158", currentState: currentState, note: note)
+        
+        return MKGameTableViewCellViewModel(model: model)
     }
 }
