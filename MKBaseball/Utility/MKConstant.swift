@@ -8,16 +8,16 @@
 
 import Foundation
 
-let TEAM_NAME_LION = "統一7-ELEVEn"
+let TEAM_NAME_LION = "統一獅"
 let TEAM_NAME_ELEPHANT = "中信兄弟"
 let TEAM_NAME_GUARDIANS = "富邦悍將"
-let TEAM_NAME_MONKEY = "Lamigo"
+let TEAM_NAME_MONKEY = "Lamigo猿"
 
 enum CPBLTeam: String {
-    case lion = "統一7-ELEVEn"
+    case lion = "統一獅"
     case elephant = "中信兄弟"
     case guardians = "富邦悍將"
-    case monkey = "Lamigo"
+    case monkey = "Lamigo猿"
     
     init(html: String) {
         if html.contains("B04") {

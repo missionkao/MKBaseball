@@ -27,12 +27,14 @@ class MKTodayChangeTableViewCell: UITableViewCell {
     
     private lazy var teamLabel: UILabel = {
         let view = commonLabel()
+        view.textAlignment = .left
         view.text = TEAM_NAME_LION
         return view
     }()
     
     private lazy var nameLabel: UILabel = {
         let view = commonLabel()
+        view.textAlignment = .left
         view.text = "馬丁尼茲"
         return view
     }()
@@ -48,9 +50,9 @@ class MKTodayChangeTableViewCell: UITableViewCell {
 private extension MKTodayChangeTableViewCell {
     func setupConstraints() {
         teamLabel.snp.makeConstraints { (make) in
-            make.left.equalToSuperview()
+            make.left.equalToSuperview().offset(16)
             make.centerY.equalToSuperview()
-            make.width.equalToSuperview().multipliedBy(0.4)
+            make.width.equalToSuperview().multipliedBy(0.3)
         }
         
         nameLabel.snp.makeConstraints { (make) in
@@ -62,7 +64,7 @@ private extension MKTodayChangeTableViewCell {
         reasonLabel.snp.makeConstraints { (make) in
             make.left.equalTo(nameLabel.snp.right)
             make.centerY.equalToSuperview()
-            make.right.equalToSuperview()
+            make.right.equalToSuperview().offset(-16)
         }
     }
     
@@ -71,7 +73,7 @@ private extension MKTodayChangeTableViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.clear
         view.textColor = UIColor.cpblBlue
-        view.font = UIFont.systemFont(ofSize: 18)
+        view.font = UIFont.systemFont(ofSize: 16)
         view.textAlignment = .center
         return view
     }

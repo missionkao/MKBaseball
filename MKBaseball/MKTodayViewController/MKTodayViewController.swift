@@ -21,7 +21,7 @@ enum MKTodayViewControllerTableViewSectionType: Int {
         titleLabel.font = UIFont.boldSystemFont(ofSize: 24)
         titleLabel.backgroundColor = UIColor.clear
         titleLabel.sizeToFit()
-        titleLabel.text = (self == .todayGame) ? "今日賽事" : "球員異動"
+        titleLabel.text = (self == .todayGame) ? "今日賽事" : "今日球員異動"
         
         view.addSubview(titleLabel)
         
@@ -119,10 +119,7 @@ extension MKTodayViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section == 0 {
-            return 100
-        }
-        return 56
+        return indexPath.section == 0 ? 100 : 48
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -144,7 +141,6 @@ extension MKTodayViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let view = UIView()
         view.backgroundColor = UIColor.clear
-        
         return view
     }
 }
