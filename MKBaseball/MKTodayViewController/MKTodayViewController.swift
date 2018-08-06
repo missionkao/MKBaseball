@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 
 enum MKTodayViewControllerTableViewSectionType: Int {
-    case todayGame = 0, memberChange
+    case todayGame = 0, playerChange
     
     func headerView() -> UIView {
         let view = MKContainerView(frame: .zero)
@@ -30,6 +30,13 @@ enum MKTodayViewControllerTableViewSectionType: Int {
         }
         
         return view
+    }
+    
+    func cellReuseIdentifier() -> String {
+        switch self {
+        case .todayGame: return "MKTodayGameTableViewCell"
+        case .playerChange: return "MKTodayPlayerChangeTableViewCell"
+        }
     }
 }
 
@@ -70,6 +77,8 @@ class MKTodayViewController: UIViewController {
         view.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         view.dataSource = self
         view.delegate = self
+        view.register(MKGameTableViewCell.self, forCellReuseIdentifier: MKTodayViewControllerTableViewSectionType.todayGame.cellReuseIdentifier())
+        view.register(MKTodayChangeTableViewCell.self, forCellReuseIdentifier: MKTodayViewControllerTableViewSectionType.playerChange.cellReuseIdentifier())
         return view
     }()
 }
@@ -94,17 +103,19 @@ extension MKTodayViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cellReuseIdentifier = MKTodayViewControllerTableViewSectionType(rawValue: indexPath.section)!.cellReuseIdentifier()
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath)
+        
         if indexPath.section == 0 {
-            let cell = MKGameTableViewCell(style: .default, reuseIdentifier: nil)
+            let gameCell = cell as! MKGameTableViewCell
             if viewModel.competitions.count == 0 {
-                cell.shouldSwitchToNoGameView(true)
+                gameCell.applyCellViewModel(viewModel: nil)
             } else {
                 let cellViewModel = MKGameTableViewCellViewModel(model: viewModel.competitions[indexPath.row])
-                cell.applyCellViewModel(viewModel: cellViewModel)
+                gameCell.applyCellViewModel(viewModel: cellViewModel)
             }
-            return cell
         }
-        return MKTodayChangeTableViewCell(style: .default, reuseIdentifier: nil)
+        return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

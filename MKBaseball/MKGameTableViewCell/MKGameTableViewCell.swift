@@ -34,20 +34,18 @@ class MKGameTableViewCell: UITableViewCell {
         setupConstraints()
     }
     
-    func applyCellViewModel(viewModel: MKGameTableViewCellViewModel) {
-        shouldSwitchToNoGameView(false)
-        leftImageView.image = UIImage(named: viewModel.awayTeam.logoImageName())
-        leftLabel.text = viewModel.awayScore
-        rightImageView.image = UIImage(named: viewModel.homeTeam.logoImageName())
-        rightLabel.text = viewModel.homeScore
-        locationLabel.text = viewModel.location
-        timeLabel.text = viewModel.currentState
-    }
-    
-    func shouldSwitchToNoGameView(_ should: Bool) {
-        noGameLabel.alpha = should ? 1 : 0
-        topView.alpha = should ? 0 : 1
-        middleView.alpha = should ? 0 : 1
+    func applyCellViewModel(viewModel: MKGameTableViewCellViewModel?) {
+        if let viewModel = viewModel {
+            shouldSwitchToNoGameView(false)
+            leftImageView.image = UIImage(named: viewModel.awayTeam.logoImageName())
+            leftLabel.text = viewModel.awayScore
+            rightImageView.image = UIImage(named: viewModel.homeTeam.logoImageName())
+            rightLabel.text = viewModel.homeScore
+            locationLabel.text = viewModel.location
+            timeLabel.text = viewModel.currentState
+        } else {
+            shouldSwitchToNoGameView(true)
+        }
     }
     
     private lazy var topView: UIStackView = {
@@ -184,5 +182,11 @@ private extension MKGameTableViewCell {
         view.textAlignment = .center
         view.sizeToFit()
         return view
+    }
+    
+    func shouldSwitchToNoGameView(_ should: Bool) {
+        noGameLabel.alpha = should ? 1 : 0
+        topView.alpha = should ? 0 : 1
+        middleView.alpha = should ? 0 : 1
     }
 }
