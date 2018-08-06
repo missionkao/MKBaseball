@@ -18,6 +18,7 @@ class MKTodayChangeTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.selectionStyle = .none
         
+        contentView.addSubview(dateLabel)
         contentView.addSubview(teamLabel)
         contentView.addSubview(nameLabel)
         contentView.addSubview(reasonLabel)
@@ -25,23 +26,30 @@ class MKTodayChangeTableViewCell: UITableViewCell {
         setupConstraints()
     }
     
+    private lazy var dateLabel: UILabel = {
+        let view = commonLabel()
+        view.text = "2018/08/06"
+        return view
+    }()
+    
     private lazy var teamLabel: UILabel = {
         let view = commonLabel()
-        view.textAlignment = .left
         view.text = TEAM_NAME_LION
+        view.textAlignment = .center
         return view
     }()
     
     private lazy var nameLabel: UILabel = {
         let view = commonLabel()
-        view.textAlignment = .left
         view.text = "馬丁尼茲"
+        view.textAlignment = .center
         return view
     }()
     
     private lazy var reasonLabel: UILabel = {
         let view = commonLabel()
         view.text = "升一軍"
+        view.textAlignment = .center
         return view
     }()
 
@@ -49,16 +57,22 @@ class MKTodayChangeTableViewCell: UITableViewCell {
 
 private extension MKTodayChangeTableViewCell {
     func setupConstraints() {
-        teamLabel.snp.makeConstraints { (make) in
+        dateLabel.snp.makeConstraints { (make) in
             make.left.equalToSuperview().offset(16)
             make.centerY.equalToSuperview()
-            make.width.equalToSuperview().multipliedBy(0.3)
+            make.width.equalToSuperview().multipliedBy(0.25)
+        }
+        
+        teamLabel.snp.makeConstraints { (make) in
+            make.left.equalTo(dateLabel.snp.right)
+            make.centerY.equalToSuperview()
+            make.width.equalToSuperview().multipliedBy(0.2)
         }
         
         nameLabel.snp.makeConstraints { (make) in
             make.left.equalTo(teamLabel.snp.right)
             make.centerY.equalToSuperview()
-            make.width.equalToSuperview().multipliedBy(0.3)
+            make.width.equalToSuperview().multipliedBy(0.25)
         }
         
         reasonLabel.snp.makeConstraints { (make) in
@@ -73,8 +87,8 @@ private extension MKTodayChangeTableViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.clear
         view.textColor = UIColor.cpblBlue
-        view.font = UIFont.systemFont(ofSize: 16)
-        view.textAlignment = .center
+        view.font = UIFont.systemFont(ofSize: 14)
+        view.textAlignment = .left
         return view
     }
 }

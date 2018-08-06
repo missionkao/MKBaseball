@@ -21,7 +21,7 @@ enum MKTodayViewControllerTableViewSectionType: Int {
         titleLabel.font = UIFont.boldSystemFont(ofSize: 24)
         titleLabel.backgroundColor = UIColor.clear
         titleLabel.sizeToFit()
-        titleLabel.text = (self == .todayGame) ? "今日賽事" : "今日球員異動"
+        titleLabel.text = (self == .todayGame) ? "今日賽事" : "近三日球員異動"
         
         view.addSubview(titleLabel)
         
@@ -66,6 +66,7 @@ class MKTodayViewController: UIViewController {
         setupConstraints()
         
         viewModel.fetchTodayGame()
+        viewModel.fetchPlayerChange()
     }
     
     private lazy var tableView: UITableView = {
