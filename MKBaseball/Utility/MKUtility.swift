@@ -15,3 +15,12 @@ extension UIColor {
     
     static let cpblBlue = UIColor(r: 45, g: 71, b: 126, a: 1.0)
 }
+
+extension Date {
+    init(_ year: Int, _ month: Int, _ day: Int) {
+        let dateString = "\(year)-\(month)-\(day)"
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        self = dateFormatter.date(from: dateString)!
+    }
+}

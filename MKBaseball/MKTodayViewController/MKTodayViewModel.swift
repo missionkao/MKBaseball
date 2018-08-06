@@ -19,8 +19,8 @@ protocol MKTodayViewModelDelegate: class {
 struct MKCompetitionModel {
     let awayTeam: CPBLTeam
     let homeTeam: CPBLTeam
-    private(set) var awayScore = "--"
-    private(set) var homeScore = "--"
+    let awayScore: String?
+    let homeScore: String?
     let location: String
     let number: String
     let currentState: String?
@@ -115,7 +115,7 @@ private extension MKTodayViewModel {
         }
         let awayTeam = CPBLTeam(html: awayTeamImage)
         let homeTeam = CPBLTeam(html: homeTeamImage)
-//        print("\(awayTeam.rawValue), \(location), \(homeTeam.rawValue)")
+        
         return (awayTeam, homeTeam, location)
     }
     
@@ -126,23 +126,21 @@ private extension MKTodayViewModel {
         return number
     }
     
-    func parseGameScore(_ element: XMLElement?) -> (awayScore: String, currentInning: String?, homeScore: String)? {
-        guard let awayScoreElement = element?.at_css("td"), let awayScore = awayScoreElement.at_css("span")?.text else {
-            return nil
-        }
+    func parseGameScore(_ element: XMLElement?) -> (awayScore: String?, currentInning: String?, homeScore: String?)? {
+        let awayScoreElement = element?.at_css("td")
+        
+        let awayScore = awayScoreElement?.at_css("span")?.text
         
         var currentInning: String?
-        if let currentInningElement = awayScoreElement.nextSibling {
+        if let currentInningElement = awayScoreElement?.nextSibling {
             currentInning = currentInningElement.at_css("a")?.text
             if currentInning == "" {
                 currentInning = "Final"
             }
         }
         
-        guard let homeScoreElement = awayScoreElement.nextSibling?.nextSibling, let homeScore = homeScoreElement.at_css("span")?.text else {
-            return nil
-        }
-//        print("\(awayScore), \(currentInning ?? "no inning"), \(homeScore)")
+        let homeScore = awayScoreElement?.nextSibling?.nextSibling?.at_css("span")?.text
+        
         return (awayScore, currentInning, homeScore)
     }
     
