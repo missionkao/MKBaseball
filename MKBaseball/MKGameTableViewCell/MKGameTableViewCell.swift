@@ -29,16 +29,25 @@ class MKGameTableViewCell: UITableViewCell {
         middleView.addSubview(rightLabel)
         middleView.addSubview(rightImageView)
         
+        contentView.addSubview(noGameLabel)
+        
         setupConstraints()
     }
     
     func applyCellViewModel(viewModel: MKGameTableViewCellViewModel) {
+        shouldSwitchToNoGameView(false)
         leftImageView.image = UIImage(named: viewModel.awayTeam.logoImageName())
         leftLabel.text = viewModel.awayScore
         rightImageView.image = UIImage(named: viewModel.homeTeam.logoImageName())
         rightLabel.text = viewModel.homeScore
         locationLabel.text = viewModel.location
         timeLabel.text = viewModel.currentState
+    }
+    
+    func shouldSwitchToNoGameView(_ should: Bool) {
+        noGameLabel.alpha = should ? 1 : 0
+        topView.alpha = should ? 0 : 1
+        middleView.alpha = should ? 0 : 1
     }
     
     private lazy var topView: UIStackView = {
@@ -96,6 +105,18 @@ class MKGameTableViewCell: UITableViewCell {
         let view = middleGeneralLabel()
         return view
     }()
+    
+    private lazy var noGameLabel: UILabel = {
+        let view = UILabel()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.clear
+        view.font = UIFont.systemFont(ofSize: 24)
+        view.textColor = UIColor.lightGray
+        var attribute = [NSAttributedStringKey:Any]()
+        attribute[.kern] = 5.0
+        view.attributedText = NSAttributedString(string: "本日無賽事", attributes: attribute)
+        return view
+    }()
 }
 
 private extension MKGameTableViewCell {
@@ -138,6 +159,9 @@ private extension MKGameTableViewCell {
             make.width.height.equalTo(48)
         }
         
+        noGameLabel.snp.makeConstraints { (make) in
+            make.centerX.centerY.equalToSuperview()
+        }
     }
     
     func topGeneralLabel() -> UILabel {

@@ -52,6 +52,7 @@ class MKTodayViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = UIColor.cpblBlue
         view.addSubview(tableView)
+        refreshControl.tintColor = UIColor.white
         
         tableView.addSubview(refreshControl)
         
@@ -86,7 +87,8 @@ extension MKTodayViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
-            return viewModel.competitions.count
+            let gameCount = viewModel.competitions.count
+            return gameCount == 0 ? 1 : gameCount
         }
         return 5
     }
@@ -94,8 +96,12 @@ extension MKTodayViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
             let cell = MKGameTableViewCell(style: .default, reuseIdentifier: nil)
-            let cellViewModel = MKGameTableViewCellViewModel(model: viewModel.competitions[indexPath.row])
-            cell.applyCellViewModel(viewModel: cellViewModel)
+            if viewModel.competitions.count == 0 {
+                cell.shouldSwitchToNoGameView(true)
+            } else {
+                let cellViewModel = MKGameTableViewCellViewModel(model: viewModel.competitions[indexPath.row])
+                cell.applyCellViewModel(viewModel: cellViewModel)
+            }
             return cell
         }
         return MKTodayChangeTableViewCell(style: .default, reuseIdentifier: nil)

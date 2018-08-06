@@ -9,8 +9,8 @@
 struct MKGameTableViewCellViewModel {
     let awayTeam: CPBLTeam
     let homeTeam: CPBLTeam
-    private(set) var awayScore = "--"
-    private(set) var homeScore = "--"
+    let awayScore: String?
+    let homeScore: String?
     let location: String
     let currentState: String?
     let note: String?
@@ -18,8 +18,8 @@ struct MKGameTableViewCellViewModel {
     init(model: MKCompetitionModel) {
         awayTeam = model.awayTeam
         homeTeam = model.homeTeam
-        awayScore = model.awayScore
-        homeScore = model.homeScore
+        awayScore = model.awayScore ?? "--"
+        homeScore = model.homeScore ?? "--"
         location = model.location
         currentState = model.currentState
         note = model.note
