@@ -100,7 +100,8 @@ extension MKTodayViewController: UITableViewDataSource {
             let gameCount = viewModel.competitions.count
             return gameCount == 0 ? 1 : gameCount
         }
-        return 5
+        let playerChangeCount = viewModel.changes.count
+        return playerChangeCount == 0 ? 1 : playerChangeCount
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -115,12 +116,27 @@ extension MKTodayViewController: UITableViewDataSource {
                 let cellViewModel = MKGameTableViewCellViewModel(model: viewModel.competitions[indexPath.row])
                 gameCell.applyCellViewModel(viewModel: cellViewModel)
             }
+            return cell
         }
+        
+        let playerChangeCell = cell as! MKTodayChangeTableViewCell
+        if viewModel.changes.count == 0 {
+            playerChangeCell.applyPlayerChangeModel(model: nil)
+        } else {
+            playerChangeCell.applyPlayerChangeModel(model: viewModel.changes[indexPath.row])
+        }
+        
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return indexPath.section == 0 ? 100 : 48
+        if indexPath.section == 0 {
+            return 100
+        }
+        if viewModel.changes.count == 0 {
+            return 100
+        }
+        return 48
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -150,6 +166,7 @@ extension MKTodayViewController: UITableViewDelegate {
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         if refreshControl.isRefreshing {
             viewModel.fetchTodayGame()
+            viewModel.fetchPlayerChange()
         }
     }
 }

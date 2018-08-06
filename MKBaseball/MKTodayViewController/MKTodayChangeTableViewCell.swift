@@ -22,37 +22,55 @@ class MKTodayChangeTableViewCell: UITableViewCell {
         contentView.addSubview(teamLabel)
         contentView.addSubview(nameLabel)
         contentView.addSubview(reasonLabel)
+        contentView.addSubview(noPlayerChangeLabel)
         
         setupConstraints()
     }
     
+    func applyPlayerChangeModel(model: MKPlayerChangeModel?) {
+        if let model = model {
+            shouldSwitchToNoPlayerChangeView(false)
+            dateLabel.text = model.date
+            teamLabel.text = model.team.rawValue
+            nameLabel.text = model.player
+            reasonLabel.text = model.reason
+        } else {
+            shouldSwitchToNoPlayerChangeView(true)
+        }
+    }
+    
     private lazy var dateLabel: UILabel = {
         let view = commonLabel()
-        view.text = "2018/08/06"
+        view.textAlignment = .left
         return view
     }()
     
     private lazy var teamLabel: UILabel = {
         let view = commonLabel()
-        view.text = TEAM_NAME_LION
-        view.textAlignment = .center
         return view
     }()
     
     private lazy var nameLabel: UILabel = {
         let view = commonLabel()
-        view.text = "馬丁尼茲"
-        view.textAlignment = .center
         return view
     }()
     
     private lazy var reasonLabel: UILabel = {
         let view = commonLabel()
-        view.text = "升一軍"
-        view.textAlignment = .center
         return view
     }()
-
+    
+    private lazy var noPlayerChangeLabel: UILabel = {
+        let view = UILabel()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.clear
+        view.font = UIFont.systemFont(ofSize: 24)
+        view.textColor = UIColor.lightGray
+        var attribute = [NSAttributedStringKey:Any]()
+        attribute[.kern] = 5.0
+        view.attributedText = NSAttributedString(string: "近三日無球員異動", attributes: attribute)
+        return view
+    }()
 }
 
 private extension MKTodayChangeTableViewCell {
@@ -60,13 +78,13 @@ private extension MKTodayChangeTableViewCell {
         dateLabel.snp.makeConstraints { (make) in
             make.left.equalToSuperview().offset(16)
             make.centerY.equalToSuperview()
-            make.width.equalToSuperview().multipliedBy(0.25)
+            make.width.equalToSuperview().multipliedBy(0.15)
         }
         
         teamLabel.snp.makeConstraints { (make) in
             make.left.equalTo(dateLabel.snp.right)
             make.centerY.equalToSuperview()
-            make.width.equalToSuperview().multipliedBy(0.2)
+            make.width.equalToSuperview().multipliedBy(0.25)
         }
         
         nameLabel.snp.makeConstraints { (make) in
@@ -80,6 +98,10 @@ private extension MKTodayChangeTableViewCell {
             make.centerY.equalToSuperview()
             make.right.equalToSuperview().offset(-16)
         }
+        
+        noPlayerChangeLabel.snp.makeConstraints { (make) in
+            make.centerX.centerY.equalToSuperview()
+        }
     }
     
     func commonLabel() -> UILabel {
@@ -88,7 +110,15 @@ private extension MKTodayChangeTableViewCell {
         view.backgroundColor = UIColor.clear
         view.textColor = UIColor.cpblBlue
         view.font = UIFont.systemFont(ofSize: 14)
-        view.textAlignment = .left
+        view.textAlignment = .center
         return view
+    }
+    
+    func shouldSwitchToNoPlayerChangeView(_ should: Bool) {
+        dateLabel.alpha = should ? 0 : 1
+        teamLabel.alpha = should ? 0 : 1
+        nameLabel.alpha = should ? 0 : 1
+        reasonLabel.alpha = should ? 0 : 1
+        noPlayerChangeLabel.alpha = should ? 1 : 0
     }
 }

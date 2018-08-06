@@ -35,6 +35,22 @@ enum CPBLTeam: String {
         self = .lion
     }
     
+    init(name: String) {
+        if name.contains("富邦") {
+            self = .guardians
+            return
+        }
+        if name.contains("Lamigo") {
+            self = .monkey
+            return
+        }
+        if name.contains("兄弟") {
+            self = .elephant
+            return
+        }
+        self = .lion
+    }
+    
     func logoImageName() -> String {
         switch self {
         case .lion: return "Score_L_logo"
