@@ -21,7 +21,7 @@ enum MKTodayViewControllerTableViewSectionType: Int {
         titleLabel.font = UIFont.boldSystemFont(ofSize: 24)
         titleLabel.backgroundColor = UIColor.clear
         titleLabel.sizeToFit()
-        titleLabel.text = (self == .todayGame) ? "今日賽事" : "球員異動"
+        titleLabel.text = (self == .todayGame) ? "今日賽事" : "近三日球員異動"
         
         view.addSubview(titleLabel)
         
@@ -66,6 +66,7 @@ class MKTodayViewController: UIViewController {
         setupConstraints()
         
         viewModel.fetchTodayGame()
+        viewModel.fetchPlayerChange()
     }
     
     private lazy var tableView: UITableView = {
@@ -99,7 +100,8 @@ extension MKTodayViewController: UITableViewDataSource {
             let gameCount = viewModel.competitions.count
             return gameCount == 0 ? 1 : gameCount
         }
-        return 5
+        let playerChangeCount = viewModel.changes.count
+        return playerChangeCount == 0 ? 1 : playerChangeCount
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -114,7 +116,16 @@ extension MKTodayViewController: UITableViewDataSource {
                 let cellViewModel = MKGameTableViewCellViewModel(model: viewModel.competitions[indexPath.row])
                 gameCell.applyCellViewModel(viewModel: cellViewModel)
             }
+            return cell
         }
+        
+        let playerChangeCell = cell as! MKTodayChangeTableViewCell
+        if viewModel.changes.count == 0 {
+            playerChangeCell.applyPlayerChangeModel(model: nil)
+        } else {
+            playerChangeCell.applyPlayerChangeModel(model: viewModel.changes[indexPath.row])
+        }
+        
         return cell
     }
     
@@ -122,7 +133,10 @@ extension MKTodayViewController: UITableViewDataSource {
         if indexPath.section == 0 {
             return 100
         }
-        return 56
+        if viewModel.changes.count == 0 {
+            return 100
+        }
+        return 48
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -144,7 +158,6 @@ extension MKTodayViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let view = UIView()
         view.backgroundColor = UIColor.clear
-        
         return view
     }
 }
@@ -153,6 +166,7 @@ extension MKTodayViewController: UITableViewDelegate {
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         if refreshControl.isRefreshing {
             viewModel.fetchTodayGame()
+            viewModel.fetchPlayerChange()
         }
     }
 }
