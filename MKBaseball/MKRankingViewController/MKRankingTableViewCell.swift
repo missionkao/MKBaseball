@@ -27,7 +27,7 @@ class MKRankingTableViewCell: UITableViewCell {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.clear
-        view.font = UIFont.systemFont(ofSize: 16)
+        view.font = UIFont.systemFont(ofSize: 14)
         view.textColor = UIColor.cpblBlue
         view.textAlignment = .center
         view.text = "test"
@@ -71,6 +71,15 @@ class MKRankingTableViewCell: UITableViewCell {
 
 class MKRankingTableViewRankCell: MKRankingTableViewCell {
     
+    func applyCellModel(model: MKTeamRankingModel) {
+        rankLabel.text = model.number
+        teamLabel.text = model.team.rawValue
+        gameLabel.text = model.total
+        gradeLabel.text = model.winLose
+        averageLabel.text = model.winRate
+        diffLabel.text = model.winDiff
+    }
+    
     override fileprivate func setupLabels() -> ([UILabel], [CGFloat]) {
         let labels = [rankLabel, teamLabel, gameLabel, gradeLabel, averageLabel, diffLabel]
         let widths = MKRankingTableViewSectionType.rank.labelWidthMultiplies()
@@ -111,6 +120,14 @@ class MKRankingTableViewRankCell: MKRankingTableViewCell {
 }
 
 class MKRankingTableViewBetweenCell: MKRankingTableViewCell {
+    func applyCellModel(model: MKTeamBetweenModel) {
+        teamLabel.text = model.team.rawValue
+        firstLabel.text = model.first
+        secondLabel.text = model.second
+        thirdLabel.text = model.third
+        fourthLabel.text = model.fourth
+    }
+    
     override fileprivate func setupLabels() -> ([UILabel], [CGFloat]) {
         let labels = [teamLabel, firstLabel, secondLabel, thirdLabel, fourthLabel]
         let widths = MKRankingTableViewSectionType.between.labelWidthMultiplies()
@@ -118,9 +135,9 @@ class MKRankingTableViewBetweenCell: MKRankingTableViewCell {
         return (labels, widths)
     }
     
-    //Lamigo, 中信兄弟, 富邦, 統一
     private lazy var teamLabel: UILabel = {
         let view = commonLabel()
+        view.font = UIFont.systemFont(ofSize: 12)
         return view
     }()
     
@@ -146,6 +163,15 @@ class MKRankingTableViewBetweenCell: MKRankingTableViewCell {
 }
 
 class MKRankingTableViewTeamCell: MKRankingTableViewCell {
+    func applyCellModel(model: MKTeamGradeModel) {
+        teamLabel.text = model.team.rawValue
+        goalLabel.text = model.goal
+        loseLabel.text = model.lose
+        hrLabel.text = model.hr
+        hitLabel.text = model.hitRate
+        eraLabel.text = model.era
+    }
+    
     override fileprivate func setupLabels() -> ([UILabel], [CGFloat]) {
         let labels = [teamLabel, goalLabel, loseLabel, hrLabel, hitLabel, eraLabel]
         let widths = MKRankingTableViewSectionType.team.labelWidthMultiplies()

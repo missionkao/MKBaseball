@@ -30,7 +30,7 @@ class MKIndexViewController: UITabBarController {
         let calendarViewController = MKScheduleViewController()
         calendarViewController.tabBarItem = calendarTabBarItem
         
-        let rankingViewController = MKRankingViewController()
+        let rankingViewController = MKRankingViewController(viewModel: MKRankingViewModel())
         rankingViewController.tabBarItem = rankingTabBarItem
         
         let statsViewController = MKStatisticViewController()
