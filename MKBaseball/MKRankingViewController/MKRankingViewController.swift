@@ -60,13 +60,30 @@ enum MKRankingTableViewSectionType: Int {
 class MKRankingViewController: UIViewController {
     
     private let sectionTypes: [MKRankingTableViewSectionType] = [.rank, .between, .team]
-
+    private var viewModel: MKRankingViewModel!
+    private let refreshControl = UIRefreshControl()
+    
+    required init(viewModel: MKRankingViewModel) {
+        super.init(nibName: nil, bundle: nil)
+        self.viewModel = viewModel
+        self.viewModel.delegate = self
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.cpblBlue
         view.addSubview(tableView)
+        refreshControl.tintColor = UIColor.white
+        
+        tableView.addSubview(refreshControl)
         
         setupConstraints()
+        
+        viewModel.fetchRanking(seasonMode: .bottom)
     }
     
     private lazy var tableView: UITableView = {
@@ -89,14 +106,40 @@ class MKRankingViewController: UIViewController {
 
 }
 
+extension MKRankingViewController: MKRankingViewModelDelegate {
+    func viewModel(_ viewModel: MKRankingViewModel, didChangeViewMode: MKViewMode) {
+        DispatchQueue.main.sync { [unowned self] in
+            self.refreshControl.endRefreshing()
+            self.tableView.reloadData()
+        }
+    }
+}
+
 extension MKRankingViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 4
+        if section == 0 {
+            return viewModel.teamRanks.count
+        } else if section == 1 {
+            return viewModel.teamBetweens.count
+        }
+        return viewModel.teamGrades.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellReuseIdentifier = MKRankingTableViewSectionType(rawValue: indexPath.section)!.cellReuseIdentifier()
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath)
+        
+        if indexPath.section == 0 {
+            let rankCell = cell as! MKRankingTableViewRankCell
+            rankCell.applyCellModel(model: viewModel.teamRanks[indexPath.row])
+        } else if indexPath.section == 1 {
+            let betweenCell = cell as! MKRankingTableViewBetweenCell
+            betweenCell.applyCellModel(model: viewModel.teamBetweens[indexPath.row])
+        } else {
+            let gradeCell = cell as! MKRankingTableViewTeamCell
+            gradeCell.applyCellModel(model: viewModel.teamGrades[indexPath.row])
+        }
+        
         return cell
     }
     
@@ -115,7 +158,10 @@ extension MKRankingViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         var labelTexts = [String]()
         if section == 1 {
-            labelTexts = ["Lamigo", "中信兄弟", "富邦", "統一"]
+            let teams: [String] = viewModel.teamBetweens.compactMap { (model) -> String in
+                return model.team.rawValue
+            }
+            labelTexts = teams.count == 0 ? ["--", "--", "--", "--"] : teams
         } else {
             labelTexts = MKRankingTableViewSectionType(rawValue: section)!.sectionHeaderTexts()
         }
@@ -129,6 +175,11 @@ extension MKRankingViewController: UITableViewDataSource {
 }
 
 extension MKRankingViewController: UITableViewDelegate {
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        if refreshControl.isRefreshing {
+            viewModel.fetchRanking(seasonMode: .bottom)
+        }
+    }
 }
 
 private extension MKRankingViewController {

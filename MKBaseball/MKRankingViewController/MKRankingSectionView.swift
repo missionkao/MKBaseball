@@ -188,7 +188,7 @@ private extension MKRankingSectionView {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.clear
-        view.font = UIFont.systemFont(ofSize: 14)
+        view.font = UIFont.systemFont(ofSize: 12)
         view.textColor = UIColor.cpblBlue
         view.textAlignment = .center
         return view

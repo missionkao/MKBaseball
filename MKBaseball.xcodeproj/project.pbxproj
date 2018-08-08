@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0211A4772119C22500F4FE27 /* MKRankingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0211A4762119C22500F4FE27 /* MKRankingViewModel.swift */; };
 		027655832109D3B1005C0ADF /* MKConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027655822109D3B1005C0ADF /* MKConstant.swift */; };
 		027655852109D5F4005C0ADF /* MKUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027655842109D5F4005C0ADF /* MKUtility.swift */; };
 		0276558C210B0034005C0ADF /* MKScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0276558B210B0034005C0ADF /* MKScheduleViewController.swift */; };
@@ -48,6 +49,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0211A4762119C22500F4FE27 /* MKRankingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKRankingViewModel.swift; sourceTree = "<group>"; };
 		027655822109D3B1005C0ADF /* MKConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKConstant.swift; sourceTree = "<group>"; };
 		027655842109D5F4005C0ADF /* MKUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKUtility.swift; sourceTree = "<group>"; };
 		0276558B210B0034005C0ADF /* MKScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKScheduleViewController.swift; sourceTree = "<group>"; };
@@ -141,6 +143,7 @@
 				932665B12107640E002F7237 /* MKRankingSectionView.swift */,
 				932665B32109FB47002F7237 /* MKRankingTableViewCell.swift */,
 				932665AF210754CB002F7237 /* MKRankingViewController.swift */,
+				0211A4762119C22500F4FE27 /* MKRankingViewModel.swift */,
 			);
 			path = MKRankingViewController;
 			sourceTree = "<group>";
@@ -434,6 +437,7 @@
 				932665B22107640E002F7237 /* MKRankingSectionView.swift in Sources */,
 				932665B42109FB47002F7237 /* MKRankingTableViewCell.swift in Sources */,
 				932665B0210754CB002F7237 /* MKRankingViewController.swift in Sources */,
+				0211A4772119C22500F4FE27 /* MKRankingViewModel.swift in Sources */,
 				0276558C210B0034005C0ADF /* MKScheduleViewController.swift in Sources */,
 				0276559D210CA13E005C0ADF /* MKSegmentedControlHeaderView.swift in Sources */,
 				027655A7210EB4DD005C0ADF /* MKStatisticPopupTableViewCell.swift in Sources */,
