@@ -13,6 +13,18 @@ class MKScheduleViewController: UIViewController {
     
     private let cellReuseIdentifier = "MKScheduleTableViewCell"
     private var isCalendarMainViewAppear = false
+    private var viewModel: MKScheduleViewModel!
+    private let refreshControl = UIRefreshControl()
+    
+    required init(viewModel: MKScheduleViewModel) {
+        super.init(nibName: nil, bundle: nil)
+        self.viewModel = viewModel
+//        self.viewModel.delegate = self
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,6 +39,8 @@ class MKScheduleViewController: UIViewController {
         setupCalendarView()
         
         monthButton.addTarget(self, action: #selector(toggleCalendarView), for: .touchUpInside)
+        
+        viewModel.fetchSchedule(atYear: "2018", month: "8")
     }
     
     override func viewDidLayoutSubviews() {
@@ -110,7 +124,7 @@ class MKScheduleViewController: UIViewController {
         view.tableFooterView = UIView()
         view.separatorColor = UIColor.gray
         view.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-        view.rowHeight = 120
+        view.rowHeight = 100
         view.dataSource = self
         view.delegate = self
         view.register(MKGameTableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)

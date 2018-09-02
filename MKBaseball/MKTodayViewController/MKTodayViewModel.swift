@@ -83,30 +83,7 @@ private extension MKTodayViewModelTodayGame {
         
         let games = doc.xpath("/html/body/div[4]/div/div/table/tr[\(rowColumn.row)]/td[\(rowColumn.column)]/div")
         
-        competitions = [MKCompetitionModel]()
-            
-        for g in games {
-            let competitionElement = g.at_css("table")
-            let numberElement = competitionElement?.nextSibling
-            let scoreElement = numberElement?.nextSibling
-            
-            guard let competiton = parseGameCompetition(competitionElement), let score = parseGameScore(scoreElement), let number = parseGameNumber(numberElement) else {
-                continue
-            }
-            
-            var currentState = score.currentInning
-            if currentState == nil {
-                currentState = parseGameInfo(scoreElement?.nextSibling)
-            }
-            
-            guard let current = currentState else {
-                continue
-            }
-            
-            let model = MKCompetitionModel(awayTeam: competiton.awayTeam, homeTeam: competiton.homeTeam, awayScore: score.awayScore, homeScore: score.homeScore, location: competiton.location, number: number, currentState: current, note: nil)
-            
-            competitions.append(model)
-        }
+        competitions = MKGameParserHelper.parseGamesToCompetitionModels(games: games)
     }
     
     // WIP: should be tested
@@ -121,53 +98,6 @@ private extension MKTodayViewModelTodayGame {
         let row = (weekday == 1) ? weekMonth - 1 : weekMonth
         
         return (2 * row + 1, column)
-    }
-    
-    func parseGameCompetition(_ element: XMLElement?) -> (awayTeam: CPBLTeam, homeTeam: CPBLTeam, location: String)? {
-        guard let awayElement = element?.at_css("td"), let awayTeamImage = awayElement.at_css("img")?["src"] else {
-            return nil
-        }
-        
-        guard let locationElement = awayElement.nextSibling, let location = locationElement.text else {
-            return nil
-        }
-        
-        guard let homeElement = locationElement.nextSibling, let homeTeamImage = homeElement.at_css("img")?["src"] else {
-            return nil
-        }
-        let awayTeam = CPBLTeam(html: awayTeamImage)
-        let homeTeam = CPBLTeam(html: homeTeamImage)
-        
-        return (awayTeam, homeTeam, location)
-    }
-    
-    func parseGameNumber(_ element: XMLElement?) -> String? {
-        guard let number = element?.at_css("tr th")?.nextSibling?.text else {
-            return nil
-        }
-        return number
-    }
-    
-    func parseGameScore(_ element: XMLElement?) -> (awayScore: String?, currentInning: String?, homeScore: String?)? {
-        let awayScoreElement = element?.at_css("td")
-        
-        let awayScore = awayScoreElement?.at_css("span")?.text
-        
-        var currentInning: String?
-        if let currentInningElement = awayScoreElement?.nextSibling {
-            currentInning = currentInningElement.at_css("a")?.text
-            if currentInning == "" {
-                currentInning = "Final"
-            }
-        }
-        
-        let homeScore = awayScoreElement?.nextSibling?.nextSibling?.at_css("span")?.text
-        
-        return (awayScore, currentInning, homeScore)
-    }
-    
-    func parseGameInfo(_ element: XMLElement?) -> String? {
-        return element?.at_css("tr td")?.nextSibling?.text
     }
 }
 
