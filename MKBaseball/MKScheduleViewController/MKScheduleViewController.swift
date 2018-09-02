@@ -19,7 +19,7 @@ class MKScheduleViewController: UIViewController {
     required init(viewModel: MKScheduleViewModel) {
         super.init(nibName: nil, bundle: nil)
         self.viewModel = viewModel
-//        self.viewModel.delegate = self
+        self.viewModel.delegate = self
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -135,19 +135,20 @@ class MKScheduleViewController: UIViewController {
 
 extension MKScheduleViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        return self.viewModel.allGames[section].model.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // WIP: move to viewModel
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! MKGameTableViewCell
-        let cellViewModel = MKGameTableViewCellViewModel.parsing(htmlString: "")
+        let model = self.viewModel.allGames[indexPath.section].model[indexPath.row]
+        let cellViewModel = MKGameTableViewCellViewModel(model: model)
         cell.applyCellViewModel(viewModel: cellViewModel)
         return cell
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 5
+        return self.viewModel.allGames.count
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -156,7 +157,7 @@ extension MKScheduleViewController: UITableViewDataSource {
         
         let dateLabel = UILabel()
         dateLabel.translatesAutoresizingMaskIntoConstraints = false
-        dateLabel.text = "2018/07/28 (六)"
+        dateLabel.text = self.viewModel.allGames[section].date
         dateLabel.textColor = UIColor.cpblBlue
         dateLabel.font = UIFont.systemFont(ofSize: 16)
         view.addSubview(dateLabel)
@@ -182,6 +183,15 @@ extension MKScheduleViewController: CVCalendarViewDelegate, CVCalendarMenuViewDe
     
     func firstWeekday() -> Weekday { return .sunday }
     
+}
+
+extension MKScheduleViewController: MKScheduleViewModelDelegate {
+    func viewModel(_ viewModel: MKScheduleViewModel, didChangeViewMode: MKViewMode) {
+        DispatchQueue.main.sync { [unowned self] in
+            self.refreshControl.endRefreshing()
+            self.tableView.reloadData()
+        }
+    }
 }
 
 private extension MKScheduleViewController {

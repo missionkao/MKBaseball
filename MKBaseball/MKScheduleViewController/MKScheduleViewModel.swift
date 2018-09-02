@@ -8,14 +8,19 @@
 
 import Kanna
 
+protocol MKScheduleViewModelDelegate: class {
+    func viewModel(_ viewModel: MKScheduleViewModel, didChangeViewMode: MKViewMode)
+}
+
 class MKScheduleViewModel {
+    weak var delegate: MKScheduleViewModelDelegate?
     
-    var allGames = [(date: String, [MKCompetitionModel])]()
+    var allGames = [(date: String, model: [MKCompetitionModel])]()
     var currentMonth = ""
     
     private (set) var viewMode: MKViewMode = .loading {
         didSet {
-//            delegate?.viewModel(self, didChangeViewMode: viewMode)
+            delegate?.viewModel(self, didChangeViewMode: viewMode)
         }
     }
     
