@@ -17,6 +17,7 @@ class MKGameParserHelper {
             let competitionElement = g.at_css("table")
             let numberElement = competitionElement?.nextSibling
             let scoreElement = numberElement?.nextSibling
+            let gameInfoElement = scoreElement?.nextSibling
             
             guard let competiton = parseGameCompetition(competitionElement), let score = parseGameScore(scoreElement), let number = parseGameNumber(numberElement) else {
                 continue
@@ -27,14 +28,11 @@ class MKGameParserHelper {
             
             //比賽時間
             if currentState == nil {
-                currentState = scoreElement?.nextSibling?.at_css("tr td")?.nextSibling?.text
+                currentState = gameInfoElement?.at_css("tr td")?.nextSibling?.text
             }
             
-            //延賽資訊
-            var note: String?
-            if currentState == nil {
-                note = scoreElement?.nextSibling?.at_css("tr td span")?.text
-            }
+            //延賽資訊, 保留比賽資訊
+            let note = gameInfoElement?.at_css("tr td span")?.text
             
             let model = MKCompetitionModel(awayTeam: competiton.awayTeam, homeTeam: competiton.homeTeam, awayScore: score.awayScore, homeScore: score.homeScore, location: competiton.location, number: number, currentState: currentState, note: note)
             
