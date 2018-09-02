@@ -22,16 +22,21 @@ class MKGameParserHelper {
                 continue
             }
             
+            //比賽局數
             var currentState = score.currentInning
+            
+            //比賽時間
             if currentState == nil {
-                currentState = parseGameInfo(scoreElement?.nextSibling)
+                currentState = scoreElement?.nextSibling?.at_css("tr td")?.nextSibling?.text
             }
             
-            guard let current = currentState else {
-                continue
+            //延賽資訊
+            var note: String?
+            if currentState == nil {
+                note = scoreElement?.nextSibling?.at_css("tr td span")?.text
             }
             
-            let model = MKCompetitionModel(awayTeam: competiton.awayTeam, homeTeam: competiton.homeTeam, awayScore: score.awayScore, homeScore: score.homeScore, location: competiton.location, number: number, currentState: current, note: nil)
+            let model = MKCompetitionModel(awayTeam: competiton.awayTeam, homeTeam: competiton.homeTeam, awayScore: score.awayScore, homeScore: score.homeScore, location: competiton.location, number: number, currentState: currentState, note: note)
             
             competitions.append(model)
         }
@@ -81,18 +86,13 @@ private extension MKGameParserHelper {
     
     //找出對戰場數
     static func parseGameNumber(_ element: XMLElement?) -> String? {
+        // Fix:
         //第一個 th 可能為`補賽`, `保留`
         //第三個 th 可能為`雙賽1`, `雙賽2`
         guard let number = element?.at_css("tr th")?.nextSibling?.text else {
             return nil
         }
         return number
-    }
-    
-    static func parseGameInfo(_ element: XMLElement?) -> String? {
-        //tr td .next 為比賽時間
-        //Fix: 可能只有 tr td span 為延賽資訊
-        return element?.at_css("tr td")?.nextSibling?.text
     }
 }
 

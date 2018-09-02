@@ -41,8 +41,13 @@ class MKGameTableViewCell: UITableViewCell {
             leftLabel.text = viewModel.awayScore
             rightImageView.image = UIImage(named: viewModel.homeTeam.logoImageName())
             rightLabel.text = viewModel.homeScore
-            locationLabel.text = viewModel.location
-            timeLabel.text = viewModel.currentState
+            if viewModel.currentState != nil {
+                locationLabel.text = viewModel.location
+                timeLabel.text = viewModel.currentState
+            } else {
+                locationLabel.text = ""
+                timeLabel.text = viewModel.note
+            }
         } else {
             shouldSwitchToNoGameView(true)
         }
