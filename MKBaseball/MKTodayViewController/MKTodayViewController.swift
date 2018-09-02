@@ -86,6 +86,9 @@ class MKTodayViewController: UIViewController {
 
 extension MKTodayViewController: MKTodayViewModelDelegate {
     func viewModel(_ viewModel: MKTodayViewModel, didChangeViewMode: MKViewMode) {
+        if didChangeViewMode == .loading {
+            return
+        }
         DispatchQueue.main.sync { [unowned self] in
             self.refreshControl.endRefreshing()
             self.tableView.reloadData()

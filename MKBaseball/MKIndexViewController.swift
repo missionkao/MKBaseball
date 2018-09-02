@@ -27,7 +27,7 @@ class MKIndexViewController: UITabBarController {
         let topViewController = MKTodayViewController(viewModel: MKTodayViewModel())
         topViewController.tabBarItem = topTabBarItem
         
-        let calendarViewController = MKScheduleViewController()
+        let calendarViewController = MKScheduleViewController(viewModel: MKScheduleViewModel())
         calendarViewController.tabBarItem = calendarTabBarItem
         
         let rankingViewController = MKRankingViewController(viewModel: MKRankingViewModel())

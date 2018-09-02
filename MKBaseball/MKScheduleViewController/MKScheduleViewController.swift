@@ -13,6 +13,23 @@ class MKScheduleViewController: UIViewController {
     
     private let cellReuseIdentifier = "MKScheduleTableViewCell"
     private var isCalendarMainViewAppear = false
+    private var viewModel: MKScheduleViewModel!
+    private let refreshControl = UIRefreshControl()
+    private var calendar = Calendar.current
+    private var targetMonth: Int = 0
+    private var targetYear: Int = 0
+    
+    required init(viewModel: MKScheduleViewModel) {
+        super.init(nibName: nil, bundle: nil)
+        self.viewModel = viewModel
+        self.viewModel.delegate = self
+        self.targetYear = calendar.component(.year, from: Date())
+        self.targetMonth = calendar.component(.month, from: Date())
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,11 +39,20 @@ class MKScheduleViewController: UIViewController {
         headerView.addSubview(monthButton)
         headerView.addSubview(rightButton)
         view.addSubview(tableView)
+        
+        //refresh control
+        refreshControl.tintColor = UIColor.white
+        tableView.addSubview(refreshControl)
+        
         setupConstraints()
         
         setupCalendarView()
         
         monthButton.addTarget(self, action: #selector(toggleCalendarView), for: .touchUpInside)
+        leftButton.addTarget(self, action: #selector(leftAction), for: .touchUpInside)
+        rightButton.addTarget(self, action: #selector(rightAction), for: .touchUpInside)
+        
+        fetchSchedule()
     }
     
     override func viewDidLayoutSubviews() {
@@ -58,7 +84,7 @@ class MKScheduleViewController: UIViewController {
     private lazy var monthButton: UIButton = {
         let view = UIButton()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.setTitle("2018 年 8 月", for: .normal)
+        view.setTitle("\(self.targetYear) 年 \(self.targetMonth) 月", for: .normal)
         view.titleLabel?.font = UIFont.systemFont(ofSize: 18)
         view.titleLabel?.textAlignment = .center
         view.setTitleColor(UIColor.cpblBlue, for: .normal)
@@ -100,6 +126,7 @@ class MKScheduleViewController: UIViewController {
         view.calendarAppearanceDelegate = self
         view.animatorDelegate = self
         view.calendarDelegate = self
+        view.appearance.spaceBetweenWeekViews = 1
         return view
     }()
     
@@ -110,7 +137,7 @@ class MKScheduleViewController: UIViewController {
         view.tableFooterView = UIView()
         view.separatorColor = UIColor.gray
         view.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-        view.rowHeight = 120
+        view.rowHeight = 100
         view.dataSource = self
         view.delegate = self
         view.register(MKGameTableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
@@ -121,19 +148,20 @@ class MKScheduleViewController: UIViewController {
 
 extension MKScheduleViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        return self.viewModel.allGames[section].model.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // WIP: move to viewModel
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! MKGameTableViewCell
-        let cellViewModel = MKGameTableViewCellViewModel.parsing(htmlString: "")
+        let model = self.viewModel.allGames[indexPath.section].model[indexPath.row]
+        let cellViewModel = MKGameTableViewCellViewModel(model: model)
         cell.applyCellViewModel(viewModel: cellViewModel)
         return cell
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 5
+        return self.viewModel.allGames.count
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -142,7 +170,7 @@ extension MKScheduleViewController: UITableViewDataSource {
         
         let dateLabel = UILabel()
         dateLabel.translatesAutoresizingMaskIntoConstraints = false
-        dateLabel.text = "2018/07/28 (六)"
+        dateLabel.text = self.viewModel.allGames[section].date
         dateLabel.textColor = UIColor.cpblBlue
         dateLabel.font = UIFont.systemFont(ofSize: 16)
         view.addSubview(dateLabel)
@@ -158,16 +186,41 @@ extension MKScheduleViewController: UITableViewDataSource {
 }
 
 extension MKScheduleViewController: UITableViewDelegate {
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        if refreshControl.isRefreshing {
+            self.fetchSchedule(forceUpdate: true)
+        }
+    }
 }
 
 extension MKScheduleViewController: CVCalendarViewDelegate, CVCalendarMenuViewDelegate {
     
     // MARK: Required methods
-    
     func presentationMode() -> CalendarMode { return .monthView }
     
     func firstWeekday() -> Weekday { return .sunday }
     
+    func didShowNextMonthView(_ date: Date) {
+        self.setupYearAndMonth(date: date)
+    }
+    
+    func didShowPreviousMonthView(_ date: Date) {
+        self.setupYearAndMonth(date: date)
+    }
+    
+    // WIP: didSelectDayView to scroll table view to that date
+}
+
+extension MKScheduleViewController: MKScheduleViewModelDelegate {
+    func viewModel(_ viewModel: MKScheduleViewModel, didChangeViewMode: MKViewMode) {
+        if didChangeViewMode == .loading {
+            return
+        }
+        DispatchQueue.main.sync { [unowned self] in
+            self.refreshControl.endRefreshing()
+            self.tableView.reloadData()
+        }
+    }
 }
 
 private extension MKScheduleViewController {
@@ -243,5 +296,24 @@ private extension MKScheduleViewController {
                 self.isCalendarMainViewAppear = false
             }
         }
+    }
+    
+    func fetchSchedule(forceUpdate: Bool = false) {
+        viewModel.fetchSchedule(atYear: self.targetYear, month: self.targetMonth, forceUpdate: forceUpdate)
+    }
+    
+    @objc func leftAction() {
+        self.calendarView.loadPreviousView()
+    }
+    
+    @objc func rightAction() {
+        self.calendarView.loadNextView()
+    }
+    
+    func setupYearAndMonth(date: Date) {
+        self.targetYear = calendar.component(.year, from: date)
+        self.targetMonth = calendar.component(.month, from: date)
+        self.monthButton.setTitle("\(self.targetYear) 年 \(self.targetMonth) 月", for: .normal)
+        self.fetchSchedule()
     }
 }
