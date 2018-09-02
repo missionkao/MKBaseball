@@ -51,7 +51,7 @@ class MKTodayViewModel {
     weak var delegate: MKTodayViewModelDelegate?
     
     func fetchTodayGame() {
-        let url = "http://www.cpbl.com.tw/schedule/index/2018-08-04.html"
+        let url = "http://www.cpbl.com.tw/schedule/index.html"
         
         MKAPIClinet.fetchHTMLFrom(url: url, success: { [unowned self] (html) in
             self.parseTodayGameHTML(html)

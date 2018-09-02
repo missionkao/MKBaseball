@@ -16,7 +16,7 @@ class MKScheduleViewModel {
     weak var delegate: MKScheduleViewModelDelegate?
     
     var allGames = [(date: String, model: [MKCompetitionModel])]()
-    var currentMonth = ""
+    var currentMonth: Int = 0
     
     private (set) var viewMode: MKViewMode = .loading {
         didSet {
@@ -24,8 +24,12 @@ class MKScheduleViewModel {
         }
     }
     
-    func fetchSchedule(atYear year: String, month: String) {
+    func fetchSchedule(atYear year: Int, month: Int) {
+        if month == currentMonth {
+            return
+        }
         currentMonth = month
+        viewMode = .loading
         let scheduleURL = "http://www.cpbl.com.tw/schedule/index/\(year)-\(month)-01.html?&date=\(year)-\(month)-01&gameno=01&sfieldsub=&sgameno=01"
         
         MKAPIClinet.fetchHTMLFrom(url: scheduleURL, success: { [unowned self] (html) in
@@ -49,6 +53,7 @@ private extension MKScheduleViewModel {
             return
         }
         
+        allGames = [(date: String, model: [MKCompetitionModel])]()
         var dateE: XMLElement? = weekdaysE.nextSibling
         
         while dateE != nil {

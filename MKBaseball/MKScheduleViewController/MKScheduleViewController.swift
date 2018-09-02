@@ -15,11 +15,16 @@ class MKScheduleViewController: UIViewController {
     private var isCalendarMainViewAppear = false
     private var viewModel: MKScheduleViewModel!
     private let refreshControl = UIRefreshControl()
+    private var calendar = Calendar.current
+    private var targetMonth: Int = 0
+    private var targetYear: Int = 0
     
     required init(viewModel: MKScheduleViewModel) {
         super.init(nibName: nil, bundle: nil)
         self.viewModel = viewModel
         self.viewModel.delegate = self
+        self.targetYear = calendar.component(.year, from: Date())
+        self.targetMonth = calendar.component(.month, from: Date())
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -39,8 +44,10 @@ class MKScheduleViewController: UIViewController {
         setupCalendarView()
         
         monthButton.addTarget(self, action: #selector(toggleCalendarView), for: .touchUpInside)
+        leftButton.addTarget(self, action: #selector(leftAction), for: .touchUpInside)
+        rightButton.addTarget(self, action: #selector(rightAction), for: .touchUpInside)
         
-        viewModel.fetchSchedule(atYear: "2018", month: "8")
+        fetchSchedule()
     }
     
     override func viewDidLayoutSubviews() {
@@ -72,7 +79,7 @@ class MKScheduleViewController: UIViewController {
     private lazy var monthButton: UIButton = {
         let view = UIButton()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.setTitle("2018 年 8 月", for: .normal)
+        view.setTitle("\(self.targetYear) 年 \(self.targetMonth) 月", for: .normal)
         view.titleLabel?.font = UIFont.systemFont(ofSize: 18)
         view.titleLabel?.textAlignment = .center
         view.setTitleColor(UIColor.cpblBlue, for: .normal)
@@ -114,6 +121,7 @@ class MKScheduleViewController: UIViewController {
         view.calendarAppearanceDelegate = self
         view.animatorDelegate = self
         view.calendarDelegate = self
+        view.appearance.spaceBetweenWeekViews = 1
         return view
     }()
     
@@ -178,15 +186,24 @@ extension MKScheduleViewController: UITableViewDelegate {
 extension MKScheduleViewController: CVCalendarViewDelegate, CVCalendarMenuViewDelegate {
     
     // MARK: Required methods
-    
     func presentationMode() -> CalendarMode { return .monthView }
     
     func firstWeekday() -> Weekday { return .sunday }
     
+    func didShowNextMonthView(_ date: Date) {
+        self.setupYearAndMonth(date: date)
+    }
+    
+    func didShowPreviousMonthView(_ date: Date) {
+        self.setupYearAndMonth(date: date)
+    }
 }
 
 extension MKScheduleViewController: MKScheduleViewModelDelegate {
     func viewModel(_ viewModel: MKScheduleViewModel, didChangeViewMode: MKViewMode) {
+        if didChangeViewMode == .loading {
+            return
+        }
         DispatchQueue.main.sync { [unowned self] in
             self.refreshControl.endRefreshing()
             self.tableView.reloadData()
@@ -267,5 +284,24 @@ private extension MKScheduleViewController {
                 self.isCalendarMainViewAppear = false
             }
         }
+    }
+    
+    func fetchSchedule() {
+        viewModel.fetchSchedule(atYear: self.targetYear, month: self.targetMonth)
+    }
+    
+    @objc func leftAction() {
+        self.calendarView.loadPreviousView()
+    }
+    
+    @objc func rightAction() {
+        self.calendarView.loadNextView()
+    }
+    
+    func setupYearAndMonth(date: Date) {
+        self.targetYear = calendar.component(.year, from: date)
+        self.targetMonth = calendar.component(.month, from: date)
+        self.monthButton.setTitle("\(self.targetYear) 年 \(self.targetMonth) 月", for: .normal)
+        self.fetchSchedule()
     }
 }
