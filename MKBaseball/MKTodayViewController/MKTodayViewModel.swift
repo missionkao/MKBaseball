@@ -53,6 +53,7 @@ class MKTodayViewModel {
     func fetchTodayGame() {
         let url = "http://www.cpbl.com.tw/schedule/index.html"
         
+        self.viewMode = .loading
         MKAPIClinet.fetchHTMLFrom(url: url, success: { [unowned self] (html) in
             self.parseTodayGameHTML(html)
             self.viewMode = .complete
@@ -64,6 +65,7 @@ class MKTodayViewModel {
     func fetchPlayerChange() {
         let url = "http://www.cpbl.com.tw/players/change.html"
         
+        self.viewMode = .loading
         MKAPIClinet.fetchHTMLFrom(url: url, success: { [unowned self] (html) in
             self.parsePlayerChangeHTML(html)
             self.viewMode = .complete
@@ -109,6 +111,7 @@ private extension MKTodayViewModelPlayerChange {
         
         changes = [MKPlayerChangeModel]()
         
+        //FIX: 如果是月初, 就擷取不到上個月底的球員異動
         let players = doc.css("#player_tr").reversed()
         
         for p in players {

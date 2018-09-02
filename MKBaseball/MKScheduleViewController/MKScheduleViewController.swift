@@ -39,6 +39,11 @@ class MKScheduleViewController: UIViewController {
         headerView.addSubview(monthButton)
         headerView.addSubview(rightButton)
         view.addSubview(tableView)
+        
+        //refresh control
+        refreshControl.tintColor = UIColor.white
+        tableView.addSubview(refreshControl)
+        
         setupConstraints()
         
         setupCalendarView()
@@ -181,6 +186,11 @@ extension MKScheduleViewController: UITableViewDataSource {
 }
 
 extension MKScheduleViewController: UITableViewDelegate {
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        if refreshControl.isRefreshing {
+            self.fetchSchedule(forceUpdate: true)
+        }
+    }
 }
 
 extension MKScheduleViewController: CVCalendarViewDelegate, CVCalendarMenuViewDelegate {
@@ -197,6 +207,8 @@ extension MKScheduleViewController: CVCalendarViewDelegate, CVCalendarMenuViewDe
     func didShowPreviousMonthView(_ date: Date) {
         self.setupYearAndMonth(date: date)
     }
+    
+    // WIP: didSelectDayView to scroll table view to that date
 }
 
 extension MKScheduleViewController: MKScheduleViewModelDelegate {
@@ -286,8 +298,8 @@ private extension MKScheduleViewController {
         }
     }
     
-    func fetchSchedule() {
-        viewModel.fetchSchedule(atYear: self.targetYear, month: self.targetMonth)
+    func fetchSchedule(forceUpdate: Bool = false) {
+        viewModel.fetchSchedule(atYear: self.targetYear, month: self.targetMonth, forceUpdate: forceUpdate)
     }
     
     @objc func leftAction() {

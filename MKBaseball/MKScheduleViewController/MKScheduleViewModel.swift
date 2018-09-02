@@ -24,8 +24,8 @@ class MKScheduleViewModel {
         }
     }
     
-    func fetchSchedule(atYear year: Int, month: Int) {
-        if month == currentMonth {
+    func fetchSchedule(atYear year: Int, month: Int, forceUpdate: Bool = false) {
+        if month == currentMonth && forceUpdate == false {
             return
         }
         currentMonth = month
