@@ -25,16 +25,22 @@ class MKStatisticTableViewCell: UITableViewCell {
         setupConstraints()
     }
     
+    func applyCellViewModel(tuple: StatisticTuple) {
+        itemLabel.text = tuple.item
+        playerLabel.text = tuple.name
+        teamLabel.text = tuple.team
+        valueLabel.text = tuple.value
+    }
+    
     private lazy var itemLabel: UILabel = {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.font = UIFont.boldSystemFont(ofSize: 16)
+        view.font = UIFont.boldSystemFont(ofSize: 14)
         view.layer.cornerRadius = 20
         view.layer.masksToBounds = true
         view.textColor = UIColor.white
         view.backgroundColor = UIColor.cpblBlue
         view.textAlignment = .center
-        view.text = "AVG"
         return view
     }()
     
@@ -44,7 +50,6 @@ class MKStatisticTableViewCell: UITableViewCell {
         view.backgroundColor = UIColor.clear
         view.font = UIFont.systemFont(ofSize: 20)
         view.textColor = UIColor.cpblBlue
-        view.text = "胡金龍"
         return view
     }()
     
@@ -54,7 +59,6 @@ class MKStatisticTableViewCell: UITableViewCell {
         view.backgroundColor = UIColor.clear
         view.font = UIFont.systemFont(ofSize: 12)
         view.textColor = UIColor.lightGray
-        view.text = CPBLTeam.guardians.rawValue
         return view
     }()
     
@@ -65,7 +69,6 @@ class MKStatisticTableViewCell: UITableViewCell {
         view.font = UIFont.boldSystemFont(ofSize: 20)
         view.textColor = UIColor.cpblBlue
         view.textAlignment = .right
-        view.text = "0.367"
         return view
     }()
 }
