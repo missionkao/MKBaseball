@@ -9,9 +9,29 @@
 import UIKit
 import PopupController
 
+fileprivate enum MKStatisticViewMode: Int {
+    case hitter = 0, pitcher
+}
+
 class MKStatisticViewController: UIViewController {
     
     private let cellReuseIdentifier = "MKStatisticTableViewCell"
+    private var viewModel: MKStatisticViewModel!
+    private var viewMode: MKStatisticViewMode = .hitter {
+        didSet {
+            self.tableView.reloadData()
+        }
+    }
+    
+    required init(viewModel: MKStatisticViewModel) {
+        super.init(nibName: nil, bundle: nil)
+        self.viewModel = viewModel
+        self.viewModel.delegate = self
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,10 +40,13 @@ class MKStatisticViewController: UIViewController {
         view.addSubview(tableView)
         
         setupConstraints()
+        
+        viewModel.fetchStatistic()
     }
     
     private lazy var headerView: MKSegmentedControlHeaderView = {
         let view = MKSegmentedControlHeaderView(items: ["打擊數據", "投手數據"])
+        view.delegate = self
         return view
     }()
 
@@ -44,11 +67,22 @@ class MKStatisticViewController: UIViewController {
 
 extension MKStatisticViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        if viewMode == .hitter {
+            return self.viewModel.hitTuples.count
+        }
+        
+        return self.viewModel.defenseTuples.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! MKStatisticTableViewCell
+        
+        if viewMode == .hitter {
+            cell.applyCellViewModel(tuple: self.viewModel.hitTuples[indexPath.row])
+        } else {
+            cell.applyCellViewModel(tuple: self.viewModel.defenseTuples[indexPath.row])
+        }
+        
         return cell
     }
 }
@@ -67,6 +101,27 @@ extension MKStatisticViewController: UITableViewDelegate {
             .create(self)
             .customize(popupOptions)
             .show(MKStatisticPopupViewController())
+    }
+}
+
+extension MKStatisticViewController: MKStatisticViewModelDelegate {
+    func viewModel(_ viewModel: MKStatisticViewModel, didChangeViewMode: MKViewMode) {
+        if didChangeViewMode == .loading {
+            return
+        }
+        DispatchQueue.main.sync { [unowned self] in
+            self.tableView.reloadData()
+        }
+    }
+}
+
+extension MKStatisticViewController: MKSegmentedControlHeaderViewDelegate {
+    func headerView(_ headerView: MKSegmentedControlHeaderView, didSelectSegmentControl atIndex: Int) {
+        if atIndex == 0 {
+            self.viewMode = .hitter
+        } else {
+            self.viewMode = .pitcher
+        }
     }
 }
 
