@@ -42,35 +42,27 @@ class MKTodayViewModel {
     private (set) var competitions = [MKCompetitionModel]()
     private (set) var changes = [MKPlayerChangeModel]()
     
-    private (set) var viewMode: MKViewMode = .loading {
-        didSet {
-            delegate?.viewModel(self, didChangeViewMode: viewMode)
-        }
-    }
-    
     weak var delegate: MKTodayViewModelDelegate?
     
     func fetchTodayGame() {
         let url = "http://www.cpbl.com.tw/schedule/index.html"
         
-        self.viewMode = .loading
         MKAPIClinet.fetchHTMLFrom(url: url, success: { [unowned self] (html) in
             self.parseTodayGameHTML(html)
-            self.viewMode = .complete
+            self.delegate?.viewModel(self, didChangeViewMode: .complete)
         }) { (error) in
-            self.viewMode = .error
+            self.delegate?.viewModel(self, didChangeViewMode: .error)
         }
     }
     
     func fetchPlayerChange() {
         let url = "http://www.cpbl.com.tw/players/change.html"
         
-        self.viewMode = .loading
         MKAPIClinet.fetchHTMLFrom(url: url, success: { [unowned self] (html) in
             self.parsePlayerChangeHTML(html)
-            self.viewMode = .complete
+            self.delegate?.viewModel(self, didChangeViewMode: .complete)
         }) { (error) in
-            self.viewMode = .error
+            self.delegate?.viewModel(self, didChangeViewMode: .error)
         }
     }
 }
