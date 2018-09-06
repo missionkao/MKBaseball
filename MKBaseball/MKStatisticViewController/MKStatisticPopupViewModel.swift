@@ -83,7 +83,7 @@ private extension MKStatisticPopupViewModel {
         let teamImage = teamAndName?.at_css("img")?["src"] ?? ""
         let team = CPBLTeam(html: teamImage)
         
-        let name = teamAndName?.at_css("a")?.text ?? ""
+        let name = teamAndName?.at_css("a")?.text?.trimmingCharacters(in: .whitespaces) ?? ""
         
         let value = element.at_xpath("td[\(index)]")?.text ?? ""
         

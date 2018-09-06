@@ -13,7 +13,8 @@ enum MKViewMode: Int {
 }
 
 protocol MKTodayViewModelDelegate: class {
-    func viewModel(_ viewModel: MKTodayViewModel, didChangeViewMode: MKViewMode)
+    func viewModelShouldReloadTodayGame(_ viewModel: MKTodayViewModel)
+    func viewModelShouldReloadPlayerChange(_ viewModel: MKTodayViewModel)
 }
 
 struct MKCompetitionModel {
@@ -49,9 +50,9 @@ class MKTodayViewModel {
         
         MKAPIClinet.fetchHTMLFrom(url: url, success: { [unowned self] (html) in
             self.parseTodayGameHTML(html)
-            self.delegate?.viewModel(self, didChangeViewMode: .complete)
+            self.delegate?.viewModelShouldReloadTodayGame(self)
         }) { (error) in
-            self.delegate?.viewModel(self, didChangeViewMode: .error)
+            print("fetchTodayGame Error!!!!!!!!!")
         }
     }
     
@@ -60,9 +61,9 @@ class MKTodayViewModel {
         
         MKAPIClinet.fetchHTMLFrom(url: url, success: { [unowned self] (html) in
             self.parsePlayerChangeHTML(html)
-            self.delegate?.viewModel(self, didChangeViewMode: .complete)
+            self.delegate?.viewModelShouldReloadPlayerChange(self)
         }) { (error) in
-            self.delegate?.viewModel(self, didChangeViewMode: .error)
+            print("fetchPlayerChange Error!!!!!!!!!")
         }
     }
 }

@@ -113,7 +113,7 @@ private extension MKStatisticPopupViewController {
         attributes[.font] = UIFont.systemFont(ofSize: 24)
         let title = NSAttributedString(string: self.viewModel.type.uppercased(), attributes: attributes)
         attributes[.font] = UIFont.systemFont(ofSize: 10)
-        let subtitle = NSAttributedString(string: " \(self.viewModel.type.localizedDescription())", attributes: attributes)
+        let subtitle = NSAttributedString(string: "  \(self.viewModel.type.localizedDescription())", attributes: attributes)
         let string = NSMutableAttributedString(attributedString: title)
         string.append(subtitle)
         
