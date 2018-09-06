@@ -104,7 +104,7 @@ extension MKStatisticViewController: UITableViewDelegate {
             type = self.viewModel.pitchs[indexPath.row]
         }
         
-        let popupViewModel = MKStatisticPopupViewModel(year: "2018", type: type)
+        let popupViewModel = MKStatisticPopupViewModel(type: type)
         
         PopupController
             .create(self)

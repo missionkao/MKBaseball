@@ -29,8 +29,8 @@ class MKStatisticPopupViewModel {
     private let year: String
     let type: MKStatisticType
     
-    init(year: String, type: MKStatisticType) {
-        self.year = year
+    init(type: MKStatisticType) {
+        self.year = "\(Calendar.current.component(.year, from: Date()))"
         self.type = type
     }
     
