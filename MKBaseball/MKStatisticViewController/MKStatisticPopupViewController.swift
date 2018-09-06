@@ -12,13 +12,25 @@ import PopupController
 class MKStatisticPopupViewController: UIViewController {
     
     private let cellReuseIdentifier = "MKStatisticPopupTableViewCell"
-
+    private var viewModel: MKStatisticPopupViewModel!
+    
+    required init(viewModel: MKStatisticPopupViewModel) {
+        super.init(nibName: nil, bundle: nil)
+        self.viewModel = viewModel
+        self.viewModel.delegate = self
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.addSubview(tableView)
-        
         setupConstraints()
+        
+        self.viewModel.fetchStatistic()
     }
     
     private lazy var tableView: UITableView = {
@@ -31,7 +43,7 @@ class MKStatisticPopupViewController: UIViewController {
         view.rowHeight = 56
         view.dataSource = self
         view.delegate = self
-        view.register(MKStatisticTableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
+        view.register(MKStatisticPopupTableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
         return view
     }()
     
@@ -47,11 +59,12 @@ extension MKStatisticPopupViewController: PopupContentViewController {
 
 extension MKStatisticPopupViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 20
+        return self.viewModel.statisticTuples.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! MKStatisticPopupTableViewCell
+        cell.applyCellViewModel(tuple: self.viewModel.statisticTuples[indexPath.row])
         return cell
     }
     
@@ -65,6 +78,17 @@ extension MKStatisticPopupViewController: UITableViewDataSource {
 }
 
 extension MKStatisticPopupViewController: UITableViewDelegate {
+}
+
+extension MKStatisticPopupViewController: MKStatisticPopupViewModelDelegate {
+    func viewModel(_ viewModel: MKStatisticPopupViewModel, didChangeViewMode: MKViewMode) {
+        if didChangeViewMode == .loading {
+            return
+        }
+        DispatchQueue.main.sync { [unowned self] in
+            self.tableView.reloadData()
+        }
+    }
 }
 
 private extension MKStatisticPopupViewController {
@@ -84,13 +108,12 @@ private extension MKStatisticPopupViewController {
         label.textColor = UIColor.cpblBlue
         label.sizeToFit()
         label.backgroundColor = UIColor.clear
-        label.text = "AVG"
         
         var attributes = [NSAttributedStringKey:Any]()
         attributes[.font] = UIFont.systemFont(ofSize: 24)
-        let title = NSAttributedString(string: "AVG", attributes: attributes)
+        let title = NSAttributedString(string: self.viewModel.type.uppercased(), attributes: attributes)
         attributes[.font] = UIFont.systemFont(ofSize: 10)
-        let subtitle = NSAttributedString(string: " 打擊率", attributes: attributes)
+        let subtitle = NSAttributedString(string: "  \(self.viewModel.type.localizedDescription())", attributes: attributes)
         let string = NSMutableAttributedString(attributedString: title)
         string.append(subtitle)
         

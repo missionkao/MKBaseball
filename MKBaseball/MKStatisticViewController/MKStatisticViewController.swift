@@ -71,7 +71,7 @@ extension MKStatisticViewController: UITableViewDataSource {
             return self.viewModel.hitTuples.count
         }
         
-        return self.viewModel.defenseTuples.count
+        return self.viewModel.pitchTuples.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -80,7 +80,7 @@ extension MKStatisticViewController: UITableViewDataSource {
         if viewMode == .hitter {
             cell.applyCellViewModel(tuple: self.viewModel.hitTuples[indexPath.row])
         } else {
-            cell.applyCellViewModel(tuple: self.viewModel.defenseTuples[indexPath.row])
+            cell.applyCellViewModel(tuple: self.viewModel.pitchTuples[indexPath.row])
         }
         
         return cell
@@ -97,10 +97,19 @@ extension MKStatisticViewController: UITableViewDelegate {
             .scrollable(true)
         ]
         
+        let type: MKStatisticType!
+        if viewMode == .hitter {
+            type = self.viewModel.hits[indexPath.row]
+        } else {
+            type = self.viewModel.pitchs[indexPath.row]
+        }
+        
+        let popupViewModel = MKStatisticPopupViewModel(year: "2018", type: type)
+        
         PopupController
             .create(self)
             .customize(popupOptions)
-            .show(MKStatisticPopupViewController())
+            .show(MKStatisticPopupViewController(viewModel: popupViewModel))
     }
 }
 

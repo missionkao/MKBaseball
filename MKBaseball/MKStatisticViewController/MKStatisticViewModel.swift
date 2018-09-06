@@ -24,22 +24,11 @@ class MKStatisticViewModel {
         }
     }
     
-    private var avgTop: StatisticTuple = (item: "AVG", name: "", team: "", value: "")
-    private var hitTop: StatisticTuple = (item: "H", name: "", team: "", value: "")
-    private var hrTop: StatisticTuple = (item: "HR", name: "", team: "", value: "")
-    private var rbiTop: StatisticTuple = (item: "RBI", name: "", team: "", value: "")
-    private var tbTop: StatisticTuple = (item: "TB", name: "", team: "", value: "")
-    private var sbTop: StatisticTuple = (item: "SB", name: "", team: "", value: "")
-    
-    private var eraTop: StatisticTuple = (item: "ERA", name: "", team: "", value: "")
-    private var winTop: StatisticTuple = (item: "W", name: "", team: "", value: "")
-    private var svTop: StatisticTuple = (item: "SV", name: "", team: "", value: "")
-    private var soTop: StatisticTuple = (item: "SO", name: "", team: "", value: "")
-    private var whipTop: StatisticTuple = (item: "WHIP", name: "", team: "", value: "")
-    private var hldTop: StatisticTuple = (item: "HLD", name: "", team: "", value: "")
+    let hits: [MKStatisticType] = [.avg, .hit, .hr, .rbi, .sb, .tb]
+    let pitchs: [MKStatisticType] = [.era, .win, .sv, .so, .whip, .hld]
     
     private (set) var hitTuples = [StatisticTuple]()
-    private (set) var defenseTuples = [StatisticTuple]()
+    private (set) var pitchTuples = [StatisticTuple]()
     
     func fetchStatistic() {
         let url = "http://www.cpbl.com.tw/stats/toplist.html"
@@ -59,24 +48,15 @@ private extension MKStatisticViewModel {
             return
         }
         
-        self.avgTop = parseEveryHTML(doc, withIndex: 1, item: "AVG")
-        self.hitTop = parseEveryHTML(doc, withIndex: 2, item: "H")
-        self.hrTop = parseEveryHTML(doc, withIndex: 3, item: "HR")
+        for hit in hits {
+            let tuple = parseEveryHTML(doc, withIndex: hit.rawValue, item: hit.abbreviation())
+            hitTuples.append(tuple)
+        }
         
-        self.eraTop = parseEveryHTML(doc, withIndex: 4, item: "ERA")
-        self.winTop = parseEveryHTML(doc, withIndex: 5, item: "W")
-        self.svTop = parseEveryHTML(doc, withIndex: 6, item: "SV")
-        
-        self.rbiTop = parseEveryHTML(doc, withIndex: 7, item: "RBI")
-        self.sbTop = parseEveryHTML(doc, withIndex: 8, item: "SB")
-        self.soTop = parseEveryHTML(doc, withIndex: 9, item: "SO")
-        
-        self.whipTop = parseEveryHTML(doc, withIndex: 10, item: "WHIP")
-        self.tbTop = parseEveryHTML(doc, withIndex: 11, item: "TB")
-        self.hldTop = parseEveryHTML(doc, withIndex: 12, item: "HLD")
-        
-        self.hitTuples = [self.avgTop, self.hitTop, self.hrTop, self.rbiTop, self.sbTop, self.tbTop]
-        self.defenseTuples = [self.eraTop, self.winTop, self.svTop, self.soTop, self.whipTop, self.hldTop]
+        for pitch in pitchs {
+            let tuple = parseEveryHTML(doc, withIndex: pitch.rawValue, item: pitch.abbreviation())
+            pitchTuples.append(tuple)
+        }
     }
     
     func parseEveryHTML(_ doc: HTMLDocument, withIndex: Int, item: String) -> StatisticTuple {

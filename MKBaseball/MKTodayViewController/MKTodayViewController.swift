@@ -85,13 +85,17 @@ class MKTodayViewController: UIViewController {
 }
 
 extension MKTodayViewController: MKTodayViewModelDelegate {
-    func viewModel(_ viewModel: MKTodayViewModel, didChangeViewMode: MKViewMode) {
-        if didChangeViewMode == .loading {
-            return
-        }
+    func viewModelShouldReloadTodayGame(_ viewModel: MKTodayViewModel) {
         DispatchQueue.main.sync { [unowned self] in
             self.refreshControl.endRefreshing()
-            self.tableView.reloadData()
+            self.tableView.reloadSections(IndexSet(integer: 0), with: .none)
+        }
+    }
+    
+    func viewModelShouldReloadPlayerChange(_ viewModel: MKTodayViewModel) {
+        DispatchQueue.main.sync { [unowned self] in
+            self.refreshControl.endRefreshing()
+            self.tableView.reloadSections(IndexSet(integer: 1), with: .none)
         }
     }
 }
