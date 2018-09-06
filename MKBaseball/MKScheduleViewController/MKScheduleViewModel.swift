@@ -30,7 +30,14 @@ class MKScheduleViewModel {
         }
         currentMonth = month
         viewMode = .loading
-        let scheduleURL = "http://www.cpbl.com.tw/schedule/index/\(year)-\(month)-01.html?&date=\(year)-\(month)-01&gameno=01&sfieldsub=&sgameno=01"
+        
+        var components = URLComponents(string: "http://www.cpbl.com.tw/schedule/index/\(year)-\(month)-01.html")
+        components?.queryItems = [
+            URLQueryItem(name: "date", value: "\(year)-\(month)-01"),
+            URLQueryItem(name: "gameno", value: "01"),
+            URLQueryItem(name: "sgameno", value: "01")
+        ]
+        let scheduleURL = components?.url?.absoluteString ?? ""
         
         MKAPIClinet.fetchHTMLFrom(url: scheduleURL, success: { [unowned self] (html) in
             self.parseScheduleHTML(html)
