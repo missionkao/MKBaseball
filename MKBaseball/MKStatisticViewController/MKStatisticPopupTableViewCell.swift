@@ -25,13 +25,19 @@ class MKStatisticPopupTableViewCell: UITableViewCell {
         setupConstraints()
     }
     
+    func applyCellViewModel(tuple: StatisticRankTuple) {
+        rankLabel.text = tuple.rank
+        playerLabel.text = tuple.name
+        teamLabel.text = tuple.team
+        valueLabel.text = tuple.value
+    }
+    
     private lazy var rankLabel: UILabel = {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.clear
         view.font = UIFont.systemFont(ofSize: 20)
         view.textColor = UIColor.black
-        view.text = "1"
         view.textAlignment = .center
         return view
     }()
@@ -42,7 +48,6 @@ class MKStatisticPopupTableViewCell: UITableViewCell {
         view.backgroundColor = UIColor.clear
         view.font = UIFont.systemFont(ofSize: 20)
         view.textColor = UIColor.black
-        view.text = "胡金龍"
         return view
     }()
     
@@ -52,7 +57,6 @@ class MKStatisticPopupTableViewCell: UITableViewCell {
         view.backgroundColor = UIColor.clear
         view.font = UIFont.systemFont(ofSize: 12)
         view.textColor = UIColor.lightGray
-        view.text = CPBLTeam.guardians.rawValue
         return view
     }()
     
@@ -63,7 +67,6 @@ class MKStatisticPopupTableViewCell: UITableViewCell {
         view.font = UIFont.boldSystemFont(ofSize: 20)
         view.textColor = UIColor.black
         view.textAlignment = .right
-        view.text = "0.367"
         return view
     }()
 }

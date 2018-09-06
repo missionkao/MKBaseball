@@ -97,10 +97,12 @@ extension MKStatisticViewController: UITableViewDelegate {
             .scrollable(true)
         ]
         
+        let popupViewModel = MKStatisticPopupViewModel(year: "2018", type: .avg)
+        
         PopupController
             .create(self)
             .customize(popupOptions)
-            .show(MKStatisticPopupViewController())
+            .show(MKStatisticPopupViewController(viewModel: popupViewModel))
     }
 }
 
