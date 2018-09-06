@@ -76,6 +76,7 @@ class MKRankingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.cpblBlue
+        view.addSubview(headerView)
         view.addSubview(tableView)
         refreshControl.tintColor = UIColor.white
         
@@ -83,8 +84,14 @@ class MKRankingViewController: UIViewController {
         
         setupConstraints()
         
-        viewModel.fetchRanking(seasonMode: .bottom)
+        viewModel.fetchRanking()
     }
+    
+    private lazy var headerView: MKSegmentedControlHeaderView = {
+        let view = MKSegmentedControlHeaderView(items: ["上半季", "下半季", "全年度"], defaultIndex: viewModel.defaultSelectedSegmentIndex)
+        view.delegate = self
+        return view
+    }()
     
     private lazy var tableView: UITableView = {
         let view = UITableView(frame: CGRect.zero, style: .plain)
@@ -103,7 +110,6 @@ class MKRankingViewController: UIViewController {
         
         return view
     }()
-
 }
 
 extension MKRankingViewController: MKRankingViewModelDelegate {
@@ -112,6 +118,12 @@ extension MKRankingViewController: MKRankingViewModelDelegate {
             self.refreshControl.endRefreshing()
             self.tableView.reloadData()
         }
+    }
+}
+
+extension MKRankingViewController: MKSegmentedControlHeaderViewDelegate {
+    func headerView(_ headerView: MKSegmentedControlHeaderView, didSelectSegmentControl atIndex: Int) {
+        viewModel.fetchRanking(seasonMode: MKSeasonMode(rawValue: atIndex)!)
     }
 }
 
@@ -184,13 +196,19 @@ extension MKRankingViewController: UITableViewDelegate {
 
 private extension MKRankingViewController {
     func setupConstraints() {
-        tableView.snp.makeConstraints { (make) in
+        headerView.snp.makeConstraints { (make) in
             // top offset = logo(56) + offset
             if #available(iOS 11.0, *) {
                 make.top.equalTo(view.safeAreaLayoutGuide.snp.topMargin).offset(56 + 16)
             } else {
                 make.top.equalToSuperview().offset(56 + 16)
             }
+            make.left.right.equalToSuperview()
+            make.height.equalTo(56)
+        }
+
+        tableView.snp.makeConstraints { (make) in
+            make.top.equalTo(headerView.snp.bottom)
             make.left.right.bottom.equalToSuperview()
         }
     }

@@ -66,10 +66,22 @@ class MKRankingViewModel {
     private (set) var teamBetweens = [MKTeamBetweenModel]()
     private (set) var teamGrades = [MKTeamGradeModel]()
     
+    let defaultSelectedSegmentIndex: Int = {
+        let month = Calendar.current.component(.month, from: Date())
+        return (month < 7) ? 0 : 1
+    }()
+    
     weak var delegate: MKRankingViewModelDelegate?
     
-    func fetchRanking(seasonMode: MKSeasonMode) {
-        MKAPIClinet.fetchHTMLFrom(url: seasonMode.rankURL(), success: { [unowned self] (html) in
+    func fetchRanking(seasonMode: MKSeasonMode? = nil) {
+        let url: String!
+        if let mode = seasonMode {
+            url = mode.rankURL()
+        } else {
+            url = "http://www.cpbl.com.tw/standing/season"
+        }
+        
+        MKAPIClinet.fetchHTMLFrom(url: url, success: { [unowned self] (html) in
             self.parseRankingHTML(html)
             self.parseTeamGradeHTML(html)
             self.viewMode = .complete

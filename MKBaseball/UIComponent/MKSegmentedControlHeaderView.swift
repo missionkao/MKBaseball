@@ -17,13 +17,15 @@ class MKSegmentedControlHeaderView: MKContainerView {
     weak var delegate: MKSegmentedControlHeaderViewDelegate?
     
     private let items: [String]
+    private let defaultIndex: Int
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    init(items: [String]) {
+    init(items: [String], defaultIndex: Int = 0) {
         self.items = items
+        self.defaultIndex = defaultIndex
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         backgroundColor = UIColor.white
@@ -32,7 +34,7 @@ class MKSegmentedControlHeaderView: MKContainerView {
         
         selectionView.snp.makeConstraints { (make) in
             make.centerX.centerY.equalToSuperview()
-            make.width.equalTo(180)
+            make.width.equalToSuperview().multipliedBy(0.7)
             make.height.equalTo(36)
         }
     }
@@ -41,7 +43,7 @@ class MKSegmentedControlHeaderView: MKContainerView {
         let view = UISegmentedControl(items: items)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.tintColor = UIColor.cpblBlue
-        view.selectedSegmentIndex = 0
+        view.selectedSegmentIndex = self.defaultIndex
         var attributes = [NSAttributedStringKey: Any]()
         attributes[NSAttributedStringKey.font] = UIFont.systemFont(ofSize: 16)
         view.setTitleTextAttributes(attributes, for: .normal)
