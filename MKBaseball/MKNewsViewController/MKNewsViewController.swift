@@ -16,12 +16,23 @@ class MKNewsViewController: UIViewController {
 
     private let newsCellReuseIdentifier = "MKNewsTableViewCell"
     private let videoCellReuseIdentifier = "MKVideoTableViewCell"
+    private var viewModel: MKNewsViewModel!
     
     private var viewMode: MKNewsViewMode = .news {
         didSet {
             tableView.backgroundColor = (viewMode == .news ? UIColor.white : UIColor.black)
             tableView.reloadData()
         }
+    }
+    
+    required init(viewModel: MKNewsViewModel) {
+        super.init(nibName: nil, bundle: nil)
+        self.viewModel = viewModel
+        self.viewModel.delegate = self
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func viewDidLoad() {
@@ -75,6 +86,11 @@ extension MKNewsViewController: UITableViewDataSource {
 }
 
 extension MKNewsViewController: UITableViewDelegate {
+}
+
+extension MKNewsViewController: MKNewsViewModelDelegate {
+    func viewModel(_ viewModel: MKNewsViewModel, didChangeViewMode: MKViewMode) {
+    }
 }
 
 extension MKNewsViewController: MKSegmentedControlHeaderViewDelegate {

@@ -36,7 +36,7 @@ class MKIndexViewController: UITabBarController {
         let statsViewController = MKStatisticViewController(viewModel: MKStatisticViewModel())
         statsViewController.tabBarItem = statsTabBarItem
         
-        let newsViewController = MKNewsViewController()
+        let newsViewController = MKNewsViewController(viewModel: MKNewsViewModel())
         newsViewController.tabBarItem = newsTabBarItem
         
         self.viewControllers = [topViewController, calendarViewController, rankingViewController, statsViewController, newsViewController]
