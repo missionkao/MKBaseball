@@ -8,6 +8,13 @@
 
 import UIKit
 
+struct MKNewsTableViewCellViewModel {
+    let image: String?
+    let title: String?
+    let date: String?
+    let link: String?
+}
+
 class MKNewsTableViewCell: UITableViewCell {
     
     required init?(coder aDecoder: NSCoder) {
@@ -16,7 +23,7 @@ class MKNewsTableViewCell: UITableViewCell {
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
+        selectionStyle = .none
         contentView.addSubview(newsImageView)
         contentView.addSubview(rightView)
         rightView.addSubview(titleLabel)
@@ -25,15 +32,19 @@ class MKNewsTableViewCell: UITableViewCell {
         setupConstraints()
     }
     
+    func applyCellViewModel(_ cellViewModel: MKNewsTableViewCellViewModel) {
+        
+        if let image = cellViewModel.image, let url = URL(string: image), let data = try? Data(contentsOf: url) {
+            newsImageView.image = UIImage(data: data)
+        }
+        titleLabel.text = cellViewModel.title
+        dateLabel.text = cellViewModel.date
+    }
+    
     private lazy var newsImageView: UIImageView = {
         let view = UIImageView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.contentMode = .scaleAspectFill
-        // NOTE: This is synchronously on main thread
-        let url = URL(string: "http://cpbl-elta.cdn.hinet.net/upload/news/18282.jpg")
-        if let data = try? Data(contentsOf: url!) {
-            view.image = UIImage(data: data)
-        }
         return view
     }()
     
@@ -46,8 +57,7 @@ class MKNewsTableViewCell: UITableViewCell {
     private lazy var titleLabel: UILabel = {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.text = "詹子賢轟雙響砲 帶領中信兄弟擊退富邦"
-        view.font = UIFont.boldSystemFont(ofSize: 18)
+        view.font = UIFont.boldSystemFont(ofSize: 16)
         view.numberOfLines = 0
         view.lineBreakMode = .byWordWrapping
         view.textColor = UIColor.black
@@ -57,7 +67,6 @@ class MKNewsTableViewCell: UITableViewCell {
     private lazy var dateLabel: UILabel = {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.text = "2018.07.28"
         view.font = UIFont.systemFont(ofSize: 14)
         view.textColor = UIColor.lightGray
         return view
@@ -69,12 +78,12 @@ private extension MKNewsTableViewCell {
         newsImageView.snp.makeConstraints { (make) in
             make.left.equalToSuperview().offset(16)
             make.centerY.equalToSuperview()
-            make.height.equalTo(88)
-            make.width.equalTo(156)
+            make.height.equalTo(80)
+            make.width.equalTo(142)
         }
         
         rightView.snp.makeConstraints { (make) in
-            make.left.equalTo(newsImageView.snp.right).offset(16)
+            make.left.equalTo(newsImageView.snp.right).offset(8)
             make.centerY.equalToSuperview()
             make.height.equalTo(88)
             make.right.equalToSuperview().offset(-16)
