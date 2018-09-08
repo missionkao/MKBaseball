@@ -19,7 +19,6 @@
 		0276559B210C8BD7005C0ADF /* MKNewsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0276559A210C8BD7005C0ADF /* MKNewsViewController.swift */; };
 		0276559D210CA13E005C0ADF /* MKSegmentedControlHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0276559C210CA13E005C0ADF /* MKSegmentedControlHeaderView.swift */; };
 		0276559F210D7BAA005C0ADF /* MKNewsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0276559E210D7BAA005C0ADF /* MKNewsTableViewCell.swift */; };
-		027655A1210DAF59005C0ADF /* MKVideoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027655A0210DAF59005C0ADF /* MKVideoTableViewCell.swift */; };
 		027655A3210DEEC8005C0ADF /* MKStatisticTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027655A2210DEEC8005C0ADF /* MKStatisticTableViewCell.swift */; };
 		027655A5210E051E005C0ADF /* MKStatisticPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027655A4210E051E005C0ADF /* MKStatisticPopupViewController.swift */; };
 		027655A7210EB4DD005C0ADF /* MKStatisticPopupTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027655A6210EB4DD005C0ADF /* MKStatisticPopupTableViewCell.swift */; };
@@ -67,7 +66,6 @@
 		0276559A210C8BD7005C0ADF /* MKNewsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKNewsViewController.swift; sourceTree = "<group>"; };
 		0276559C210CA13E005C0ADF /* MKSegmentedControlHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKSegmentedControlHeaderView.swift; sourceTree = "<group>"; };
 		0276559E210D7BAA005C0ADF /* MKNewsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKNewsTableViewCell.swift; sourceTree = "<group>"; };
-		027655A0210DAF59005C0ADF /* MKVideoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKVideoTableViewCell.swift; sourceTree = "<group>"; };
 		027655A2210DEEC8005C0ADF /* MKStatisticTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKStatisticTableViewCell.swift; sourceTree = "<group>"; };
 		027655A4210E051E005C0ADF /* MKStatisticPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKStatisticPopupViewController.swift; sourceTree = "<group>"; };
 		027655A6210EB4DD005C0ADF /* MKStatisticPopupTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKStatisticPopupTableViewCell.swift; sourceTree = "<group>"; };
@@ -198,7 +196,6 @@
 				0276559E210D7BAA005C0ADF /* MKNewsTableViewCell.swift */,
 				029C033E2141823D00B90291 /* MKNewsViewModel.swift */,
 				0276559A210C8BD7005C0ADF /* MKNewsViewController.swift */,
-				027655A0210DAF59005C0ADF /* MKVideoTableViewCell.swift */,
 			);
 			path = MKNewsViewController;
 			sourceTree = "<group>";
@@ -472,7 +469,6 @@
 				0297BC3E211572D80088E214 /* MKTodayViewModel.swift in Sources */,
 				027655852109D5F4005C0ADF /* MKUtility.swift in Sources */,
 				02D43E4E213D817E00189A32 /* MKStatisticViewModel.swift in Sources */,
-				027655A1210DAF59005C0ADF /* MKVideoTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
