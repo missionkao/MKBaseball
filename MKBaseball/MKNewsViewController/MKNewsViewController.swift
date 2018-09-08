@@ -99,7 +99,8 @@ extension MKNewsViewController: UITableViewDelegate {
             .scrollable(true)
         ]
         
-        guard let link = viewModel.newsModels[indexPath.row].link, let url = URL(string: link) else {
+        let link = (viewMode == .news) ? viewModel.newsModels[indexPath.row].link : viewModel.videoModels[indexPath.row].link
+        guard let l = link, let url = URL(string: l) else {
             return
         }
         

@@ -23,7 +23,7 @@ class MKNewsTableViewCell: UITableViewCell {
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
+        selectionStyle = .none
         contentView.addSubview(newsImageView)
         contentView.addSubview(rightView)
         rightView.addSubview(titleLabel)

@@ -92,8 +92,13 @@ private extension MKNewsViewModel {
             let title = li.at_css(".pv-title")?.text
             let date = li.at_css(".date")?.text
             let image = "http:" + (li.at_css("img")?["src"] ?? "")
-            let link = li.at_css("div")?["onclick"] ?? ""
-            videoModels.append(MKNewsTableViewCellViewModel(image: image, title: title, date: date, link: link))
+            let path = li.at_css("div")?["onclick"] ?? ""
+            videoModels.append(MKNewsTableViewCellViewModel(image: image, title: title, date: date, link: getVideoLink(path: path)))
         }
+    }
+    
+    func getVideoLink(path: String) -> String {
+        let id = path.trimmingCharacters(in: CharacterSet(charactersIn: "0123456789").inverted)
+        return "https://www.cpbltv.com/vod.php?vod_id=" + id
     }
 }
