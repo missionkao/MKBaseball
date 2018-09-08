@@ -17,8 +17,6 @@ struct MKNewsTableViewCellViewModel {
 
 class MKNewsTableViewCell: UITableViewCell {
     
-    var link: String?
-    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -41,7 +39,6 @@ class MKNewsTableViewCell: UITableViewCell {
         }
         titleLabel.text = cellViewModel.title
         dateLabel.text = cellViewModel.date
-        link = cellViewModel.link
     }
     
     private lazy var newsImageView: UIImageView = {

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import PopupController
 
 fileprivate let newsCellReuseIdentifier = "MKNewsTableViewCell"
 
@@ -89,6 +90,24 @@ extension MKNewsViewController: UITableViewDataSource {
 }
 
 extension MKNewsViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let popupOptions: [PopupCustomOption] = [
+            .layout(.center),
+            .animation(.slideUp),
+            .backgroundStyle(.blackFilter(alpha: 0.1)),
+            .dismissWhenTaps(true),
+            .scrollable(true)
+        ]
+        
+        guard let link = viewModel.newsModels[indexPath.row].link, let url = URL(string: link) else {
+            return
+        }
+        
+        PopupController
+            .create(self)
+            .customize(popupOptions)
+            .show(MKNewsPopupViewController(url: url))
+    }
 }
 
 extension MKNewsViewController: MKNewsViewModelDelegate {

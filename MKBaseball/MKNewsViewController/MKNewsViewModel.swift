@@ -52,10 +52,9 @@ private extension MKNewsViewModel {
         let image = headElement?.at_css("a img")?["src"] ?? ""
         let newsHead = headElement?.at_css(".news_head")
         let title = newsHead?.at_css("div a")?.text
-        let path = newsHead?.at_css("div a")?["href"] ?? ""
         let date = newsHead?.at_css(".news_head_date")?.text
         
-        newsModels.append(MKNewsTableViewCellViewModel(image: image, title: title, date: date, link: getNewsLink(path: path)))
+        newsModels.append(MKNewsTableViewCellViewModel(image: image, title: title, date: date, link: getNewsLink(image: image)))
         
         parseNewsRow(doc: doc)
     }
@@ -70,19 +69,14 @@ private extension MKNewsViewModel {
             let date = dateE.text?.filter { !"\r\n\t".contains($0) }
             let image = r.at_css("div img")?["src"] ?? ""
             let title = r.at_css(".news_row_title")?.text
-            let path = r.at_css("div div a")?["href"] ?? ""
             
-            newsModels.append(MKNewsTableViewCellViewModel(image: image, title: title, date: date, link: getNewsLink(path: path)))
+            newsModels.append(MKNewsTableViewCellViewModel(image: image, title: title, date: date, link: getNewsLink(image: image)))
         }
     }
     
-    func getNewsLink(path: String) -> String {
-        var uc = URLComponents()
-        uc.scheme = "http"
-        uc.host = "www.cpbl.com.tw"
-        uc.path = "/news/lists"
-        
-        return uc.url?.absoluteString ?? ""
+    func getNewsLink(image: String) -> String {
+        let id = image.trimmingCharacters(in: CharacterSet(charactersIn: "0123456789").inverted)
+        return "http://www.cpbl.com.tw/news/view/" + id
     }
     
     func parseVideoHTML(_ html: String) {
