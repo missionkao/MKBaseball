@@ -15,10 +15,12 @@ enum FetchingHTMLError: Error {
 }
 
 class MKAPIClinet {
-    static func fetchHTMLFrom(url: String, success: @escaping (_: String) -> Void, failure: @escaping (_: Error) -> Void) {
+    
+    @discardableResult
+    static func fetchHTMLFrom(url: String, success: @escaping (_: String) -> Void, failure: @escaping (_: Error) -> Void) -> URLSessionDataTask? {
         guard let url = URL(string: url) else {
             failure(FetchingHTMLError.invalidURLString)
-            return
+            return nil
         }
         let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
             if let e = error {
@@ -36,5 +38,6 @@ class MKAPIClinet {
             success(html)
         }
         task.resume()
+        return task
     }
 }

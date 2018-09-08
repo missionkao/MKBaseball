@@ -8,7 +8,16 @@
 
 import UIKit
 
+struct MKVideoTableViewCellViewModel {
+    let image: String?
+    let title: String?
+    let date: String?
+    let link: String?
+}
+
 class MKVideoTableViewCell: UITableViewCell {
+    
+    var link: String?
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -23,24 +32,19 @@ class MKVideoTableViewCell: UITableViewCell {
         setupConstraints()
     }
     
+    func applyCellViewModel(_ model: MKVideoTableViewCellViewModel) {
+        if let image = model.image, let url = URL(string: image), let data = try? Data(contentsOf: url) {
+            videoImageView.image = UIImage(data: data)
+        }
+        titleTextView.text = model.title
+        link = model.link
+    }
+    
     private lazy var videoImageView: UIImageView = {
         let view = UIImageView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.contentMode = .scaleAspectFill
-        // NOTE: This is synchronously on main thread
-        // WIP: use Kingfisher to cashe image
-        let url = URL(string: "https://img.youtube.com/vi/uzt7711Zsr4/hqdefault.jpg")
-        if let data = try? Data(contentsOf: url!) {
-            view.image = UIImage(data: data)
-        }
         view.clipsToBounds = true
-        return view
-    }()
-    
-    private lazy var infoView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor(white: 0.1, alpha: 0.6)
         return view
     }()
     
@@ -51,7 +55,6 @@ class MKVideoTableViewCell: UITableViewCell {
         view.textContainerInset = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
         view.font = UIFont.boldSystemFont(ofSize: 18)
         view.textColor = UIColor.white
-        view.text = "07/28 兄弟 vs 富邦 九局下，李振昌成功擊敗旅美邦，霸氣飆出再見三振，順利收下第一次SV"
         view.isEditable = false
         view.isScrollEnabled = false
         return view

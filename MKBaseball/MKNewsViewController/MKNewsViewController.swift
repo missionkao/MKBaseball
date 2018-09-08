@@ -8,22 +8,21 @@
 
 import UIKit
 
+fileprivate let newsCellReuseIdentifier = "MKNewsTableViewCell"
+
 enum MKNewsViewMode: Int {
     case news = 0, video
+    
+    init(segmentControlIndex: Int) {
+        self = segmentControlIndex == 0 ? .news : .video
+    }
 }
 
 class MKNewsViewController: UIViewController {
 
-    private let newsCellReuseIdentifier = "MKNewsTableViewCell"
-    private let videoCellReuseIdentifier = "MKVideoTableViewCell"
-    private var viewModel: MKNewsViewModel!
+    fileprivate var viewModel: MKNewsViewModel!
     
-    private var viewMode: MKNewsViewMode = .news {
-        didSet {
-            tableView.backgroundColor = (viewMode == .news ? UIColor.white : UIColor.black)
-            tableView.reloadData()
-        }
-    }
+    private var viewMode: MKNewsViewMode = .news
     
     required init(viewModel: MKNewsViewModel) {
         super.init(nibName: nil, bundle: nil)
@@ -42,6 +41,8 @@ class MKNewsViewController: UIViewController {
         view.addSubview(tableView)
         
         setupConstraints()
+        
+        viewModel.fetchNews()
     }
     
     private lazy var headerView: MKSegmentedControlHeaderView = {
@@ -59,29 +60,31 @@ class MKNewsViewController: UIViewController {
         view.dataSource = self
         view.delegate = self
         view.register(MKNewsTableViewCell.self, forCellReuseIdentifier: newsCellReuseIdentifier)
-        view.register(MKVideoTableViewCell.self, forCellReuseIdentifier: videoCellReuseIdentifier)
         return view
     }()
 }
 
 extension MKNewsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        if viewMode == .news {
+            return viewModel.newsModels.count
+        }
+        return viewModel.videoModels.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: newsCellReuseIdentifier, for: indexPath) as! MKNewsTableViewCell
+        
         if viewMode == .news {
-            return tableView.dequeueReusableCell(withIdentifier: newsCellReuseIdentifier, for: indexPath)
+            cell.applyCellViewModel(viewModel.newsModels[indexPath.row])
+        } else {
+            cell.applyCellViewModel(viewModel.videoModels[indexPath.row])
         }
-        let cell = tableView.dequeueReusableCell(withIdentifier: videoCellReuseIdentifier, for: indexPath)
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if viewMode == .news {
-            return 120
-        }
-        return 212
+        return 112
     }
 }
 
@@ -90,16 +93,19 @@ extension MKNewsViewController: UITableViewDelegate {
 
 extension MKNewsViewController: MKNewsViewModelDelegate {
     func viewModel(_ viewModel: MKNewsViewModel, didChangeViewMode: MKViewMode) {
+        DispatchQueue.main.sync { [unowned self] in
+            self.tableView.reloadData()
+        }
     }
 }
 
 extension MKNewsViewController: MKSegmentedControlHeaderViewDelegate {
     func headerView(_ headerView: MKSegmentedControlHeaderView, didSelectSegmentControl atIndex: Int) {
-        if atIndex == 0 {
-            viewMode = .news
-        } else {
-            viewMode = .video
+        viewMode = MKNewsViewMode(segmentControlIndex: atIndex)
+        if viewMode == .video && viewModel.hasfetchedVideo == false {
+            viewModel.fetchVideo()
         }
+        tableView.reloadData()
     }
 }
 
