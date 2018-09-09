@@ -8,6 +8,13 @@
 
 import UIKit
 
+struct MKPlayerChangeModel: MKTableViewCellViewModelProtocol {
+    let player: String
+    let team: CPBLTeam
+    let date: String
+    let reason: String
+}
+
 class MKTodayChangeTableViewCell: UITableViewCell {
 
     required init?(coder aDecoder: NSCoder) {

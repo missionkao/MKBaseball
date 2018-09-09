@@ -42,12 +42,12 @@ enum MKTodayViewControllerTableViewSectionType: Int {
 
 class MKTodayViewController: UIViewController {
     
-    private var viewModel: MKTodayViewModel!
+    private var viewModel: MKTodayViewModel
     private let refreshControl = UIRefreshControl()
     
     required init(viewModel: MKTodayViewModel) {
-        super.init(nibName: nil, bundle: nil)
         self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
         self.viewModel.delegate = self
     }
     
@@ -58,6 +58,7 @@ class MKTodayViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.cpblBlue
+        view.addSubview(loadingView)
         view.addSubview(tableView)
         refreshControl.tintColor = UIColor.white
         
@@ -65,9 +66,15 @@ class MKTodayViewController: UIViewController {
         
         setupConstraints()
         
+        loadingView.startLoading(disappear: tableView)
         viewModel.fetchTodayGame()
-        viewModel.fetchPlayerChange()
     }
+    
+    private lazy var loadingView: MKLoadingView = {
+        let view = MKLoadingView()
+        view.delegate = self
+        return view
+    }()
     
     private lazy var tableView: UITableView = {
         let view = UITableView(frame: CGRect.zero, style: .plain)
@@ -85,17 +92,15 @@ class MKTodayViewController: UIViewController {
 }
 
 extension MKTodayViewController: MKTodayViewModelDelegate {
-    func viewModelShouldReloadTodayGame(_ viewModel: MKTodayViewModel) {
+    func viewModel(_ viewModel: MKTodayViewModel, didChangeLoadingStatus status: MKViewMode) {
         DispatchQueue.main.sync { [unowned self] in
             self.refreshControl.endRefreshing()
-            self.tableView.reloadSections(IndexSet(integer: 0), with: .none)
-        }
-    }
-    
-    func viewModelShouldReloadPlayerChange(_ viewModel: MKTodayViewModel) {
-        DispatchQueue.main.sync { [unowned self] in
-            self.refreshControl.endRefreshing()
-            self.tableView.reloadSections(IndexSet(integer: 1), with: .none)
+            if status == .error {
+                self.loadingView.loadingTimeout(disappear: tableView)
+            } else if status == .complete {
+                self.loadingView.shouldShowView(self.tableView)
+                self.tableView.reloadData()
+            }
         }
     }
 }
@@ -123,10 +128,7 @@ extension MKTodayViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section == 0 {
-            return 100
-        }
-        if viewModel.changes.count == 0 {
+        if indexPath.section == 0 || viewModel.changes.count == 0 {
             return 100
         }
         return 48
@@ -159,13 +161,28 @@ extension MKTodayViewController: UITableViewDelegate {
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         if refreshControl.isRefreshing {
             viewModel.fetchTodayGame()
-            viewModel.fetchPlayerChange()
         }
+    }
+}
+
+extension MKTodayViewController: MKLoadingViewDelegate {
+    func loadingView(_ view: MKLoadingView, didClickRetryButton button: UIButton) {
+        viewModel.fetchTodayGame()
     }
 }
 
 private extension MKTodayViewController {
     func setupConstraints() {
+        loadingView.snp.makeConstraints { (make) in
+            // top offset = logo(56) + offset
+            if #available(iOS 11.0, *) {
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.topMargin).offset(56 + 16)
+            } else {
+                make.top.equalToSuperview().offset(56 + 16)
+            }
+            make.left.right.bottom.equalToSuperview()
+        }
+        
         tableView.snp.makeConstraints { (make) in
             // top offset = logo(56) + offset
             if #available(iOS 11.0, *) {

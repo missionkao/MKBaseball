@@ -8,20 +8,8 @@
 
 import Kanna
 
-enum MKViewMode: Int {
-    case loading = 0, complete, error
-}
-
 protocol MKTodayViewModelDelegate: class {
-    func viewModelShouldReloadTodayGame(_ viewModel: MKTodayViewModel)
-    func viewModelShouldReloadPlayerChange(_ viewModel: MKTodayViewModel)
-}
-
-struct MKPlayerChangeModel: MKTableViewCellViewModelProtocol {
-    let player: String
-    let team: CPBLTeam
-    let date: String
-    let reason: String
+    func viewModel(_ viewModel: MKTodayViewModel, didChangeLoadingStatus status: MKViewMode)
 }
 
 fileprivate typealias MKTodayViewModelTodayGame = MKTodayViewModel
@@ -39,20 +27,14 @@ class MKTodayViewModel {
         
         MKAPIClinet.fetchHTMLFrom(url: url, success: { [unowned self] (html) in
             self.parseTodayGameHTML(html)
-            self.delegate?.viewModelShouldReloadTodayGame(self)
+            self.fetchPlayerChange(success: {
+                self.delegate?.viewModel(self, didChangeLoadingStatus: .complete)
+            }, failure: { (error) in
+                self.delegate?.viewModel(self, didChangeLoadingStatus: .error)
+            })
         }) { (error) in
             print("fetchTodayGame Error!!!!!!!!!")
-        }
-    }
-    
-    func fetchPlayerChange() {
-        let url = "http://www.cpbl.com.tw/players/change.html"
-        
-        MKAPIClinet.fetchHTMLFrom(url: url, success: { [unowned self] (html) in
-            self.parsePlayerChangeHTML(html)
-            self.delegate?.viewModelShouldReloadPlayerChange(self)
-        }) { (error) in
-            print("fetchPlayerChange Error!!!!!!!!!")
+            self.delegate?.viewModel(self, didChangeLoadingStatus: .error)
         }
     }
 }
@@ -86,6 +68,18 @@ private extension MKTodayViewModelTodayGame {
 }
 
 private extension MKTodayViewModelPlayerChange {
+    func fetchPlayerChange(success: @escaping () -> Void, failure: @escaping (Error?) -> Void) {
+        let url = "http://www.cpbl.com.tw/players/change.html"
+        
+        MKAPIClinet.fetchHTMLFrom(url: url, success: { [unowned self] (html) in
+            self.parsePlayerChangeHTML(html)
+            success()
+        }) { (error) in
+            print("fetchPlayerChange Error!!!!!!!!!")
+            failure(error)
+        }
+    }
+    
     func parsePlayerChangeHTML(_ html: String) {
         guard let doc = try? HTML(html: html, encoding: .utf8) else {
             return

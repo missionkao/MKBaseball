@@ -44,7 +44,7 @@ class MKNewsViewController: UIViewController {
         
         setupConstraints()
         
-        loadingView.startLoading()
+        loadingView.startLoading(disappear: tableView)
         viewModel.fetchNews()
     }
     
@@ -117,11 +117,10 @@ extension MKNewsViewController: MKNewsViewModelDelegate {
     func viewModel(_ viewModel: MKNewsViewModel, didChangeLoadingStatus status: MKViewMode) {
         DispatchQueue.main.sync { [unowned self] in
             if status == .error {
-                self.loadingView.loadingTimeout()
+                self.loadingView.loadingTimeout(disappear: tableView)
                 return
             }
-            
-            self.showTableView()
+            self.loadingView.shouldShowView(self.tableView)
             self.tableView.reloadData()
         }
     }
@@ -133,7 +132,7 @@ extension MKNewsViewController: MKSegmentedControlHeaderViewDelegate {
         // 還沒載過資料, 需要重新 fetch
         if hasNotFetchData() == true {
             self.tableView.alpha = 0
-            self.loadingView.startLoading()
+            self.loadingView.startLoading(disappear: tableView)
             viewMode == .news ? viewModel.fetchNews() : viewModel.fetchVideo()
             return
         }
@@ -169,13 +168,6 @@ private extension MKNewsViewController {
         tableView.snp.makeConstraints { (make) in
             make.top.equalTo(headerView.snp.bottom)
             make.left.right.bottom.equalToSuperview()
-        }
-    }
-    
-    func showTableView() {
-        if self.tableView.alpha == 0 {
-            self.loadingView.stopLoading()
-            self.tableView.alpha = 1
         }
     }
     

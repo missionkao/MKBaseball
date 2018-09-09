@@ -30,19 +30,25 @@ class MKLoadingView: UIView {
         retryButton.addTarget(self, action: #selector(retryAction), for: .touchUpInside)
     }
     
-    func startLoading() {
+    func startLoading(disappear view: UIView?) {
         self.alpha = 1
+        view?.alpha = 0
         indicatorView.alpha = 1
         indicatorView.startAnimating()
         retryButton.alpha = 0
     }
     
-    func stopLoading() {
-        self.alpha = 0
-        indicatorView.stopAnimating()
+    func shouldShowView(_ view: UIView) {
+        if view.alpha == 0 {
+            self.alpha = 0
+            indicatorView.stopAnimating()
+            view.alpha = 1
+        }
     }
     
-    func loadingTimeout() {
+    func loadingTimeout(disappear view: UIView) {
+        self.alpha = 1
+        view.alpha = 0
         statusLabel.text = "無法取得資料, 請檢查網路後重試..."
         indicatorView.alpha = 0
         retryButton.alpha = 1
@@ -67,7 +73,7 @@ class MKLoadingView: UIView {
     }
     
     @objc private func retryAction() {
-        self.startLoading()
+        self.startLoading(disappear: nil)
         delegate?.loadingView(self, didClickRetryButton: retryButton)
     }
     
