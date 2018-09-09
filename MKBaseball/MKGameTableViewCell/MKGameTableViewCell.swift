@@ -8,6 +8,17 @@
 
 import UIKit
 
+struct MKCompetitionModel: MKTableViewCellViewModelProtocol {
+    let awayTeam: CPBLTeam
+    let homeTeam: CPBLTeam
+    let awayScore: String?
+    let homeScore: String?
+    let location: String
+    let number: String
+    let currentState: String?
+    let note: String?
+}
+
 class MKGameTableViewCell: UITableViewCell {
 
     required init?(coder aDecoder: NSCoder) {
@@ -32,24 +43,6 @@ class MKGameTableViewCell: UITableViewCell {
         contentView.addSubview(noGameLabel)
         
         setupConstraints()
-    }
-    
-    func applyCellViewModel(viewModel: MKGameTableViewCellViewModel?) {
-        if let viewModel = viewModel {
-            shouldSwitchToNoGameView(false)
-            leftImageView.image = UIImage(named: viewModel.awayTeam.logoImageName())
-            leftLabel.text = viewModel.awayScore
-            rightImageView.image = UIImage(named: viewModel.homeTeam.logoImageName())
-            rightLabel.text = viewModel.homeScore
-            timeLabel.text = viewModel.currentState
-            if viewModel.note != nil {
-                locationLabel.text = viewModel.note
-            } else {
-                locationLabel.text = viewModel.location
-            }
-        } else {
-            shouldSwitchToNoGameView(true)
-        }
     }
     
     private lazy var topView: UIStackView = {
@@ -119,6 +112,26 @@ class MKGameTableViewCell: UITableViewCell {
         view.attributedText = NSAttributedString(string: "本日無賽事", attributes: attribute)
         return view
     }()
+}
+
+extension MKGameTableViewCell: MKTableViewCellProtocol {
+    func applyCellViewModel(_ model: MKTableViewCellViewModelProtocol?) {
+        if let viewModel = model as? MKCompetitionModel {
+            shouldSwitchToNoGameView(false)
+            leftImageView.image = UIImage(named: viewModel.awayTeam.logoImageName())
+            leftLabel.text = viewModel.awayScore ?? "--"
+            rightImageView.image = UIImage(named: viewModel.homeTeam.logoImageName())
+            rightLabel.text = viewModel.homeScore ?? "--"
+            timeLabel.text = viewModel.currentState
+            if viewModel.note != nil {
+                locationLabel.text = viewModel.note
+            } else {
+                locationLabel.text = viewModel.location
+            }
+        } else {
+            shouldSwitchToNoGameView(true)
+        }
+    }
 }
 
 private extension MKGameTableViewCell {

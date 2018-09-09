@@ -103,37 +103,23 @@ extension MKTodayViewController: MKTodayViewModelDelegate {
 extension MKTodayViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
-            let gameCount = viewModel.competitions.count
-            return gameCount == 0 ? 1 : gameCount
-        }
-        let playerChangeCount = viewModel.changes.count
-        return playerChangeCount == 0 ? 1 : playerChangeCount
+        let count = section == 0 ? viewModel.competitions.count : viewModel.changes.count
+        return count == 0 ? 1 : count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellReuseIdentifier = MKTodayViewControllerTableViewSectionType(rawValue: indexPath.section)!.cellReuseIdentifier()
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! MKTableViewCellProtocol
         
-        if indexPath.section == 0 {
-            let gameCell = cell as! MKGameTableViewCell
-            if viewModel.competitions.count == 0 {
-                gameCell.applyCellViewModel(viewModel: nil)
-            } else {
-                let cellViewModel = MKGameTableViewCellViewModel(model: viewModel.competitions[indexPath.row])
-                gameCell.applyCellViewModel(viewModel: cellViewModel)
-            }
-            return cell
-        }
-        
-        let playerChangeCell = cell as! MKTodayChangeTableViewCell
-        if viewModel.changes.count == 0 {
-            playerChangeCell.applyPlayerChangeModel(model: nil)
+        let count = indexPath.section == 0 ? viewModel.competitions.count : viewModel.changes.count
+        if count == 0 {
+            cell.applyCellViewModel(nil)
         } else {
-            playerChangeCell.applyPlayerChangeModel(model: viewModel.changes[indexPath.row])
+            let model: MKTableViewCellViewModelProtocol = indexPath.section == 0 ? viewModel.competitions[indexPath.row] : viewModel.changes[indexPath.row]
+            cell.applyCellViewModel(model)
         }
         
-        return cell
+        return cell as! UITableViewCell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

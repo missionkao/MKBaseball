@@ -17,18 +17,7 @@ protocol MKTodayViewModelDelegate: class {
     func viewModelShouldReloadPlayerChange(_ viewModel: MKTodayViewModel)
 }
 
-struct MKCompetitionModel {
-    let awayTeam: CPBLTeam
-    let homeTeam: CPBLTeam
-    let awayScore: String?
-    let homeScore: String?
-    let location: String
-    let number: String
-    let currentState: String?
-    let note: String?
-}
-
-struct MKPlayerChangeModel {
+struct MKPlayerChangeModel: MKTableViewCellViewModelProtocol {
     let player: String
     let team: CPBLTeam
     let date: String
@@ -121,7 +110,7 @@ private extension MKTodayViewModelPlayerChange {
                 continue
             }
             
-            if isDateInThereDays(date) == false {
+            if isDateInThreeDays(date) == false {
                 break
             }
             
@@ -130,7 +119,7 @@ private extension MKTodayViewModelPlayerChange {
         }
     }
     
-    func isDateInThereDays(_ date: Date) -> Bool {
+    func isDateInThreeDays(_ date: Date) -> Bool {
         let todayStartDate = Calendar.current.startOfDay(for: Date())
         let threeDaysAgo = todayStartDate.timeIntervalSince1970 - (86400 * 3)
         

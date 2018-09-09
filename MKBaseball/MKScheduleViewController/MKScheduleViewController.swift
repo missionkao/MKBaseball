@@ -155,8 +155,7 @@ extension MKScheduleViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! MKGameTableViewCell
         let model = self.viewModel.allGames[indexPath.section].model[indexPath.row]
-        let cellViewModel = MKGameTableViewCellViewModel(model: model)
-        cell.applyCellViewModel(viewModel: cellViewModel)
+        cell.applyCellViewModel(model)
         return cell
     }
     
