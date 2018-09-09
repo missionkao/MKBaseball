@@ -39,12 +39,12 @@ class MKNewsViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = UIColor.cpblBlue
         view.addSubview(headerView)
-        view.addSubview(indicatorView)
+        view.addSubview(loadingView)
         view.addSubview(tableView)
         
         setupConstraints()
         
-        indicatorView.startAnimating()
+        loadingView.startLoading()
         viewModel.fetchNews()
     }
     
@@ -54,9 +54,9 @@ class MKNewsViewController: UIViewController {
         return view
     }()
     
-    private lazy var indicatorView: UIActivityIndicatorView = {
-        let view = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-        view.translatesAutoresizingMaskIntoConstraints = false
+    private lazy var loadingView: MKLoadingView = {
+        let view = MKLoadingView()
+        view.delegate = self
         return view
     }()
     
@@ -76,20 +76,13 @@ class MKNewsViewController: UIViewController {
 
 extension MKNewsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if viewMode == .news {
-            return viewModel.newsModels.count
-        }
-        return viewModel.videoModels.count
+        return viewMode == .news ? viewModel.newsModels.count : viewModel.videoModels.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: newsCellReuseIdentifier, for: indexPath) as! MKNewsTableViewCell
-        
-        if viewMode == .news {
-            cell.applyCellViewModel(viewModel.newsModels[indexPath.row])
-        } else {
-            cell.applyCellViewModel(viewModel.videoModels[indexPath.row])
-        }
+        let cellViewModel = viewMode == .news ? viewModel.newsModels[indexPath.row] : viewModel.videoModels[indexPath.row]
+        cell.applyCellViewModel(cellViewModel)
         return cell
     }
     
@@ -121,13 +114,14 @@ extension MKNewsViewController: UITableViewDelegate {
 }
 
 extension MKNewsViewController: MKNewsViewModelDelegate {
-    func viewModel(_ viewModel: MKNewsViewModel, didChangeViewMode: MKViewMode) {
+    func viewModel(_ viewModel: MKNewsViewModel, didChangeLoadingStatus status: MKViewMode) {
         DispatchQueue.main.sync { [unowned self] in
-            if self.tableView.alpha == 0 {
-                self.indicatorView.stopAnimating()
-                self.indicatorView.alpha = 0
-                self.tableView.alpha = 1
+            if status == .error {
+                self.loadingView.loadingTimeout()
+                return
             }
+            
+            self.showTableView()
             self.tableView.reloadData()
         }
     }
@@ -136,15 +130,20 @@ extension MKNewsViewController: MKNewsViewModelDelegate {
 extension MKNewsViewController: MKSegmentedControlHeaderViewDelegate {
     func headerView(_ headerView: MKSegmentedControlHeaderView, didSelectSegmentControl atIndex: Int) {
         viewMode = MKNewsViewMode(segmentControlIndex: atIndex)
-        // 第一次切換到 video mode
-        if viewMode == .video && viewModel.hasfetchedVideo == false {
+        // 還沒載過資料, 需要重新 fetch
+        if hasNotFetchData() == true {
             self.tableView.alpha = 0
-            self.indicatorView.startAnimating()
-            self.indicatorView.alpha = 1
-            viewModel.fetchVideo()
+            self.loadingView.startLoading()
+            viewMode == .news ? viewModel.fetchNews() : viewModel.fetchVideo()
             return
         }
         tableView.reloadData()
+    }
+}
+
+extension MKNewsViewController: MKLoadingViewDelegate {
+    func loadingView(_ view: MKLoadingView, didClickRetryButton button: UIButton) {
+        viewMode == .news ? viewModel.fetchNews() : viewModel.fetchVideo()
     }
 }
 
@@ -161,13 +160,26 @@ private extension MKNewsViewController {
             make.height.equalTo(56)
         }
         
-        indicatorView.snp.makeConstraints { (maker) in
-            maker.centerX.centerY.equalToSuperview()
+        loadingView.snp.makeConstraints { (maker) in
+            maker.top.equalTo(headerView.snp.bottom)
+            maker.left.right.equalToSuperview()
+            maker.bottom.equalToSuperview().offset(-48)
         }
         
         tableView.snp.makeConstraints { (make) in
             make.top.equalTo(headerView.snp.bottom)
             make.left.right.bottom.equalToSuperview()
         }
+    }
+    
+    func showTableView() {
+        if self.tableView.alpha == 0 {
+            self.loadingView.stopLoading()
+            self.tableView.alpha = 1
+        }
+    }
+    
+    func hasNotFetchData() -> Bool {
+        return (viewMode == .video && viewModel.hasFetchedVideo == false) || (viewMode == .news && viewModel.hasFetchedNews == false)
     }
 }
