@@ -9,6 +9,10 @@
 import UIKit
 import SnapKit
 
+// WIP:
+// 1. loading view
+// 2. today, tomorrow pither or hitter
+
 class MKIndexViewController: UITabBarController {
     
     override func viewDidLoad() {

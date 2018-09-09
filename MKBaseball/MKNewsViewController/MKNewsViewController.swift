@@ -39,10 +39,12 @@ class MKNewsViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = UIColor.cpblBlue
         view.addSubview(headerView)
+        view.addSubview(indicatorView)
         view.addSubview(tableView)
         
         setupConstraints()
         
+        indicatorView.startAnimating()
         viewModel.fetchNews()
     }
     
@@ -52,10 +54,17 @@ class MKNewsViewController: UIViewController {
         return view
     }()
     
+    private lazy var indicatorView: UIActivityIndicatorView = {
+        let view = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     private lazy var tableView: UITableView = {
         let view = UITableView(frame: .zero, style: .plain)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.white
+        view.alpha = 0
         view.tableFooterView = UIView()
         view.separatorStyle = .none
         view.dataSource = self
@@ -114,6 +123,11 @@ extension MKNewsViewController: UITableViewDelegate {
 extension MKNewsViewController: MKNewsViewModelDelegate {
     func viewModel(_ viewModel: MKNewsViewModel, didChangeViewMode: MKViewMode) {
         DispatchQueue.main.sync { [unowned self] in
+            if self.tableView.alpha == 0 {
+                self.indicatorView.stopAnimating()
+                self.indicatorView.alpha = 0
+                self.tableView.alpha = 1
+            }
             self.tableView.reloadData()
         }
     }
@@ -122,8 +136,13 @@ extension MKNewsViewController: MKNewsViewModelDelegate {
 extension MKNewsViewController: MKSegmentedControlHeaderViewDelegate {
     func headerView(_ headerView: MKSegmentedControlHeaderView, didSelectSegmentControl atIndex: Int) {
         viewMode = MKNewsViewMode(segmentControlIndex: atIndex)
+        // 第一次切換到 video mode
         if viewMode == .video && viewModel.hasfetchedVideo == false {
+            self.tableView.alpha = 0
+            self.indicatorView.startAnimating()
+            self.indicatorView.alpha = 1
             viewModel.fetchVideo()
+            return
         }
         tableView.reloadData()
     }
@@ -140,6 +159,10 @@ private extension MKNewsViewController {
             }
             make.left.right.equalToSuperview()
             make.height.equalTo(56)
+        }
+        
+        indicatorView.snp.makeConstraints { (maker) in
+            maker.centerX.centerY.equalToSuperview()
         }
         
         tableView.snp.makeConstraints { (make) in

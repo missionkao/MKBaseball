@@ -12,6 +12,7 @@ enum FetchingHTMLError: Error {
     case invalidURLString
     case emptyHTML
     case encodingError
+    case responseError
 }
 
 class MKAPIClinet {
@@ -23,8 +24,8 @@ class MKAPIClinet {
             return nil
         }
         let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-            if let e = error {
-                failure(e)
+            if let _ = error {
+                failure(FetchingHTMLError.responseError)
                 return
             }
             guard let data = data else {

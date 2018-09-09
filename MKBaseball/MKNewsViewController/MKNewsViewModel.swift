@@ -18,6 +18,7 @@ class MKNewsViewModel {
     
     private var fetchingTask: URLSessionDataTask?
     private (set) var hasfetchedVideo = false
+    
     private (set) var newsModels = [MKNewsTableViewCellViewModel]()
     private (set) var videoModels = [MKNewsTableViewCellViewModel]()
     
