@@ -36,7 +36,7 @@ class MKStatisticPopupTableViewCell: UITableViewCell {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.clear
-        view.font = UIFont.systemFont(ofSize: 20)
+        view.font = UIFont.systemFont(ofSize: 18)
         view.textColor = UIColor.black
         view.textAlignment = .center
         return view

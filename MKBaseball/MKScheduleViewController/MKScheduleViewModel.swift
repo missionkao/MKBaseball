@@ -16,6 +16,7 @@ class MKScheduleViewModel {
     weak var delegate: MKScheduleViewModelDelegate?
     
     var allGames = [(date: String, model: [MKCompetitionModel])]()
+    var dateArray = [Int]()
     var currentMonth: Int = 0
     
     private (set) var viewMode: MKViewMode = .loading {
@@ -46,6 +47,16 @@ class MKScheduleViewModel {
             self.viewMode = .error
         }
     }
+    
+    func getNearestDateIndex() -> Int {
+        let today = Calendar.current.component(.day, from: Date())
+        for (index, value) in dateArray.enumerated() {
+            if value >= today {
+                return index
+            }
+        }
+        return 0
+    }
 }
 
 private extension MKScheduleViewModel {
@@ -61,6 +72,7 @@ private extension MKScheduleViewModel {
         }
         
         allGames = [(date: String, model: [MKCompetitionModel])]()
+        dateArray = [Int]()
         var dateE: XMLElement? = weekdaysE.nextSibling
         
         while dateE != nil {
@@ -98,6 +110,10 @@ private extension MKScheduleViewModel {
             let gameModels = MKGameParserHelper.parseGamesToCompetitionModels(games: games)
             
             allGames.append((date, gameModels))
+            
+            if let d = dateE.text, let dateInt = Int(d) {
+                dateArray.append(dateInt)
+            }
         }
     }
     

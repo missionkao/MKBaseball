@@ -18,6 +18,7 @@ class MKScheduleViewController: UIViewController {
     private var calendar = Calendar.current
     private var targetMonth: Int = 0
     private var targetYear: Int = 0
+    private var isFirstFetchingData = true
     
     required init(viewModel: MKScheduleViewModel) {
         super.init(nibName: nil, bundle: nil)
@@ -152,7 +153,6 @@ extension MKScheduleViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // WIP: move to viewModel
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! MKGameTableViewCell
         let model = self.viewModel.allGames[indexPath.section].model[indexPath.row]
         let cellViewModel = MKGameTableViewCellViewModel(model: model)
@@ -219,6 +219,10 @@ extension MKScheduleViewController: MKScheduleViewModelDelegate {
         DispatchQueue.main.sync { [unowned self] in
             self.refreshControl.endRefreshing()
             self.tableView.reloadData()
+            if isFirstFetchingData == true {
+                self.tableView.scrollToRow(at: IndexPath(row: 0, section: self.viewModel.getNearestDateIndex()), at: .top, animated: true)
+                isFirstFetchingData = false
+            }
         }
     }
 }
