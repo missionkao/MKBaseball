@@ -12,6 +12,7 @@ import SnapKit
 // WIP:
 // 1. loading view
 // 2. today, tomorrow pither or hitter
+// 3. cancel while refresh again
 
 class MKIndexViewController: UITabBarController {
     
