@@ -9,7 +9,7 @@
 import Kanna
 
 protocol MKScheduleViewModelDelegate: class {
-    func viewModel(_ viewModel: MKScheduleViewModel, didChangeViewMode: MKViewMode)
+    func viewModel(_ viewModel: MKScheduleViewModel, didChangeLoadingStatus status: MKViewMode)
 }
 
 class MKScheduleViewModel {
@@ -19,18 +19,11 @@ class MKScheduleViewModel {
     var dateArray = [Int]()
     var currentMonth: Int = 0
     
-    private (set) var viewMode: MKViewMode = .loading {
-        didSet {
-            delegate?.viewModel(self, didChangeViewMode: viewMode)
-        }
-    }
-    
     func fetchSchedule(atYear year: Int, month: Int, forceUpdate: Bool = false) {
         if month == currentMonth && forceUpdate == false {
             return
         }
         currentMonth = month
-        viewMode = .loading
         
         var components = URLComponents(string: "http://www.cpbl.com.tw/schedule/index/\(year)-\(month)-01.html")
         components?.queryItems = [
@@ -42,9 +35,9 @@ class MKScheduleViewModel {
         
         MKAPIClinet.fetchHTMLFrom(url: scheduleURL, success: { [unowned self] (html) in
             self.parseScheduleHTML(html)
-            self.viewMode = .complete
+            self.delegate?.viewModel(self, didChangeLoadingStatus: .complete)
         }) { (error) in
-            self.viewMode = .error
+            self.delegate?.viewModel(self, didChangeLoadingStatus: .error)
         }
     }
     

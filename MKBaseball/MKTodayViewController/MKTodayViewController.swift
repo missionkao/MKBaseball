@@ -180,7 +180,8 @@ private extension MKTodayViewController {
             } else {
                 make.top.equalToSuperview().offset(56 + 16)
             }
-            make.left.right.bottom.equalToSuperview()
+            make.left.right.equalToSuperview()
+            make.bottom.equalToSuperview().offset(-48)
         }
         
         tableView.snp.makeConstraints { (make) in
