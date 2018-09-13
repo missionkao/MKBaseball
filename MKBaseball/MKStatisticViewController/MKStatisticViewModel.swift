@@ -23,10 +23,12 @@ class MKStatisticViewModel {
     
     private (set) var hitTuples = [StatisticTuple]()
     private (set) var pitchTuples = [StatisticTuple]()
+    private var fetchingTask: URLSessionDataTask?
     
     func fetchStatistic() {
         let url = "http://www.cpbl.com.tw/stats/toplist.html"
-        MKAPIClinet.fetchHTMLFrom(url: url, success: { [unowned self] (html) in
+        self.fetchingTask?.cancel()
+        self.fetchingTask = MKAPIClinet.fetchHTMLFrom(url: url, success: { [unowned self] (html) in
             self.parseStatisticHTML(html)
             self.delegate?.viewModel(self, didChangeLoadingStatus: .complete)
         }) { (error) in

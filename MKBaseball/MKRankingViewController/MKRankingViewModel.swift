@@ -64,6 +64,8 @@ class MKRankingViewModel {
         return (month < 7) ? 0 : 1
     }()
     
+    private var fetchingTask: URLSessionDataTask?
+    
     weak var delegate: MKRankingViewModelDelegate?
     
     func fetchRanking(seasonMode: MKSeasonMode? = nil) {
@@ -74,7 +76,8 @@ class MKRankingViewModel {
             url = "http://www.cpbl.com.tw/standing/season"
         }
         
-        MKAPIClinet.fetchHTMLFrom(url: url, success: { [unowned self] (html) in
+        self.fetchingTask?.cancel()
+        self.fetchingTask = MKAPIClinet.fetchHTMLFrom(url: url, success: { [unowned self] (html) in
             self.parseRankingHTML(html)
             self.parseTeamGradeHTML(html)
             self.delegate?.viewModel(self, didChangeLoadingStatus: .complete)
