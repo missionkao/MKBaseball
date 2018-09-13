@@ -18,6 +18,7 @@ class MKSegmentedControlHeaderView: MKContainerView {
     
     private let items: [String]
     private let defaultIndex: Int
+    private (set) var selectedSegmentIndex: Int
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -26,6 +27,7 @@ class MKSegmentedControlHeaderView: MKContainerView {
     init(items: [String], defaultIndex: Int = 0) {
         self.items = items
         self.defaultIndex = defaultIndex
+        self.selectedSegmentIndex = defaultIndex
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         backgroundColor = UIColor.white
@@ -52,6 +54,7 @@ class MKSegmentedControlHeaderView: MKContainerView {
     }()
     
     @objc func didSelectSegmentControl(sender: UISegmentedControl) {
+        selectedSegmentIndex = sender.selectedSegmentIndex
         delegate?.headerView(self, didSelectSegmentControl: sender.selectedSegmentIndex)
     }
 }

@@ -51,17 +51,10 @@ struct MKTeamGradeModel {
 }
 
 protocol MKRankingViewModelDelegate: class {
-    func viewModel(_ viewModel: MKRankingViewModel, didChangeViewMode: MKViewMode)
+    func viewModel(_ viewModel: MKRankingViewModel, didChangeLoadingStatus status: MKViewMode)
 }
 
 class MKRankingViewModel {
-    
-    private (set) var viewMode: MKViewMode = .loading {
-        didSet {
-            delegate?.viewModel(self, didChangeViewMode: viewMode)
-        }
-    }
-    
     private (set) var teamRanks = [MKTeamRankingModel]()
     private (set) var teamBetweens = [MKTeamBetweenModel]()
     private (set) var teamGrades = [MKTeamGradeModel]()
@@ -84,9 +77,9 @@ class MKRankingViewModel {
         MKAPIClinet.fetchHTMLFrom(url: url, success: { [unowned self] (html) in
             self.parseRankingHTML(html)
             self.parseTeamGradeHTML(html)
-            self.viewMode = .complete
+            self.delegate?.viewModel(self, didChangeLoadingStatus: .complete)
         }) { (error) in
-            self.viewMode = .error
+            self.delegate?.viewModel(self, didChangeLoadingStatus: .error)
         }
     }
 }

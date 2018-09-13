@@ -77,6 +77,7 @@ class MKRankingViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = UIColor.cpblBlue
         view.addSubview(headerView)
+        view.addSubview(loadingView)
         view.addSubview(tableView)
         refreshControl.tintColor = UIColor.white
         
@@ -84,11 +85,18 @@ class MKRankingViewController: UIViewController {
         
         setupConstraints()
         
+        loadingView.startLoading(disappear: tableView)
         viewModel.fetchRanking()
     }
     
     private lazy var headerView: MKSegmentedControlHeaderView = {
         let view = MKSegmentedControlHeaderView(items: ["上半季", "下半季", "全年度"], defaultIndex: viewModel.defaultSelectedSegmentIndex)
+        view.delegate = self
+        return view
+    }()
+    
+    private lazy var loadingView: MKLoadingView = {
+        let view = MKLoadingView()
         view.delegate = self
         return view
     }()
@@ -113,17 +121,29 @@ class MKRankingViewController: UIViewController {
 }
 
 extension MKRankingViewController: MKRankingViewModelDelegate {
-    func viewModel(_ viewModel: MKRankingViewModel, didChangeViewMode: MKViewMode) {
+    func viewModel(_ viewModel: MKRankingViewModel, didChangeLoadingStatus status: MKViewMode) {
         DispatchQueue.main.sync { [unowned self] in
-            self.refreshControl.endRefreshing()
-            self.tableView.reloadData()
+            if status == .error {
+                self.loadingView.loadingTimeout(disappear: tableView)
+            } else if status == .complete {
+                self.refreshControl.endRefreshing()
+                self.loadingView.shouldShowView(self.tableView)
+                self.tableView.reloadData()
+            }
         }
     }
 }
 
 extension MKRankingViewController: MKSegmentedControlHeaderViewDelegate {
     func headerView(_ headerView: MKSegmentedControlHeaderView, didSelectSegmentControl atIndex: Int) {
-        viewModel.fetchRanking(seasonMode: MKSeasonMode(rawValue: atIndex)!)
+        viewModel.fetchRanking(seasonMode: MKSeasonMode(rawValue: atIndex))
+    }
+}
+
+extension MKRankingViewController: MKLoadingViewDelegate {
+    func loadingView(_ view: MKLoadingView, didClickRetryButton button: UIButton) {
+        let season = MKSeasonMode(rawValue: headerView.selectedSegmentIndex)
+        viewModel.fetchRanking(seasonMode: season)
     }
 }
 
@@ -206,7 +226,13 @@ private extension MKRankingViewController {
             make.left.right.equalToSuperview()
             make.height.equalTo(56)
         }
-
+        
+        loadingView.snp.makeConstraints { (maker) in
+            maker.top.equalTo(headerView.snp.bottom)
+            maker.left.right.equalToSuperview()
+            maker.bottom.equalToSuperview().offset(-48)
+        }
+        
         tableView.snp.makeConstraints { (make) in
             make.top.equalTo(headerView.snp.bottom)
             make.left.right.bottom.equalToSuperview()
