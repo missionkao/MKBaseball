@@ -10,19 +10,13 @@ import Foundation
 import Kanna
 
 protocol MKStatisticViewModelDelegate: class {
-    func viewModel(_ viewModel: MKStatisticViewModel, didChangeViewMode: MKViewMode)
+    func viewModel(_ viewModel: MKStatisticViewModel, didChangeLoadingStatus status: MKViewMode)
 }
 
 typealias StatisticTuple = (item: String, name: String, team: String, value: String)
 
 class MKStatisticViewModel {
     weak var delegate: MKStatisticViewModelDelegate?
-    
-    private (set) var viewMode: MKViewMode = .loading {
-        didSet {
-            delegate?.viewModel(self, didChangeViewMode: viewMode)
-        }
-    }
     
     let hits: [MKStatisticType] = [.avg, .hit, .hr, .rbi, .sb, .tb]
     let pitchs: [MKStatisticType] = [.era, .win, .sv, .so, .whip, .hld]
@@ -32,12 +26,11 @@ class MKStatisticViewModel {
     
     func fetchStatistic() {
         let url = "http://www.cpbl.com.tw/stats/toplist.html"
-        self.viewMode = .loading
         MKAPIClinet.fetchHTMLFrom(url: url, success: { [unowned self] (html) in
             self.parseStatisticHTML(html)
-            self.viewMode = .complete
+            self.delegate?.viewModel(self, didChangeLoadingStatus: .complete)
         }) { (error) in
-            self.viewMode = .error
+            self.delegate?.viewModel(self, didChangeLoadingStatus: .error)
         }
     }
 }

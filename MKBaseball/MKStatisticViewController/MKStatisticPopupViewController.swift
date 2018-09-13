@@ -26,12 +26,21 @@ class MKStatisticPopupViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = UIColor.cpblBlue
         
+        view.addSubview(loadingView)
         view.addSubview(tableView)
         setupConstraints()
         
-        self.viewModel.fetchStatistic()
+        loadingView.startLoading(disappear: tableView)
+        viewModel.fetchStatistic()
     }
+    
+    private lazy var loadingView: MKLoadingView = {
+        let view = MKLoadingView()
+        view.delegate = self
+        return view
+    }()
     
     private lazy var tableView: UITableView = {
         let view = UITableView(frame: .zero, style: .plain)
@@ -46,7 +55,12 @@ class MKStatisticPopupViewController: UIViewController {
         view.register(MKStatisticPopupTableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
         return view
     }()
-    
+}
+
+extension MKStatisticPopupViewController: MKLoadingViewDelegate {
+    func loadingView(_ view: MKLoadingView, didClickRetryButton button: UIButton) {
+        viewModel.fetchStatistic()
+    }
 }
 
 extension MKStatisticPopupViewController: PopupContentViewController {
@@ -81,11 +95,14 @@ extension MKStatisticPopupViewController: UITableViewDelegate {
 }
 
 extension MKStatisticPopupViewController: MKStatisticPopupViewModelDelegate {
-    func viewModel(_ viewModel: MKStatisticPopupViewModel, didChangeViewMode: MKViewMode) {
-        if didChangeViewMode == .loading {
-            return
-        }
+    func viewModel(_ viewModel: MKStatisticPopupViewModel, didChangeLoadingStatus status: MKViewMode) {
+        
         DispatchQueue.main.sync { [unowned self] in
+            if status == .error {
+                self.loadingView.loadingTimeout(disappear: self.tableView)
+                return
+            }
+            self.loadingView.shouldShowView(self.tableView)
             self.tableView.reloadData()
         }
     }
@@ -93,6 +110,11 @@ extension MKStatisticPopupViewController: MKStatisticPopupViewModelDelegate {
 
 private extension MKStatisticPopupViewController {
     func setupConstraints() {
+        loadingView.snp.makeConstraints { (maker) in
+            maker.top.left.right.equalToSuperview()
+            maker.bottom.equalToSuperview().offset(-48)
+        }
+        
         tableView.snp.makeConstraints { (make) in
             make.top.equalToSuperview()
             make.left.right.bottom.equalToSuperview()
