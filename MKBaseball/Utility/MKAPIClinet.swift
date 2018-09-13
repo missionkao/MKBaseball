@@ -19,17 +19,21 @@ class MKAPIClinet {
     
     @discardableResult
     static func fetchHTMLFrom(url: String, success: @escaping (_: String) -> Void, failure: @escaping (_: Error) -> Void) -> URLSessionDataTask? {
-        guard let url = URL(string: url) else {
+        guard let urlFromString = URL(string: url) else {
             failure(FetchingHTMLError.invalidURLString)
             return nil
         }
         
         let configiguration = URLSessionConfiguration.default
-        configiguration.timeoutIntervalForRequest = 10
+        configiguration.timeoutIntervalForRequest = 5
         
-        let task = URLSession(configuration: configiguration).dataTask(with: url) { (data, response, error) in
-            if let _ = error {
-                failure(FetchingHTMLError.responseError)
+        let task = URLSession(configuration: configiguration).dataTask(with: urlFromString) { (data, response, error) in
+            if let e = error as NSError? {
+                if e.code == NSURLErrorTimedOut {
+                    self.fetchHTMLFrom(url: url, success: success, failure: failure)
+                } else {
+                    failure(FetchingHTMLError.responseError)
+                }
                 return
             }
             guard let data = data else {
