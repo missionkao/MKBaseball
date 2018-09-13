@@ -10,10 +10,8 @@ import UIKit
 import SnapKit
 
 // WIP:
-// 1. loading view
+// 1. news pagnation
 // 2. today, tomorrow pither or hitter
-// 3. cancel while refresh again
-// 4. today timeout retry
 
 class MKIndexViewController: UITabBarController {
     
