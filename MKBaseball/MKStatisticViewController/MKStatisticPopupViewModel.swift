@@ -10,19 +10,13 @@ import Foundation
 import Kanna
 
 protocol MKStatisticPopupViewModelDelegate: class {
-    func viewModel(_ viewModel: MKStatisticPopupViewModel, didChangeViewMode: MKViewMode)
+    func viewModel(_ viewModel: MKStatisticPopupViewModel, didChangeLoadingStatus status: MKViewMode)
 }
 
 typealias StatisticRankTuple = (rank: String, name: String, team: String, value: String)
 
 class MKStatisticPopupViewModel {
     weak var delegate: MKStatisticPopupViewModelDelegate?
-    
-    private (set) var viewMode: MKViewMode = .loading {
-        didSet {
-            delegate?.viewModel(self, didChangeViewMode: viewMode)
-        }
-    }
     
     private (set) var statisticTuples = [StatisticRankTuple]()
     
@@ -45,12 +39,11 @@ class MKStatisticPopupViewModel {
         ]
         let url = components?.url?.absoluteString ?? ""
         
-        self.viewMode = .loading
         MKAPIClinet.fetchHTMLFrom(url: url, success: { [unowned self] (html) in
             self.parseStatisticTable(html)
-            self.viewMode = .complete
+            self.delegate?.viewModel(self, didChangeLoadingStatus: .complete)
         }) { (error) in
-            self.viewMode = .error
+            self.delegate?.viewModel(self, didChangeLoadingStatus: .error)
         }
     }
 }

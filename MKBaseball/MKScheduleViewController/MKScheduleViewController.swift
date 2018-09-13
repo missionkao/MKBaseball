@@ -39,6 +39,7 @@ class MKScheduleViewController: UIViewController {
         headerView.addSubview(leftButton)
         headerView.addSubview(monthButton)
         headerView.addSubview(rightButton)
+        view.addSubview(loadingView)
         view.addSubview(tableView)
         
         //refresh control
@@ -53,6 +54,7 @@ class MKScheduleViewController: UIViewController {
         leftButton.addTarget(self, action: #selector(leftAction), for: .touchUpInside)
         rightButton.addTarget(self, action: #selector(rightAction), for: .touchUpInside)
         
+        loadingView.startLoading(disappear: tableView)
         fetchSchedule()
     }
     
@@ -131,6 +133,12 @@ class MKScheduleViewController: UIViewController {
         return view
     }()
     
+    private lazy var loadingView: MKLoadingView = {
+        let view = MKLoadingView()
+        view.delegate = self
+        return view
+    }()
+    
     private lazy var tableView: UITableView = {
         let view = UITableView(frame: CGRect.zero, style: .plain)
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -155,8 +163,7 @@ extension MKScheduleViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! MKGameTableViewCell
         let model = self.viewModel.allGames[indexPath.section].model[indexPath.row]
-        let cellViewModel = MKGameTableViewCellViewModel(model: model)
-        cell.applyCellViewModel(viewModel: cellViewModel)
+        cell.applyCellViewModel(model)
         return cell
     }
     
@@ -193,6 +200,12 @@ extension MKScheduleViewController: UITableViewDelegate {
     }
 }
 
+extension MKScheduleViewController: MKLoadingViewDelegate {
+    func loadingView(_ view: MKLoadingView, didClickRetryButton button: UIButton) {
+        self.fetchSchedule()
+    }
+}
+
 extension MKScheduleViewController: CVCalendarViewDelegate, CVCalendarMenuViewDelegate {
     
     // MARK: Required methods
@@ -212,16 +225,18 @@ extension MKScheduleViewController: CVCalendarViewDelegate, CVCalendarMenuViewDe
 }
 
 extension MKScheduleViewController: MKScheduleViewModelDelegate {
-    func viewModel(_ viewModel: MKScheduleViewModel, didChangeViewMode: MKViewMode) {
-        if didChangeViewMode == .loading {
-            return
-        }
+    func viewModel(_ viewModel: MKScheduleViewModel, didChangeLoadingStatus status: MKViewMode) {
         DispatchQueue.main.sync { [unowned self] in
             self.refreshControl.endRefreshing()
-            self.tableView.reloadData()
-            if isFirstFetchingData == true {
-                self.tableView.scrollToRow(at: IndexPath(row: 0, section: self.viewModel.getNearestDateIndex()), at: .top, animated: true)
-                isFirstFetchingData = false
+            if status == .error {
+                self.loadingView.loadingTimeout(disappear: tableView)
+            } else if status == .complete {
+                self.loadingView.shouldShowView(self.tableView)
+                self.tableView.reloadData()
+                if isFirstFetchingData == true {
+                    self.tableView.scrollToRow(at: IndexPath(row: 0, section: self.viewModel.getNearestDateIndex()), at: .top, animated: true)
+                    isFirstFetchingData = false
+                }
             }
         }
     }
@@ -232,6 +247,11 @@ private extension MKScheduleViewController {
         tableView.snp.makeConstraints { (make) in
             make.top.equalTo(headerView.snp.bottom)
             make.left.right.bottom.equalToSuperview()
+        }
+        loadingView.snp.makeConstraints { (maker) in
+            maker.top.equalTo(headerView.snp.bottom)
+            maker.left.right.equalToSuperview()
+            maker.bottom.equalToSuperview().offset(-48)
         }
         
         headerView.snp.makeConstraints { (make) in

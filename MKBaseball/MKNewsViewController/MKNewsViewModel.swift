@@ -9,15 +9,16 @@
 import Foundation
 import Kanna
 
-protocol MKNewsViewModelDelegate: class {
-    func viewModel(_ viewModel: MKNewsViewModel, didChangeViewMode: MKViewMode)
+protocol MKNewsViewModelDelegate: NSObjectProtocol {
+    func viewModel(_ viewModel: MKNewsViewModel, didChangeLoadingStatus status: MKViewMode)
 }
 
 class MKNewsViewModel {
     weak var delegate: MKNewsViewModelDelegate?
     
     private var fetchingTask: URLSessionDataTask?
-    private (set) var hasfetchedVideo = false
+    private (set) var hasFetchedNews = false
+    private (set) var hasFetchedVideo = false
     
     private (set) var newsModels = [MKNewsTableViewCellViewModel]()
     private (set) var videoModels = [MKNewsTableViewCellViewModel]()
@@ -27,8 +28,10 @@ class MKNewsViewModel {
         self.fetchingTask?.cancel()
         self.fetchingTask = MKAPIClinet.fetchHTMLFrom(url: url, success: { [unowned self] (html) in
             self.parseNewsHTML(html)
-            self.delegate?.viewModel(self, didChangeViewMode: .complete)
+            self.hasFetchedNews = true
+            self.delegate?.viewModel(self, didChangeLoadingStatus: .complete)
         }) { (error) in
+            self.delegate?.viewModel(self, didChangeLoadingStatus: .error)
         }
     }
     
@@ -37,9 +40,10 @@ class MKNewsViewModel {
         self.fetchingTask?.cancel()
         self.fetchingTask = MKAPIClinet.fetchHTMLFrom(url: url, success: { [unowned self] (html) in
             self.parseVideoHTML(html)
-            self.hasfetchedVideo = true
-            self.delegate?.viewModel(self, didChangeViewMode: .complete)
+            self.hasFetchedVideo = true
+            self.delegate?.viewModel(self, didChangeLoadingStatus: .complete)
         }) { (error) in
+            self.delegate?.viewModel(self, didChangeLoadingStatus: .error)
         }
     }
 }

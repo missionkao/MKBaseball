@@ -60,3 +60,7 @@ enum CPBLTeam: String {
         }
     }
 }
+
+enum MKViewMode: Int {
+    case loading = 0, complete, error
+}

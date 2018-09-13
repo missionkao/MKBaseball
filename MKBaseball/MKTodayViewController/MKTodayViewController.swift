@@ -42,12 +42,12 @@ enum MKTodayViewControllerTableViewSectionType: Int {
 
 class MKTodayViewController: UIViewController {
     
-    private var viewModel: MKTodayViewModel!
+    private var viewModel: MKTodayViewModel
     private let refreshControl = UIRefreshControl()
     
     required init(viewModel: MKTodayViewModel) {
-        super.init(nibName: nil, bundle: nil)
         self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
         self.viewModel.delegate = self
     }
     
@@ -58,6 +58,7 @@ class MKTodayViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.cpblBlue
+        view.addSubview(loadingView)
         view.addSubview(tableView)
         refreshControl.tintColor = UIColor.white
         
@@ -65,9 +66,15 @@ class MKTodayViewController: UIViewController {
         
         setupConstraints()
         
+        loadingView.startLoading(disappear: tableView)
         viewModel.fetchTodayGame()
-        viewModel.fetchPlayerChange()
     }
+    
+    private lazy var loadingView: MKLoadingView = {
+        let view = MKLoadingView()
+        view.delegate = self
+        return view
+    }()
     
     private lazy var tableView: UITableView = {
         let view = UITableView(frame: CGRect.zero, style: .plain)
@@ -85,17 +92,15 @@ class MKTodayViewController: UIViewController {
 }
 
 extension MKTodayViewController: MKTodayViewModelDelegate {
-    func viewModelShouldReloadTodayGame(_ viewModel: MKTodayViewModel) {
+    func viewModel(_ viewModel: MKTodayViewModel, didChangeLoadingStatus status: MKViewMode) {
         DispatchQueue.main.sync { [unowned self] in
             self.refreshControl.endRefreshing()
-            self.tableView.reloadSections(IndexSet(integer: 0), with: .none)
-        }
-    }
-    
-    func viewModelShouldReloadPlayerChange(_ viewModel: MKTodayViewModel) {
-        DispatchQueue.main.sync { [unowned self] in
-            self.refreshControl.endRefreshing()
-            self.tableView.reloadSections(IndexSet(integer: 1), with: .none)
+            if status == .error {
+                self.loadingView.loadingTimeout(disappear: tableView)
+            } else if status == .complete {
+                self.loadingView.shouldShowView(self.tableView)
+                self.tableView.reloadData()
+            }
         }
     }
 }
@@ -103,44 +108,27 @@ extension MKTodayViewController: MKTodayViewModelDelegate {
 extension MKTodayViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
-            let gameCount = viewModel.competitions.count
-            return gameCount == 0 ? 1 : gameCount
-        }
-        let playerChangeCount = viewModel.changes.count
-        return playerChangeCount == 0 ? 1 : playerChangeCount
+        let count = section == 0 ? viewModel.competitions.count : viewModel.changes.count
+        return count == 0 ? 1 : count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellReuseIdentifier = MKTodayViewControllerTableViewSectionType(rawValue: indexPath.section)!.cellReuseIdentifier()
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! MKTableViewCellProtocol
         
-        if indexPath.section == 0 {
-            let gameCell = cell as! MKGameTableViewCell
-            if viewModel.competitions.count == 0 {
-                gameCell.applyCellViewModel(viewModel: nil)
-            } else {
-                let cellViewModel = MKGameTableViewCellViewModel(model: viewModel.competitions[indexPath.row])
-                gameCell.applyCellViewModel(viewModel: cellViewModel)
-            }
-            return cell
-        }
-        
-        let playerChangeCell = cell as! MKTodayChangeTableViewCell
-        if viewModel.changes.count == 0 {
-            playerChangeCell.applyPlayerChangeModel(model: nil)
+        let count = indexPath.section == 0 ? viewModel.competitions.count : viewModel.changes.count
+        if count == 0 {
+            cell.applyCellViewModel(nil)
         } else {
-            playerChangeCell.applyPlayerChangeModel(model: viewModel.changes[indexPath.row])
+            let model: MKTableViewCellViewModelProtocol = indexPath.section == 0 ? viewModel.competitions[indexPath.row] : viewModel.changes[indexPath.row]
+            cell.applyCellViewModel(model)
         }
         
-        return cell
+        return cell as! UITableViewCell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section == 0 {
-            return 100
-        }
-        if viewModel.changes.count == 0 {
+        if indexPath.section == 0 || viewModel.changes.count == 0 {
             return 100
         }
         return 48
@@ -173,13 +161,29 @@ extension MKTodayViewController: UITableViewDelegate {
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         if refreshControl.isRefreshing {
             viewModel.fetchTodayGame()
-            viewModel.fetchPlayerChange()
         }
+    }
+}
+
+extension MKTodayViewController: MKLoadingViewDelegate {
+    func loadingView(_ view: MKLoadingView, didClickRetryButton button: UIButton) {
+        viewModel.fetchTodayGame()
     }
 }
 
 private extension MKTodayViewController {
     func setupConstraints() {
+        loadingView.snp.makeConstraints { (make) in
+            // top offset = logo(56) + offset
+            if #available(iOS 11.0, *) {
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.topMargin).offset(56 + 16)
+            } else {
+                make.top.equalToSuperview().offset(56 + 16)
+            }
+            make.left.right.equalToSuperview()
+            make.bottom.equalToSuperview().offset(-48)
+        }
+        
         tableView.snp.makeConstraints { (make) in
             // top offset = logo(56) + offset
             if #available(iOS 11.0, *) {

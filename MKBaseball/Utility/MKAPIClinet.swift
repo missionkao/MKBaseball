@@ -23,7 +23,11 @@ class MKAPIClinet {
             failure(FetchingHTMLError.invalidURLString)
             return nil
         }
-        let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+        
+        let configiguration = URLSessionConfiguration.default
+        configiguration.timeoutIntervalForRequest = 10
+        
+        let task = URLSession(configuration: configiguration).dataTask(with: url) { (data, response, error) in
             if let _ = error {
                 failure(FetchingHTMLError.responseError)
                 return

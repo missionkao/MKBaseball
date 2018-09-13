@@ -8,6 +8,13 @@
 
 import UIKit
 
+struct MKPlayerChangeModel: MKTableViewCellViewModelProtocol {
+    let player: String
+    let team: CPBLTeam
+    let date: String
+    let reason: String
+}
+
 class MKTodayChangeTableViewCell: UITableViewCell {
 
     required init?(coder aDecoder: NSCoder) {
@@ -25,18 +32,6 @@ class MKTodayChangeTableViewCell: UITableViewCell {
         contentView.addSubview(noPlayerChangeLabel)
         
         setupConstraints()
-    }
-    
-    func applyPlayerChangeModel(model: MKPlayerChangeModel?) {
-        if let model = model {
-            shouldSwitchToNoPlayerChangeView(false)
-            dateLabel.text = model.date
-            teamLabel.text = model.team.rawValue
-            nameLabel.text = model.player
-            reasonLabel.text = model.reason
-        } else {
-            shouldSwitchToNoPlayerChangeView(true)
-        }
     }
     
     private lazy var dateLabel: UILabel = {
@@ -71,6 +66,20 @@ class MKTodayChangeTableViewCell: UITableViewCell {
         view.attributedText = NSAttributedString(string: "近三日無球員異動", attributes: attribute)
         return view
     }()
+}
+
+extension MKTodayChangeTableViewCell: MKTableViewCellProtocol {
+    func applyCellViewModel(_ model: MKTableViewCellViewModelProtocol?) {
+        if let model = model as? MKPlayerChangeModel {
+            shouldSwitchToNoPlayerChangeView(false)
+            dateLabel.text = model.date
+            teamLabel.text = model.team.rawValue
+            nameLabel.text = model.player
+            reasonLabel.text = model.reason
+        } else {
+            shouldSwitchToNoPlayerChangeView(true)
+        }
+    }
 }
 
 private extension MKTodayChangeTableViewCell {

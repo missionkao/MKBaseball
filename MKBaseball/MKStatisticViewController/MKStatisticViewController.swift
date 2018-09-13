@@ -37,15 +37,23 @@ class MKStatisticViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = UIColor.cpblBlue
         view.addSubview(headerView)
+        view.addSubview(loadingView)
         view.addSubview(tableView)
         
         setupConstraints()
         
+        loadingView.startLoading(disappear: tableView)
         viewModel.fetchStatistic()
     }
     
     private lazy var headerView: MKSegmentedControlHeaderView = {
         let view = MKSegmentedControlHeaderView(items: ["打擊數據", "投手數據"])
+        view.delegate = self
+        return view
+    }()
+    
+    private lazy var loadingView: MKLoadingView = {
+        let view = MKLoadingView()
         view.delegate = self
         return view
     }()
@@ -114,13 +122,21 @@ extension MKStatisticViewController: UITableViewDelegate {
 }
 
 extension MKStatisticViewController: MKStatisticViewModelDelegate {
-    func viewModel(_ viewModel: MKStatisticViewModel, didChangeViewMode: MKViewMode) {
-        if didChangeViewMode == .loading {
-            return
-        }
+    func viewModel(_ viewModel: MKStatisticViewModel, didChangeLoadingStatus status: MKViewMode) {
         DispatchQueue.main.sync { [unowned self] in
-            self.tableView.reloadData()
+            if status == .error {
+                self.loadingView.loadingTimeout(disappear: tableView)
+            } else if status == .complete {
+                self.loadingView.shouldShowView(self.tableView)
+                self.tableView.reloadData()
+            }
         }
+    }
+}
+
+extension MKStatisticViewController: MKLoadingViewDelegate {
+    func loadingView(_ view: MKLoadingView, didClickRetryButton button: UIButton) {
+        viewModel.fetchStatistic()
     }
 }
 
@@ -145,6 +161,12 @@ private extension MKStatisticViewController {
             }
             make.left.right.equalToSuperview()
             make.height.equalTo(56)
+        }
+        
+        loadingView.snp.makeConstraints { (maker) in
+            maker.top.equalTo(headerView.snp.bottom)
+            maker.left.right.equalToSuperview()
+            maker.bottom.equalToSuperview().offset(-48)
         }
         
         tableView.snp.makeConstraints { (make) in
