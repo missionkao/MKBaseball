@@ -18,6 +18,7 @@ class MKScheduleViewModel {
     var allGames = [(date: String, model: [MKCompetitionModel])]()
     var dateArray = [Int]()
     var currentMonth: Int = 0
+    private var fetchingTask: URLSessionDataTask?
     
     func fetchSchedule(atYear year: Int, month: Int, forceUpdate: Bool = false) {
         if month == currentMonth && forceUpdate == false {
@@ -33,7 +34,8 @@ class MKScheduleViewModel {
         ]
         let scheduleURL = components?.url?.absoluteString ?? ""
         
-        MKAPIClinet.fetchHTMLFrom(url: scheduleURL, success: { [unowned self] (html) in
+        self.fetchingTask?.cancel()
+        self.fetchingTask = MKAPIClinet.fetchHTMLFrom(url: scheduleURL, success: { [unowned self] (html) in
             self.parseScheduleHTML(html)
             self.delegate?.viewModel(self, didChangeLoadingStatus: .complete)
         }) { (error) in

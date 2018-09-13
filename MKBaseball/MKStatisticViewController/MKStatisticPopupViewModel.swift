@@ -21,6 +21,7 @@ class MKStatisticPopupViewModel {
     private (set) var statisticTuples = [StatisticRankTuple]()
     
     private let year: String
+    private var fetchingTask: URLSessionDataTask?
     let type: MKStatisticType
     
     init(type: MKStatisticType) {
@@ -39,7 +40,8 @@ class MKStatisticPopupViewModel {
         ]
         let url = components?.url?.absoluteString ?? ""
         
-        MKAPIClinet.fetchHTMLFrom(url: url, success: { [unowned self] (html) in
+        self.fetchingTask?.cancel()
+        self.fetchingTask = MKAPIClinet.fetchHTMLFrom(url: url, success: { [unowned self] (html) in
             self.parseStatisticTable(html)
             self.delegate?.viewModel(self, didChangeLoadingStatus: .complete)
         }) { (error) in

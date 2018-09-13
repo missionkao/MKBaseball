@@ -19,13 +19,13 @@ class MKTodayViewModel {
     
     private (set) var competitions = [MKCompetitionModel]()
     private (set) var changes = [MKPlayerChangeModel]()
-    
+    private var fetchingTask: URLSessionDataTask?
     weak var delegate: MKTodayViewModelDelegate?
     
     func fetchTodayGame() {
         let url = "http://www.cpbl.com.tw/schedule/index.html"
-        
-        MKAPIClinet.fetchHTMLFrom(url: url, success: { [unowned self] (html) in
+        self.fetchingTask?.cancel()
+        self.fetchingTask = MKAPIClinet.fetchHTMLFrom(url: url, success: { [unowned self] (html) in
             self.parseTodayGameHTML(html)
             self.fetchPlayerChange(success: {
                 self.delegate?.viewModel(self, didChangeLoadingStatus: .complete)
