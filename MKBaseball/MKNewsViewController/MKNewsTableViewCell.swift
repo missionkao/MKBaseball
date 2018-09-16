@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 struct MKNewsTableViewCellViewModel {
     let image: String?
@@ -33,10 +34,10 @@ class MKNewsTableViewCell: UITableViewCell {
     }
     
     func applyCellViewModel(_ cellViewModel: MKNewsTableViewCellViewModel) {
-        
-        if let image = cellViewModel.image, let url = URL(string: image), let data = try? Data(contentsOf: url) {
-            newsImageView.image = UIImage(data: data)
+        if let image = cellViewModel.image {
+            newsImageView.kf.setImage(with: URL(string: image))
         }
+        
         titleLabel.text = cellViewModel.title
         dateLabel.text = cellViewModel.date
     }
