@@ -1,6 +1,7 @@
 PODS:
   - CVCalendar (1.6.1)
   - Kanna (4.0.0)
+  - Kingfisher (4.9.0)
   - PopupController (0.2.0)
   - SnapKit (4.0.0)
   - SwiftyJSON (3.1.4)
@@ -8,6 +9,7 @@ PODS:
 DEPENDENCIES:
   - CVCalendar
   - Kanna
+  - Kingfisher
   - "PopupController (from `git@github.com:ahmedsafadii/PopupController.git`)"
   - SnapKit (~> 4.0.0)
   - SwiftyJSON
@@ -16,6 +18,7 @@ SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - CVCalendar
     - Kanna
+    - Kingfisher
     - SnapKit
     - SwiftyJSON
 
@@ -31,10 +34,11 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   CVCalendar: 505c11b11a088b43f159806e791eba1c2540853b
   Kanna: d5ae2a26472f7e7a474e7f36a9cd8aa2c8c63ad3
+  Kingfisher: 64539b51826b778206daa6ed815d12653caa69dd
   PopupController: 0b69fdf11cbeaa807789a8c3992599083640988f
   SnapKit: a42d492c16e80209130a3379f73596c3454b7694
   SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
 
-PODFILE CHECKSUM: 28fd5bf36c34f3738bee078623ce346b21735fb4
+PODFILE CHECKSUM: 0e2aff5953e366cdb67c52db6f7c1aca3855801b
 
 COCOAPODS: 1.5.3
