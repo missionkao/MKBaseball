@@ -22,7 +22,7 @@ enum MKNewsViewMode: Int {
 class MKNewsViewController: UIViewController {
 
     fileprivate var viewModel: MKNewsViewModel!
-    
+    fileprivate var isReachingEnd = false
     private var viewMode: MKNewsViewMode = .news
     
     required init(viewModel: MKNewsViewModel) {
@@ -120,6 +120,21 @@ extension MKNewsViewController: UITableViewDelegate {
             .create(self)
             .customize(popupOptions)
             .show(MKNewsPopupViewController(url: url))
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let height = scrollView.frame.size.height
+        let contentYoffset = scrollView.contentOffset.y
+        let distanceFromBottom = scrollView.contentSize.height - contentYoffset
+        // 偵測是否已經滑到最底部, 並且利用 isReachingEnd 判斷在 false -> true 時, 才需要 call fetch
+        if distanceFromBottom < height && tableView.alpha == 1 {
+            if isReachingEnd == false {
+                viewMode == .news ? viewModel.fetchNews() : viewModel.fetchVideo()
+            }
+            isReachingEnd = true
+        } else {
+            isReachingEnd = false
+        }
     }
 }
 
