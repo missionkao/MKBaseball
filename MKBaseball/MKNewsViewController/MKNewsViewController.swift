@@ -22,7 +22,7 @@ enum MKNewsViewMode: Int {
 class MKNewsViewController: UIViewController {
 
     fileprivate var viewModel: MKNewsViewModel!
-    
+    fileprivate var isReachingEnd = false
     private var viewMode: MKNewsViewMode = .news
     
     required init(viewModel: MKNewsViewModel) {
@@ -46,6 +46,8 @@ class MKNewsViewController: UIViewController {
         
         loadingView.startLoading(disappear: tableView)
         viewModel.fetchNews()
+        
+        rotateFooterImage(options: .curveEaseIn)
     }
     
     private lazy var headerView: MKSegmentedControlHeaderView = {
@@ -65,11 +67,19 @@ class MKNewsViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.white
         view.alpha = 0
-        view.tableFooterView = UIView()
+        view.tableFooterView = footerView()
         view.separatorStyle = .none
         view.dataSource = self
         view.delegate = self
         view.register(MKNewsTableViewCell.self, forCellReuseIdentifier: newsCellReuseIdentifier)
+        return view
+    }()
+    
+    private lazy var indicatorImageView: UIImageView! = {
+        let image = UIImage(named: "loading_circle")
+        let view = UIImageView(image: image)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.contentMode = .scaleAspectFit
         return view
     }()
 }
@@ -110,6 +120,21 @@ extension MKNewsViewController: UITableViewDelegate {
             .create(self)
             .customize(popupOptions)
             .show(MKNewsPopupViewController(url: url))
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let height = scrollView.frame.size.height
+        let contentYoffset = scrollView.contentOffset.y
+        let distanceFromBottom = scrollView.contentSize.height - contentYoffset
+        // 偵測是否已經滑到最底部, 並且利用 isReachingEnd 判斷在 false -> true 時, 才需要 call fetch
+        if distanceFromBottom < height && tableView.alpha == 1 {
+            if isReachingEnd == false {
+                viewMode == .news ? viewModel.fetchNews() : viewModel.fetchVideo()
+            }
+            isReachingEnd = true
+        } else {
+            isReachingEnd = false
+        }
     }
 }
 
@@ -173,5 +198,26 @@ private extension MKNewsViewController {
     
     func hasNotFetchData() -> Bool {
         return (viewMode == .video && viewModel.hasFetchedVideo == false) || (viewMode == .news && viewModel.hasFetchedNews == false)
+    }
+    
+    func footerView() -> UIView {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 100))
+        view.backgroundColor = UIColor.white
+        view.addSubview(indicatorImageView)
+        indicatorImageView.snp.makeConstraints { (maker) in
+            maker.centerX.centerY.equalToSuperview()
+            maker.width.height.equalTo(64)
+        }
+        return view
+    }
+    
+    func rotateFooterImage(options: UIViewAnimationOptions) {
+        UIView.animate(withDuration: 0.3, delay: 0.0, options: options, animations: {
+            self.indicatorImageView.transform = self.indicatorImageView.transform.rotated(by: CGFloat(-Double.pi / 2))
+        }) { (finished) in
+            if finished == true {
+                self.rotateFooterImage(options: .curveLinear)
+            }
+        }
     }
 }
