@@ -18,20 +18,37 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tabBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LT2-BH-8EN">
-                                <rect key="frame" x="0.0" y="618" width="375" height="49"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <items>
-                                    <tabBarItem title="Today" image="tab_bar_top" id="C1X-Rd-lqL"/>
-                                    <tabBarItem title="Calendar" image="tab_bar_calendar" id="Me1-sS-1oI"/>
-                                    <tabBarItem title="Ranking" image="tab_bar_ranking" id="Wi9-Pe-iNp"/>
-                                    <tabBarItem title="Stats" image="tab_bar_stats" id="0ZF-AT-68g"/>
-                                    <tabBarItem title="News" image="tab_bar_news" id="kJf-21-Xjc"/>
-                                </items>
-                            </tabBar>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pej-4q-5q9">
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <subviews>
+                                    <tabBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LT2-BH-8EN">
+                                        <rect key="frame" x="0.0" y="598" width="375" height="49"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <items>
+                                            <tabBarItem title="Today" image="tab_bar_top" id="C1X-Rd-lqL"/>
+                                            <tabBarItem title="Calendar" image="tab_bar_calendar" id="Me1-sS-1oI"/>
+                                            <tabBarItem title="Ranking" image="tab_bar_ranking" id="Wi9-Pe-iNp"/>
+                                            <tabBarItem title="Stats" image="tab_bar_stats" id="0ZF-AT-68g"/>
+                                            <tabBarItem title="News" image="tab_bar_news" id="kJf-21-Xjc"/>
+                                        </items>
+                                    </tabBar>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="LT2-BH-8EN" firstAttribute="leading" secondItem="Pej-4q-5q9" secondAttribute="leading" id="FdN-Fj-37e"/>
+                                    <constraint firstAttribute="bottom" secondItem="LT2-BH-8EN" secondAttribute="bottom" id="TbZ-LF-ed7"/>
+                                    <constraint firstAttribute="trailing" secondItem="LT2-BH-8EN" secondAttribute="trailing" id="ueO-nQ-VUI"/>
+                                </constraints>
+                                <viewLayoutGuide key="safeArea" id="h2I-V4-3Pb"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="Pej-4q-5q9" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="CHs-L3-ceD"/>
+                            <constraint firstItem="Pej-4q-5q9" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="UAh-t5-Bfx"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Pej-4q-5q9" secondAttribute="trailing" id="as5-6q-okR"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Pej-4q-5q9" secondAttribute="bottom" id="j6d-6w-xrX"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                 </viewController>
