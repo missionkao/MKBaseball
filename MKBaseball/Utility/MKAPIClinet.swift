@@ -13,14 +13,15 @@ enum FetchingHTMLError: Error {
     case emptyHTML
     case encodingError
     case responseError
+    case cancelled
 }
 
 class MKAPIClinet {
     
     @discardableResult
-    static func fetchHTMLFrom(url: String, success: @escaping (_: String) -> Void, failure: @escaping (_: Error) -> Void) -> URLSessionDataTask? {
+    static func fetchHTMLFrom(url: String, success: @escaping (_: String) -> Void, failure: @escaping (_: FetchingHTMLError) -> Void) -> URLSessionDataTask? {
         guard let urlFromString = URL(string: url) else {
-            failure(FetchingHTMLError.invalidURLString)
+            failure(.invalidURLString)
             return nil
         }
         
@@ -31,17 +32,19 @@ class MKAPIClinet {
             if let e = error as NSError? {
                 if e.code == NSURLErrorTimedOut {
                     self.fetchHTMLFrom(url: url, success: success, failure: failure)
+                } else if e.code == NSURLErrorCancelled {
+                    failure(.cancelled)
                 } else {
-                    failure(FetchingHTMLError.responseError)
+                    failure(.responseError)
                 }
                 return
             }
             guard let data = data else {
-                failure(FetchingHTMLError.emptyHTML)
+                failure(.emptyHTML)
                 return
             }
             guard let html = String(data: data, encoding: String.Encoding.utf8) else {
-                failure(FetchingHTMLError.encodingError)
+                failure(.encodingError)
                 return
             }
             success(html)

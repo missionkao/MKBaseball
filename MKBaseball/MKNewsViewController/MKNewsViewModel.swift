@@ -38,10 +38,14 @@ class MKNewsViewModel {
                 self.hasFetchedNews = true
                 self.delegate?.viewModel(self, didChangeLoadingStatus: .complete)
                 }, failure: { (error) in
-                    self.delegate?.viewModel(self, didChangeLoadingStatus: .error)
+                    if error != .cancelled {
+                        self.delegate?.viewModel(self, didChangeLoadingStatus: .error)
+                    }
             })
         }) { (error) in
-            self.delegate?.viewModel(self, didChangeLoadingStatus: .error)
+            if error != .cancelled {
+                self.delegate?.viewModel(self, didChangeLoadingStatus: .error)
+            }
         }
     }
     
@@ -54,7 +58,9 @@ class MKNewsViewModel {
             self.hasFetchedVideo = true
             self.delegate?.viewModel(self, didChangeLoadingStatus: .complete)
         }) { (error) in
-            self.delegate?.viewModel(self, didChangeLoadingStatus: .error)
+            if error != .cancelled {
+                self.delegate?.viewModel(self, didChangeLoadingStatus: .error)
+            }
         }
     }
 }
