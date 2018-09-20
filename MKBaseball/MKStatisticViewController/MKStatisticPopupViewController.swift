@@ -26,7 +26,7 @@ class MKStatisticPopupViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.cpblBlue
+        view.backgroundColor = UIColor.white
         
         view.addSubview(loadingView)
         view.addSubview(tableView)
@@ -65,7 +65,7 @@ extension MKStatisticPopupViewController: MKLoadingViewDelegate {
 
 extension MKStatisticPopupViewController: PopupContentViewController {
     func sizeForPopup(_ popupController: PopupController, size: CGSize, showingKeyboard: Bool) -> CGSize {
-        let size = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height - 128)
+        let size = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height - 96)
         
         return size
     }

@@ -34,7 +34,7 @@ class MKScheduleViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.cpblBlue
+        view.backgroundColor = UIColor.white
         view.addSubview(headerView)
         headerView.addSubview(leftButton)
         headerView.addSubview(monthButton)
@@ -43,7 +43,7 @@ class MKScheduleViewController: UIViewController {
         view.addSubview(tableView)
         
         //refresh control
-        refreshControl.tintColor = UIColor.white
+        refreshControl.tintColor = UIColor.gray
         tableView.addSubview(refreshControl)
         
         setupConstraints()
@@ -257,9 +257,9 @@ private extension MKScheduleViewController {
         headerView.snp.makeConstraints { (make) in
             // top offset = logo(56) + offset
             if #available(iOS 11.0, *) {
-                make.top.equalTo(view.safeAreaLayoutGuide.snp.topMargin).offset(16)
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.topMargin)
             } else {
-                make.top.equalToSuperview().offset(16)
+                make.top.equalToSuperview()
             }
             make.left.right.equalToSuperview()
             make.height.equalTo(52)

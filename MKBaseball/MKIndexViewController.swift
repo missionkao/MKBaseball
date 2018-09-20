@@ -17,16 +17,16 @@ class MKIndexViewController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.cpblBlue
+        view.backgroundColor = UIColor.white
         tabBar.backgroundColor = UIColor.white
         
         tabBar.layer.borderWidth = 0.50
         tabBar.layer.borderColor = UIColor.gray.cgColor
         
-        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedStringKey.foregroundColor : UIColor.gray], for: .normal)
-        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedStringKey.foregroundColor : UIColor.cpblBlue], for: .selected)
-        
-//        view.addSubview(headerLogoImageView)
+        UITabBarItem.appearance()
+            .setTitleTextAttributes([NSAttributedStringKey.foregroundColor : UIColor.gray], for: .normal)
+        UITabBarItem.appearance()
+            .setTitleTextAttributes([NSAttributedStringKey.foregroundColor : UIColor.cpblBlue], for: .selected)
         
         let topViewController = MKTodayViewController(viewModel: MKTodayViewModel())
         topViewController.tabBarItem = topTabBarItem
@@ -44,16 +44,7 @@ class MKIndexViewController: UITabBarController {
         newsViewController.tabBarItem = newsTabBarItem
         
         self.viewControllers = [topViewController, calendarViewController, rankingViewController, statsViewController, newsViewController]
-        
-//        setupConstraints()
     }
-    
-    private lazy var headerLogoImageView: UIImageView = {
-        let view = UIImageView(image: UIImage(named: "cpbl_logo"))
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.contentMode = .scaleAspectFit
-        return view
-    }()
     
     private lazy var topTabBarItem: UITabBarItem = {
         return tabBarItem(titel: "Top", imageName: "tab_bar_top")
@@ -78,22 +69,9 @@ class MKIndexViewController: UITabBarController {
     private lazy var videoTabBarItem: UITabBarItem = {
         return tabBarItem(titel: "Video", imageName: "tab_bar_video")
     }()
-
 }
 
 private extension MKIndexViewController {
-    func setupConstraints() {
-        headerLogoImageView.snp.makeConstraints { (make) in
-            if #available(iOS 11.0, *) {
-                make.top.equalTo(view.safeAreaLayoutGuide.snp.topMargin)
-            } else {
-                make.top.equalTo(view.snp.topMargin)
-            }
-            make.centerX.equalToSuperview()
-            make.height.equalTo(56)
-        }
-    }
-    
     func tabBarItem(titel: String, imageName: String) -> UITabBarItem {
         let filledImageName = "\(imageName)_filled"
         return UITabBarItem(title: titel, image: UIImage(named: imageName)?.withRenderingMode(.alwaysOriginal), selectedImage: UIImage(named: filledImageName)?.withRenderingMode(.alwaysOriginal))
