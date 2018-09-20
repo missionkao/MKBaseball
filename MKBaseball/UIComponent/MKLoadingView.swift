@@ -80,6 +80,7 @@ class MKLoadingView: UIView {
     private lazy var indicatorView: UIActivityIndicatorView = {
         let view = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.color = UIColor.black
         return view
     }()
     
@@ -88,7 +89,7 @@ class MKLoadingView: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.clear
         view.font = UIFont.systemFont(ofSize: 16)
-        view.textColor = UIColor.white
+        view.textColor = UIColor.black
         view.sizeToFit()
         view.text = "讀取中..."
         return view
@@ -99,7 +100,7 @@ class MKLoadingView: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         let image = UIImage(named: "retry")?.withRenderingMode(.alwaysTemplate)
         view.setImage(image, for: .normal)
-        view.tintColor = UIColor.white
+        view.tintColor = UIColor.black
         view.backgroundColor = UIColor.clear
         return view
     }()

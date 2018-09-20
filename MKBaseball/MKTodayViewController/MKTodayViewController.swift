@@ -57,10 +57,10 @@ class MKTodayViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.cpblBlue
+        view.backgroundColor = UIColor.white
         view.addSubview(loadingView)
         view.addSubview(tableView)
-        refreshControl.tintColor = UIColor.white
+        refreshControl.tintColor = UIColor.gray
         
         tableView.addSubview(refreshControl)
         
@@ -176,9 +176,9 @@ private extension MKTodayViewController {
         loadingView.snp.makeConstraints { (make) in
             // top offset = logo(56) + offset
             if #available(iOS 11.0, *) {
-                make.top.equalTo(view.safeAreaLayoutGuide.snp.topMargin).offset(56 + 16)
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.topMargin)
             } else {
-                make.top.equalToSuperview().offset(56 + 16)
+                make.top.equalToSuperview()
             }
             make.left.right.equalToSuperview()
             make.bottom.equalToSuperview().offset(-48)
@@ -187,9 +187,9 @@ private extension MKTodayViewController {
         tableView.snp.makeConstraints { (make) in
             // top offset = logo(56) + offset
             if #available(iOS 11.0, *) {
-                make.top.equalTo(view.safeAreaLayoutGuide.snp.topMargin).offset(56 + 16)
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.topMargin)
             } else {
-                make.top.equalToSuperview().offset(56 + 16)
+                make.top.equalToSuperview()
             }
             make.left.right.bottom.equalToSuperview()
         }
