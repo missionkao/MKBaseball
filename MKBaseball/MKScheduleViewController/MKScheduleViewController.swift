@@ -257,9 +257,9 @@ private extension MKScheduleViewController {
         headerView.snp.makeConstraints { (make) in
             // top offset = logo(56) + offset
             if #available(iOS 11.0, *) {
-                make.top.equalTo(view.safeAreaLayoutGuide.snp.topMargin).offset(56 + 16)
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.topMargin).offset(16)
             } else {
-                make.top.equalToSuperview().offset(56 + 16)
+                make.top.equalToSuperview().offset(16)
             }
             make.left.right.equalToSuperview()
             make.height.equalTo(52)

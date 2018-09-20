@@ -26,7 +26,7 @@ class MKIndexViewController: UITabBarController {
         UITabBarItem.appearance().setTitleTextAttributes([NSAttributedStringKey.foregroundColor : UIColor.gray], for: .normal)
         UITabBarItem.appearance().setTitleTextAttributes([NSAttributedStringKey.foregroundColor : UIColor.cpblBlue], for: .selected)
         
-        view.addSubview(headerLogoImageView)
+//        view.addSubview(headerLogoImageView)
         
         let topViewController = MKTodayViewController(viewModel: MKTodayViewModel())
         topViewController.tabBarItem = topTabBarItem
@@ -45,7 +45,7 @@ class MKIndexViewController: UITabBarController {
         
         self.viewControllers = [topViewController, calendarViewController, rankingViewController, statsViewController, newsViewController]
         
-        setupConstraints()
+//        setupConstraints()
     }
     
     private lazy var headerLogoImageView: UIImageView = {
