@@ -61,7 +61,11 @@ private extension MKTodayViewModelTodayGame {
         let weekday = calendar.component(.weekday, from: date)
         
         let column = (weekday == 1) ? 7 : weekday - 1
-        let row = (weekday == 1) ? weekMonth - 1 : weekMonth
+        var row = (weekday == 1) ? weekMonth - 1 : weekMonth
+        
+        if checkIfStartDateOfMonthIsMonday(calendar: calendar, date: date) == true {
+            row = row + 1
+        }
         
         return (2 * row + 1, column)
     }
@@ -118,6 +122,15 @@ private extension MKTodayViewModelPlayerChange {
         let threeDaysAgo = todayStartDate.timeIntervalSince1970 - (86400 * 3)
         
         return date.timeIntervalSince1970 > threeDaysAgo
+    }
+    
+    func checkIfStartDateOfMonthIsMonday(calendar: Calendar, date: Date) -> Bool {
+        //判斷某月1號是否為禮拜一
+        let startDate = calendar.date(from: Calendar.current.dateComponents([.year, .month], from: date))!
+        
+        let weekday = calendar.component(.weekday, from: startDate)
+        
+        return weekday == 2
     }
 }
 
